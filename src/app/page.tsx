@@ -362,14 +362,27 @@ function Ticker() {
     : "🔴 Đang cập nhật tin tức mới nhất...  ✦  ";
 
   return (
-    <div style={{ background:"#B91C1C", height:34, display:"flex", overflow:"hidden" }}>
-      <div style={{ background:"#7F1D1D", padding:"0 14px", display:"flex", alignItems:"center",
-        fontSize:11, fontWeight:700, color:"#fff", letterSpacing:"1px", flexShrink:0,
-        borderRight:"2px solid rgba(255,255,255,.15)" }}>TIN MỚI</div>
-      <div style={{ flex:1, overflow:"hidden", display:"flex", alignItems:"center" }}>
-        <div className="nd-ticker" style={{ whiteSpace:"nowrap", fontSize:12.5, color:"#fff" }}>
-          <span style={{ paddingRight:40 }}>{t}</span>
-          <span style={{ paddingRight:40 }}>{t}</span>
+    <div style={{ background: "#B91C1C", height: 34, display: "flex", overflow: "hidden" }}>
+      {/* Ô chữ TIN MỚI - Ép cứng không cho co lại */}
+      <div style={{ 
+        background: "#7F1D1D", padding: "0 14px", display: "flex", alignItems: "center", 
+        fontSize: 11, fontWeight: 700, color: "#fff", letterSpacing: "1px", 
+        flexShrink: 0, borderRight: "2px solid rgba(255,255,255,.15)" 
+      }}>
+        TIN MỚI
+      </div>
+
+      {/* Phần chữ chạy - Cấm tuyệt đối rớt dòng */}
+      <div style={{ flex: 1, overflow: "hidden", display: "flex", alignItems: "center" }}>
+        <div className="nd-ticker" style={{ 
+          whiteSpace: "nowrap", 
+          fontSize: 12.5, 
+          color: "#fff",
+          display: "flex",
+          flexWrap: "nowrap" 
+        }}>
+          <span style={{ paddingRight: 40, flexShrink: 0 }}>{t}</span>
+          <span style={{ paddingRight: 40, flexShrink: 0 }}>{t}</span>
         </div>
       </div>
     </div>
