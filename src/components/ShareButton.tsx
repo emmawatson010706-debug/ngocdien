@@ -2,25 +2,25 @@
 
 import React from "react";
 
-export default function ShareButton({ title, excerpt, slug }: { title: string, excerpt: string, slug: string }) {
-  // TẠO ĐƯỜNG LINK CHUẨN XÁC VỚI TÊN MIỀN XỊN
-  const shareUrl = `https://www.ngocdien.info.vn/bai-viet/${slug}`;
-
+// Dùng "any" để bọc lót mọi trường hợp, file bài viết truyền biến gì vào cũng nhận không báo lỗi
+export default function ShareButton({ title, excerpt, slug, url }: any) {
   const handleShare = async () => {
-    // Gọi tính năng chia sẻ gốc của điện thoại
+    // VŨ KHÍ BÍ MẬT: Chộp ngay cái link đang hiện trên thanh địa chỉ của trình duyệt
+    const exactUrl = window.location.href;
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: title + " | Xóm Ngọc Điền",
           text: excerpt,
-          url: shareUrl,
+          url: exactUrl,
         });
       } catch (err) {
         console.log("Đã hủy chia sẻ");
       }
     } else {
       // Dự phòng cho máy tính bàn
-      navigator.clipboard.writeText(shareUrl);
+      navigator.clipboard.writeText(exactUrl);
       alert("Đã copy đường link! Anh/chị có thể dán vào Zalo hoặc Facebook để chia sẻ.");
     }
   };
