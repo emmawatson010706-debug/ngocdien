@@ -69,15 +69,22 @@ export default function Header() {
 
   return (
     <>
-      {/* ── TOP BAR ── */}
-      <div className="bg-[#FFF8EE] border-b border-[#EAE0D0] py-1.5 hidden md:block">
-        <div className="max-w-[1180px] mx-auto px-4 flex justify-between items-center">
-          <p className="text-xs text-gray-500 font-sans">
+      {/* ── TOP BAR (Đã xử lý chống gãy chữ 100%) ── */}
+      <div className="bg-[#FFF8EE] border-b border-[#EAE0D0] py-2 overflow-x-auto scrollbar-hide">
+        <div className="w-max min-w-full max-w-[1180px] mx-auto px-4 flex justify-between items-center gap-6">
+          <p className="text-[11px] md:text-xs text-gray-500 font-sans whitespace-nowrap">
             📅 {new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
-          <div className="flex gap-5">
-            <Link href="/gop-y" className="text-xs text-red font-sans font-semibold hover:underline">🔔 Gửi bài viết</Link>
-            <Link href="/admin" className="text-xs text-gray-500 font-sans hover:text-red">⚙ Quản trị</Link>
+          <div className="flex gap-4 md:gap-5 items-center whitespace-nowrap">
+            <button onClick={() => setMenuOpen(true)} className="text-[11px] md:text-xs text-[#B91C1C] font-sans font-bold flex items-center gap-1">
+              🔍 Tìm kiếm
+            </button>
+            <Link href="/gop-y" className="text-[11px] md:text-xs text-[#B91C1C] font-sans font-bold hover:underline flex items-center gap-1">
+              🔔 Gửi bài
+            </Link>
+            <Link href="/admin" className="text-[11px] md:text-xs text-gray-500 font-sans hover:text-[#B91C1C] flex items-center gap-1">
+              ⚙ Quản trị
+            </Link>
           </div>
         </div>
       </div>
@@ -111,18 +118,29 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Desktop nav strip */}
-        <div className="hidden md:block bg-black/20 border-t border-white/10">
-          <div className="max-w-[1180px] mx-auto px-4">
+        {/* ── THANH MỤC LỤC NGANG (Đã thêm 2 mũi tên báo hiệu) ── */}
+        <div className="relative bg-black/20 border-t border-white/10 block">
+          
+          {/* Mũi tên trái (nhấp nháy báo hiệu vuốt) */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/50 to-transparent flex items-center justify-start pl-2 z-10 pointer-events-none md:hidden">
+            <span className="text-white/90 text-xs animate-pulse">❮</span>
+          </div>
+
+          <div className="max-w-[1180px] mx-auto px-4 relative">
             <nav className="flex overflow-x-auto scrollbar-hide">
               {NAV.map((item, i) => (
                 <Link key={i} href={item.href}
                   className="text-white/90 hover:text-[#FBBF24] hover:bg-white/10 font-sans font-bold
-                    text-[11px] tracking-[.6px] px-3 py-2.5 whitespace-nowrap transition-all">
+                    text-[11px] tracking-[.6px] px-3.5 py-2.5 whitespace-nowrap transition-all">
                   {item.label}
                 </Link>
               ))}
             </nav>
+          </div>
+
+          {/* Mũi tên phải (nhấp nháy báo hiệu vuốt) */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/50 to-transparent flex items-center justify-end pr-2 z-10 pointer-events-none md:hidden">
+            <span className="text-white/90 text-xs animate-pulse">❯</span>
           </div>
         </div>
       </header>
