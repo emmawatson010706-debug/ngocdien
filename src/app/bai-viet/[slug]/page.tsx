@@ -1,8 +1,45 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "../../../components/layout/Header";
 import Footer from "../../../components/layout/Footer";
 import { ARTS, CATS } from "../../../data/mockData";
+
+// --- BỘ MÁY TẠO THẺ META TỰ ĐỘNG CHO FACEBOOK/ZALO ---
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const article = ARTS.find(a => a.slug === params.slug);
+
+  if (!article) {
+    return {
+      title: 'Không tìm thấy bài viết | Xóm Ngọc Điền',
+    };
+  }
+
+  const url = `https://ngocdien.info.vn/bai-viet/${article.slug}`;
+  const imageUrl = article.img.replace("400/220", "800/440");
+
+  return {
+    title: `${article.title} | Xóm Ngọc Điền`,
+    description: article.excerpt,
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      url: url,
+      siteName: 'Cổng thông tin Xóm Ngọc Điền',
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 440,
+          alt: article.title,
+        },
+      ],
+      locale: 'vi_VN',
+      type: 'article',
+    },
+  };
+}
+// ------------------------------------------------------
 
 export default function ArticlePage({ params }: { params: { slug: string } }) {
   // Tìm bài viết tương ứng với đường link (slug)
