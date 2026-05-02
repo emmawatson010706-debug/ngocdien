@@ -99,7 +99,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             padding:"14px 0", borderTop:"1px solid #EDE5D8", borderBottom:"1px solid #EDE5D8" }}>
             <span style={{ fontSize:12, fontWeight:700, color:"#888" }}>CHIA SẺ:</span>
             
-            <ShareButton url={url} title={article.title} excerpt={article.excerpt} />
+            <ShareButton slug="{article.slug}" title="{article.title}" excerpt="{article.excerpt}"/>
 
           </div>
 
