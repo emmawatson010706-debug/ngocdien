@@ -2,7 +2,10 @@
 
 import React from "react";
 
-export default function ShareButton({ title, excerpt, url }: { title: string, excerpt: string, url: string }) {
+export default function ShareButton({ title, excerpt, slug }: { title: string, excerpt: string, slug: string }) {
+  // TẠO ĐƯỜNG LINK CHUẨN XÁC VỚI TÊN MIỀN XỊN
+  const shareUrl = `https://www.ngocdien.info.vn/bai-viet/${slug}`;
+
   const handleShare = async () => {
     // Gọi tính năng chia sẻ gốc của điện thoại
     if (navigator.share) {
@@ -10,14 +13,14 @@ export default function ShareButton({ title, excerpt, url }: { title: string, ex
         await navigator.share({
           title: title + " | Xóm Ngọc Điền",
           text: excerpt,
-          url: url,
+          url: shareUrl,
         });
       } catch (err) {
         console.log("Đã hủy chia sẻ");
       }
     } else {
       // Dự phòng cho máy tính bàn
-      navigator.clipboard.writeText(url);
+      navigator.clipboard.writeText(shareUrl);
       alert("Đã copy đường link! Anh/chị có thể dán vào Zalo hoặc Facebook để chia sẻ.");
     }
   };
