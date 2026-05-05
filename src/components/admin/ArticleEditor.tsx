@@ -8,29 +8,52 @@ import Link from '@tiptap/extension-link';
 import Youtube from '@tiptap/extension-youtube';
 import { supabase } from '@/lib/supabase/client';
 import { toSlug } from '@/lib/utils';
-import type { Article, Category } from '@/types/database';
+import type { Article } from '@/types/database';
 
-// 🔥 Danh sách chuyên mục "cứu cánh" nếu hệ thống chưa kịp load
-const DEFAULT_CATEGORIES = [
-  { id: 'tin-tuc', name: 'Tin tức', icon: '📰' },
-  { id: 'nguoi-ngoc-dien', name: 'Người Ngọc Điền', icon: '👥' },
-  { id: 'lich-su', name: 'Lịch sử', icon: '📜' },
-  { id: 'tieng-lang', name: 'Tiếng làng', icon: '✍️' },
-  { id: 'di-tich', name: 'Di tích', icon: '🏛️' },
-  { id: 'le-hoi', name: 'Lễ hội', icon: '🎊' },
-  { id: 'thu-vien', name: 'Thư viện', icon: '📚' },
+// 🔥 GIA PHẢ CHUYÊN MỤC CỦA XÓM NGỌC ĐIỀN (Gồm cả Cha, Con, Cháu)
+const ALL_CATEGORIES = [
+  { id: 'tin-tuc', name: '📰 TIN TỨC', isParent: true },
+  { id: 'thong-bao', name: '—— Thông báo' },
+  { id: 'su-kien', name: '—— Sự kiện' },
+
+  { id: 'nguoi-ngoc-dien', name: '👥 NGƯỜI NGỌC ĐIỀN', isParent: true },
+  { id: 'nguoi-ngoc-dien-chung', name: '—— Giới thiệu chung' },
+  { id: 'me-vnah', name: '—— Mẹ Việt Nam Anh hùng' },
+  { id: 'liet-sy', name: '—— Liệt sỹ' },
+  { id: 'anh-hung', name: '—— Anh hùng LĐ Cao Lục' },
+  { id: 'dang-vien', name: '—— Đảng viên đầu tiên' },
+
+  { id: 'lich-su', name: '📜 LỊCH SỬ', isParent: true },
+
+  { id: 'tieng-lang', name: '✍️ TIẾNG LÀNG', isParent: true },
+  { id: 'tan-van', name: '—— Tản văn' },
+  { id: 'tho', name: '—— Thơ' },
+  { id: 'kham-pha', name: '—— Khám phá' },
+  { id: 'goc-nhin-thang', name: '—— Góc nhìn thẳng' },
+  { id: 'podcast', name: '—— Podcast' },
+
+  { id: 'di-tich', name: '🏛️ DI TÍCH', isParent: true },
+  { id: 'den', name: '—— Đền Ngọc Điền' },
+  { id: 'gieng', name: '—— Giếng làng' },
+
+  { id: 'le-hoi', name: '🎊 LỄ HỘI', isParent: true },
+  { id: 'le-hoi-den', name: '—— Lễ hội Đền' },
+  { id: 'le-hoi-xom', name: '—— Lễ hội Xóm' },
+  { id: 'le-hoi-gieng', name: '—— Lễ hội Giếng' },
+
+  { id: 'thu-vien', name: '📚 THƯ VIỆN', isParent: true },
+  { id: 'huong-uoc', name: '—— Hương ước 1883' },
+  { id: 'dang-bo', name: '—— Lịch sử Đảng bộ' }
 ];
 
 interface Props {
   article?: Article;
-  categories?: Category[];
 }
 
-export default function ArticleEditor({ article, categories }: Props) {
+export default function ArticleEditor({ article }: Props) {
   const router = useRouter();
   const isEdit = !!article;
 
-  // 🔥 Đã sửa để đọc đúng cột 'cat' và 'img' từ database
   const [form, setForm] = useState({
     title:       article?.title ?? '',
     slug:        article?.slug ?? '',
@@ -47,9 +70,6 @@ export default function ArticleEditor({ article, categories }: Props) {
   const [uploading, setUploading]       = useState(false);
   const [saving, setSaving]             = useState(false);
   const [error, setError]               = useState('');
-
-  // Nếu file ngoài chưa truyền chuyên mục vào, lấy danh sách dự phòng
-  const activeCategories = categories && categories.length > 0 ? categories : DEFAULT_CATEGORIES;
 
   const editor = useEditor({
     extensions: [
@@ -80,12 +100,13 @@ export default function ArticleEditor({ article, categories }: Props) {
 
   const save = async (publish?: boolean) => {
     if (!form.title.trim()) { setError('Vui lòng nhập tiêu đề'); return; }
+    if (!form.category_id) { setError('Vui lòng chọn 1 chuyên mục!'); return; }
     setSaving(true); setError('');
 
     const payload = {
       title:   form.title,
       slug:    form.slug || toSlug(form.title),
-      cat:     form.category_id || 'tin-tuc', 
+      cat:     form.category_id, 
       date:    new Date().toLocaleDateString('vi-VN'),
       img:     thumbnailUrl || '',
       excerpt: form.excerpt || '',
@@ -224,12 +245,22 @@ export default function ArticleEditor({ article, categories }: Props) {
           </div>
 
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <label className="admin-label">Chuyên mục</label>
+            <label className="admin-label">Chuyên mục *</label>
             <select value={form.category_id} onChange={e => set('category_id', e.target.value)}
               className="admin-input">
-              <option value="">— Chọn chuyên mục —</option>
-              {activeCategories.map(c => (
-                <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
+              <option value="">— Mời chọn chuyên mục —</option>
+              {ALL_CATEGORIES.map(c => (
+                <option 
+                  key={c.id} 
+                  value={c.id} 
+                  disabled={c.isParent} /* Không cho chọn thẳng mục Cha nếu nó chỉ là vỏ bọc */
+                  style={{ 
+                    fontWeight: c.isParent ? 'bold' : 'normal',
+                    color: c.isParent ? '#9B1B14' : '#000'
+                  }}
+                >
+                  {c.name}
+                </option>
               ))}
             </select>
           </div>
