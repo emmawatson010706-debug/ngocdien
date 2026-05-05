@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
-// 🔥 Đã đổi sang dùng Cáp xịn của Server để chống chập mạch
+// 🔥 1. Đã sửa lại đường dẫn dùng @ để không bao giờ bị lỗi "Không tìm thấy file"
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 const CATEGORY_TREE: Record<string, string[]> = {
@@ -57,7 +57,15 @@ function ACard({ a }: { a: any }) {
   );
 }
 
-export default async function CategoryPage({ params }: { params: any }) {
+// 🔥 2. Đã khai báo rõ ràng kiểu dữ liệu để Vercel không chặn cổng
+interface PageProps {
+  params: {
+    cat?: string;
+    slug?: string;
+  };
+}
+
+export default async function CategoryPage({ params }: PageProps) {
   const rawCat = params?.cat || params?.slug || "tieng-lang";
   const currentCat = rawCat.toLowerCase();
   
@@ -68,7 +76,7 @@ export default async function CategoryPage({ params }: { params: any }) {
   
   const familyIds = CATEGORY_TREE[currentCat] || [currentCat];
 
-  // 🔥 Gọi server client chuẩn để hút dữ liệu
+  // Gọi server client chuẩn để hút dữ liệu
   const sb = createServerSupabase();
   const { data } = await sb
     .from('articles')
