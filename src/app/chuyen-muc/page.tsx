@@ -3,18 +3,17 @@ import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { supabase } from "@/lib/supabase/client";
 
-// 🔥 1. SƠ ĐỒ GIA PHẢ: Dạy cho máy biết mục Cha gồm những mục Con nào
+// 🔥 1. SƠ ĐỒ GIA PHẢ: Đã bổ sung cả "tan-man" và "tan-van"
 const CATEGORY_TREE: Record<string, string[]> = {
   'tin-tuc': ['tin-tuc', 'thong-bao', 'su-kien'],
   'nguoi-ngoc-dien': ['nguoi-ngoc-dien', 'nguoi-ngoc-dien-chung', 'me-vnah', 'liet-sy', 'anh-hung', 'dang-vien'],
   'lich-su': ['lich-su'],
-  'tieng-lang': ['tieng-lang', 'tan-van', 'tho', 'kham-pha', 'goc-nhin-thang', 'podcast'],
+  'tieng-lang': ['tieng-lang', 'tan-van', 'tan-man', 'tho', 'kham-pha', 'goc-nhin-thang', 'podcast'],
   'di-tich': ['di-tich', 'den', 'gieng'],
   'le-hoi': ['le-hoi', 'le-hoi-den', 'le-hoi-xom', 'le-hoi-gieng'],
   'thu-vien': ['thu-vien', 'huong-uoc', 'dang-bo']
 };
 
-// 🔥 2. TRANG TRÍ MẶT TIỀN: Tên và Icon của các mục Cha
 const PARENT_INFO: Record<string, { label: string, icon: string }> = {
   'tin-tuc': { label: 'TIN TỨC', icon: '📰' },
   'nguoi-ngoc-dien': { label: 'NGƯỜI NGỌC ĐIỀN', icon: '👥' },
@@ -25,29 +24,26 @@ const PARENT_INFO: Record<string, { label: string, icon: string }> = {
   'thu-vien': { label: 'THƯ VIỆN', icon: '📚' }
 };
 
-// 🔥 3. NHÃN DÁN CHO BÀI VIẾT (Ví dụ bài thuộc Tản văn thì dán nhãn "Tản văn")
 const CAT_LABELS: Record<string, string> = {
   'tin-tuc': 'Tin tức', 'thong-bao': 'Thông báo', 'su-kien': 'Sự kiện',
-  'nguoi-ngoc-dien': 'Người Ngọc Điền', 'nguoi-ngoc-dien-chung': 'Giới thiệu chung', 'me-vnah': 'Mẹ VNAH', 'liet-sy': 'Liệt sỹ', 'anh-hung': 'Anh hùng', 'dang-vien': 'Đảng viên',
-  'tieng-lang': 'Tiếng làng', 'tan-van': 'Tản văn', 'tho': 'Thơ', 'kham-pha': 'Khám phá', 'goc-nhin-thang': 'Góc nhìn', 'podcast': 'Podcast',
+  'nguoi-ngoc-dien': 'Người Ngọc Điền', 'nguoi-ngoc-dien-chung': 'Giới thiệu', 'me-vnah': 'Mẹ VNAH', 'liet-sy': 'Liệt sỹ', 'anh-hung': 'Anh hùng', 'dang-vien': 'Đảng viên',
+  'tieng-lang': 'Tiếng làng', 'tan-van': 'Tản văn', 'tan-man': 'Tản mạn', 'tho': 'Thơ', 'kham-pha': 'Khám phá', 'goc-nhin-thang': 'Góc nhìn', 'podcast': 'Podcast',
   'di-tich': 'Di tích', 'den': 'Đền Ngọc Điền', 'gieng': 'Giếng làng',
   'le-hoi': 'Lễ hội', 'le-hoi-den': 'Lễ hội Đền', 'le-hoi-xom': 'Lễ hội Xóm', 'le-hoi-gieng': 'Lễ hội Giếng',
-  'thu-vien': 'Thư viện', 'huong-uoc': 'Hương ước 1883', 'dang-bo': 'Đảng bộ'
+  'thu-vien': 'Thư viện', 'huong-uoc': 'Hương ước', 'dang-bo': 'Đảng bộ'
 };
 
-// Giao diện 1 thẻ bài viết thu gọn
 function ACard({ a }: { a: any }) {
   return (
     <Link href={`/bai-viet/${a.slug}`} 
       style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:"1px solid #E8DDD0", 
         textDecoration:"none", color:"inherit", display:"block", transition:"box-shadow .15s" }}>
-      {/* Rút ảnh từ Supabase, nếu mất ảnh thì thay bằng logo mặc định */}
       <img src={a.img || '/logo.png'} alt={a.title} style={{ width:"100%", height:140, objectFit:"cover", display:"block" }} />
       <div style={{ padding:"10px 12px" }}>
         <div style={{ display:"flex", gap:6, marginBottom:6 }}>
           <span style={{ background:"#B91C1C", color:"#fff", fontSize:9, fontWeight:700, 
             letterSpacing:".8px", padding:"2px 7px", borderRadius:2, textTransform:"uppercase" }}>
-            {CAT_LABELS[a.cat] || a.cat}
+            {CAT_LABELS[a.cat] || a.cat || "Tin tức"}
           </span>
           <span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
         </div>
@@ -63,18 +59,19 @@ function ACard({ a }: { a: any }) {
 
 // Bật chế độ async để gọi dữ liệu từ Supabase
 export default async function CategoryPage({ params }: { params: any }) {
-  // Bắt đúng cái tên đường link đang truy cập (ví dụ: tieng-lang)
-  const currentCat = params?.slug || params?.cat || "";
+  // 🔥 Bắt đúng tên đường link, Ép về CHỮ THƯỜNG để không bị lệch sóng
+  const rawCat = params?.cat || params?.slug || "";
+  const currentCat = rawCat.toLowerCase();
   
   const categoryInfo = PARENT_INFO[currentCat] || { 
-    label: currentCat.replace("-", " "), 
+    label: currentCat.replace("-", " ").toUpperCase(), 
     icon: "📄" 
   };
   
-  // 👉 PHÉP THUẬT NẰM Ở ĐÂY: Dò trong Gia phả, nếu là mục Cha thì lấy danh sách tất cả các mục Con
+  // 👉 Mở kho lấy đúng danh sách các mục Con cháu
   const familyIds = CATEGORY_TREE[currentCat] || [currentCat];
 
-  // 👉 HÚT DỮ LIỆU TỪ SUPABASE: Lấy TẤT CẢ bài viết có mã chuyên mục nằm trong danh sách familyIds
+  // 👉 Lệnh hút toàn bộ bài viết thuộc dòng họ đó
   const { data } = await supabase
     .from('articles')
     .select('*')
