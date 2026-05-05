@@ -62,7 +62,7 @@ export default function ArticleEditor({ article, categories }: Props) {
     setThumbnailUrl(publicUrl);
   };
 
-  // 🔥 ĐÃ SỬA LẠI HÀM SAVE CHO KHỚP VỚI KÉT SẮT SUPABASE CỦA ANH 🔥
+  // 🔥 ĐÃ SỬA LẠI HÀM SAVE CHO KHỚP VỚI KÉT SẮT SUPABASE
   const save = async (publish?: boolean) => {
     if (!form.title.trim()) { setError('Vui lòng nhập tiêu đề'); return; }
     setSaving(true); setError('');
@@ -89,7 +89,6 @@ export default function ArticleEditor({ article, categories }: Props) {
       return; 
     }
 
-    // NẾU THÀNH CÔNG SẼ HIỆN BẢNG THÔNG BÁO NÀY
     alert('🎉 ĐĂNG BÀI THÀNH CÔNG VÀO KÉT SẮT SUPABASE!\n\n(Lưu ý: Bạn sẽ bị chuyển về trang Danh sách. Vì trang Danh sách vẫn đang dùng số liệu ảo nên bạn sẽ chưa thấy bài hiện ra. Đừng lo, bài đã nằm an toàn trong kho!)');
 
     router.push('/admin/bai-viet');
@@ -188,32 +187,41 @@ export default function ArticleEditor({ article, categories }: Props) {
 
         {/* Sidebar */}
         <div className="space-y-4">
-          {/* Thumbnail */}
+          
+          {/* TẠI ĐÂY: KHU VỰC ẢNH ĐẠI DIỆN ĐÃ ĐƯỢC LÀM LẠI CÓ NÚT XÓA (X) */}
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <label className="admin-label">Ảnh đại diện</label>
-            {thumbnailUrl && (
-              <div className="mb-3 rounded-lg overflow-hidden aspect-video">
-                <img src={thumbnailUrl} alt="" className="w-full h-full object-cover" />
+            <label className="admin-label mb-3">Ảnh đại diện</label>
+            
+            {thumbnailUrl ? (
+              <div className="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm group">
+                <img src={thumbnailUrl} alt="Thumbnail" className="w-full h-auto aspect-video object-cover" />
+                
+                {/* NÚT XÓA ẢNH MÀU ĐỎ NẰM ĐÈ LÊN ẢNH */}
+                <button 
+                  type="button" 
+                  onClick={() => setThumbnailUrl('')}
+                  className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full font-bold shadow-md transition-transform hover:scale-110 z-10"
+                  title="Xóa ảnh này"
+                  style={{ backgroundColor: '#dc2626' }}
+                >
+                  ✕
+                </button>
               </div>
-            )}
-            <label className="cursor-pointer">
-              <input type="file" accept="image/*" className="hidden"
-                onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])} />
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center
-                hover:border-red/40 hover:bg-red/5 transition-colors">
-                <div className="text-2xl mb-1">{uploading ? '⏳' : '📷'}</div>
-                <p className="text-xs text-gray-500 font-sans">
-                  {uploading ? 'Đang upload...' : 'Click để chọn ảnh'}
-                </p>
-              </div>
-            </label>
-            {thumbnailUrl && (
-              <button onClick={() => setThumbnailUrl('')}
-                className="mt-2 text-xs text-red font-sans hover:underline w-full text-center">
-                Xóa ảnh
-              </button>
+            ) : (
+              <label className="cursor-pointer block">
+                <input type="file" accept="image/*" className="hidden"
+                  onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])} />
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center
+                  hover:border-[#B91C1C]/50 hover:bg-[#B91C1C]/5 transition-all">
+                  <div className="text-3xl mb-2">{uploading ? '⏳' : '📷'}</div>
+                  <p className="text-sm text-gray-500 font-sans font-medium">
+                    {uploading ? 'Đang tải lên...' : 'Click để chọn ảnh'}
+                  </p>
+                </div>
+              </label>
             )}
           </div>
+          {/* KẾT THÚC KHU VỰC ẢNH ĐẠI DIỆN */}
 
           {/* Category */}
           <div className="bg-white border border-gray-200 rounded-xl p-4">
