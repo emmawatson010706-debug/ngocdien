@@ -48,6 +48,7 @@ const ALL_CATEGORIES = [
 
 interface Props {
   article?: Article;
+  categories?: any; /* Thêm dòng này để mở cửa nhận dữ liệu, chống báo lỗi */
 }
 
 export default function ArticleEditor({ article }: Props) {
