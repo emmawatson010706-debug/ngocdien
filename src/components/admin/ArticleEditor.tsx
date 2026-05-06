@@ -9,8 +9,8 @@ import Youtube from '@tiptap/extension-youtube';
 
 // 🔥 IMPORT 3 PHỤ TÙNG MỚI: MÀU SẮC & CĂN LỀ
 import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
-import Color from '@tiptap/extension-color';
+import { TextStyle } from '@tiptap/extension-text-style';
+import { Color } from '@tiptap/extension-color';
 
 import { supabase } from '@/lib/supabase/client';
 import { toSlug } from '@/lib/utils';
