@@ -2,13 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-// 🔥 1. TRẢ LẠI CHÌA KHÓA CLIENT (Vì Trang chủ & Admin đang dùng cái này đọc bài rất mượt)
+// 🔥 1. TRẢ LẠI CHÌA KHÓA CLIENT
 import { supabase } from "@/lib/supabase/client";
 
-// 🔥 2. ĐÓNG ĐINH 2 LÁ BÙA CHỐNG CACHE MẠNH NHẤT TỪ NEXT.JS
+// 🔥 2. ĐÓNG ĐINH 2 LÁ BÙA CHỐNG CACHE MẠNH NHẤT
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+// SƠ ĐỒ GIA PHẢ: Giúp trang Cha tìm thấy bài của các mục Con/Cháu
 const CATEGORY_TREE: Record<string, string[]> = {
   'tin-tuc': ['tin-tuc', 'thong-bao', 'su-kien'],
   'nguoi-ngoc-dien': ['nguoi-ngoc-dien', 'nguoi-ngoc-dien-chung', 'me-vnah', 'liet-sy', 'anh-hung', 'dang-vien'],
@@ -66,27 +67,34 @@ export default async function CategoryPage({ params }: { params: any }) {
   const rawCat = params?.cat || params?.slug || "";
   const currentCat = rawCat.toLowerCase();
   
-  const categoryInfo = PARENT_INFO[currentCat] || { 
-    label: currentCat.replace("-", " ").toUpperCase(), 
+  // Xác định thông tin hiển thị (Banner)
+  // Nếu là mục con, Banner vẫn lấy theo mục cha để đồng bộ giao diện
+  let parentKey = currentCat;
+  for (const [parent, children] of Object.entries(CATEGORY_TREE)) {
+    if (children.includes(currentCat)) {
+      parentKey = parent;
+      break;
+    }
+  }
+
+  const categoryInfo = PARENT_INFO[parentKey] || { 
+    label: CAT_LABELS[currentCat] || currentCat.replace("-", " ").toUpperCase(), 
     icon: "📄" 
   };
   
-  // 👉 Mở kho lấy đúng danh sách các mục Con cháu
+  // 🔥 LOGIC THÔNG MINH:
+  // 1. Nếu currentCat là mục CHA (ví dụ: tieng-lang) -> familyIds lấy tất cả con cháu.
+  // 2. Nếu currentCat là mục CON (ví dụ: tan-van) -> familyIds chỉ chứa chính nó.
   const familyIds = CATEGORY_TREE[currentCat as keyof typeof CATEGORY_TREE] || [currentCat];
-  console.log("Đang tìm bài cho các mục:", familyIds); // Dòng này để anh kiểm tra trong Terminal
 
-
-  // 🔥 3. Hút toàn bộ bài viết bằng CHÌA KHÓA CLIENT
+  // 🔥 3. Hút toàn bộ bài viết bài bản bằng CHÌA KHÓA CLIENT
   const { data, error } = await supabase
     .from('articles')
     .select('*')
     .in('cat', familyIds)
     .order('id', { ascending: false });
     
-  if (error) {
-    console.error("Lỗi hút bài:", error);
-  }
-    
+  if (error) console.error("Lỗi hút bài:", error);
   const arts = data || [];
 
   return (
@@ -103,7 +111,7 @@ export default async function CategoryPage({ params }: { params: any }) {
             fontSize:24 }}>{categoryInfo.icon}</div>
           <div>
             <h1 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900 }}>
-              {categoryInfo.label?.toUpperCase()}
+              {currentCat === parentKey ? categoryInfo.label?.toUpperCase() : CAT_LABELS[currentCat]?.toUpperCase()}
             </h1>
             <p style={{ opacity:.7, fontSize:12, marginTop:3 }}>
               {arts.length > 0 ? `${arts.length} bài viết` : "Chuyên mục nội dung"}
