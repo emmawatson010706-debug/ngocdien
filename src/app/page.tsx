@@ -1125,59 +1125,115 @@ function GopYPage() {
 }
 
 /* ═══════════════════════════════════════════
-   CATEGORY PAGE (CÓ PHÂN TRANG / LOAD MORE)
+   CATPAGE
 ═══════════════════════════════════════════ */
-function CatPage({ cat, setNav }: { cat?: any, setNav?: any }) {
+function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
   const [arts, setArts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
-  const limit = 6; // Hút 6 bài mỗi lần để web chạy nhanh
+  const limit = 6;
 
   if (cat === "gop-y") return <GopYPage />;
 
   useEffect(() => {
     setArts([]); setPage(0); setHasMore(false);
     fetchCat(0);
-  }, [cat]);
+  }, [cat, sub]);
 
   const fetchCat = async (pageNum: any) => {
     setLoading(true);
-    // Tính toán vị trí cắt dữ liệu: Từ bài (page * 6) đến bài ((page+1) * 6 - 1)
-    const { data, error } = await supabase
-      .from('articles').select('*').eq('cat', cat).order('id', { ascending: false })
+
+    const slugMap: any = {
+      "Thơ": ["tho", "thơ"],
+      "Tản văn": ["tan-van", "tản văn"],
+      "Khám phá": ["kham-pha"],
+      "Góc nhìn thẳng": ["goc-nhin-thang"],
+      "Podcast": ["podcast"],
+      "Mẹ Việt Nam Anh hùng": ["me-vnah"],
+      "Liệt sỹ": ["liet-sy"],
+      "Anh hùng lao động Cao Lục": ["anh-hung"],
+      "Đảng viên đầu tiên": ["dang-vien"],
+      "Đền Ngọc Điền": ["den", "đền"],
+      "Giếng làng": ["gieng", "giếng"],
+      "Lễ hội đền": ["le-hoi-den"],
+      "Lễ hội xóm": ["le-hoi-xom"],
+      "Lễ hội giếng": ["le-hoi-gieng"],
+      "Hương ước 1883": ["huong-uoc"],
+      "Thông báo": ["thong-bao"],
+      "Sự kiện": ["su-kien"]
+    };
+
+    const treeMap: any = {
+      "tieng-lang": ["tieng-lang", "tho", "thơ", "tan-van", "tản văn", "kham-pha", "goc-nhin-thang", "podcast"],
+      "nguoi-ngoc-dien": ["nguoi-ngoc-dien", "me-vnah", "liet-sy", "anh-hung", "dang-vien"],
+      "di-tich": ["di-tich", "den", "đền", "gieng", "giếng"],
+      "le-hoi": ["le-hoi", "le-hoi-den", "le-hoi-xom", "le-hoi-gieng"],
+      "thu-vien": ["thu-vien", "huong-uoc", "dang-bo"],
+      "tin-tuc": ["tin-tuc", "thong-bao", "su-kien"]
+    };
+
+    let searchIds = [];
+    if (sub) {
+      searchIds = slugMap[sub] || [sub];
+    } else {
+      searchIds = treeMap[cat] || [cat];
+    }
+
+    const { data } = await supabase
+      .from('articles')
+      .select('*')
+      .in('cat', searchIds)
+      .order('id', { ascending: false })
       .range(pageNum * limit, (pageNum + 1) * limit - 1);
       
     if (data) {
       setArts(prev => pageNum === 0 ? data : [...prev, ...data]);
-      setHasMore(data.length === limit); // Nếu lấy đủ 6 bài nghĩa là kho vẫn còn hàng
+      setHasMore(data.length === limit);
       setPage(pageNum + 1);
     }
     setLoading(false);
   };
 
-  const info = CATS.find(c=>c.slug===cat) || { label:cat, icon:"📄" };
-  const goArt = (a: any) => { setNav({ page:"article", article:a }); window.scrollTo(0,0); };
+  const info = CATS.find(c => c.slug === cat) || { label: cat, icon: "📄" };
+  const goArt = (a: any) => { setNav({ page: "article", article: a }); window.scrollTo(0,0); };
+  const subList = (SUBS as any)[cat] || [];
 
   return (
     <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px" }}>
       <div style={{ background:"linear-gradient(135deg,#9B1B14,#B91C1C)", color:"#fff", borderRadius:"0 0 12px 12px", padding:"22px 20px", marginBottom:22, display:"flex", alignItems:"center", gap:16 }}>
         <div style={{ width:50, height:50, background:"rgba(255,255,255,.15)", borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>{info.icon}</div>
         <div>
-          <h1 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900 }}>{info.label}</h1>
+          <h1 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900 }}>{sub ? sub.toUpperCase() : info.label.toUpperCase()}</h1>
           <p style={{ opacity:.7, fontSize:12, marginTop:3 }}>Chuyên mục nội dung</p>
         </div>
       </div>
+
+      {subList.length > 0 && (
+        <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginBottom:25, paddingBottom:15, borderBottom:"1px solid #E8DDD0" }}>
+          <button onClick={() => setNav({ page: "category", cat: cat, sub: "" })}
+            style={{ padding:"6px 15px", borderRadius:20, fontSize:13, fontWeight:600, border:"none", cursor:"pointer",
+            background: !sub ? "#B91C1C" : "#fff", color: !sub ? "#fff" : "#666", boxShadow: !sub ? "none" : "0 1px 3px rgba(0,0,0,0.1)" }}>
+            Tất cả
+          </button>
+          {subList.map((sItem: string) => (
+            <button key={sItem} onClick={() => setNav({ page: "category", cat: cat, sub: sItem })}
+              style={{ padding:"6px 15px", borderRadius:20, fontSize:13, fontWeight:600, border:"none", cursor:"pointer",
+              background: sub === sItem ? "#B91C1C" : "#fff", color: sub === sItem ? "#fff" : "#666", boxShadow: sub === sItem ? "none" : "0 1px 3px rgba(0,0,0,0.1)" }}>
+              {sItem}
+            </button>
+          ))}
+        </div>
+      )}
 
       {arts.length > 0 ? (
         <>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:16 }}>
             {arts.map(a=><ACard key={a.id} a={a} onClick={goArt}/>)}
           </div>
-          
           {hasMore && (
             <div style={{ textAlign:"center", marginTop:35, marginBottom:40 }}>
-              <button onClick={() => fetchCat(page)} disabled={loading} style={{ background:"#fff", border:"2px solid #B91C1C", color:"#B91C1C", padding:"10px 28px", borderRadius:30, fontWeight:900, cursor:"pointer", transition:"all 0.2s" }} onMouseEnter={e=>{e.currentTarget.style.background="#B91C1C";e.currentTarget.style.color="#fff"}} onMouseLeave={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.color="#B91C1C"}}>
+              <button onClick={() => fetchCat(page)} disabled={loading} style={{ background:"#fff", border:"2px solid #B91C1C", color:"#B91C1C", padding:"10px 28px", borderRadius:30, fontWeight:900, cursor:"pointer" }}>
                 {loading ? "⏳ Đang tải..." : "↓ Tải thêm bài viết"}
               </button>
             </div>
@@ -1189,7 +1245,7 @@ function CatPage({ cat, setNav }: { cat?: any, setNav?: any }) {
           <h2 style={{ fontFamily:"'Lora', serif", fontSize:18, fontWeight:700, marginBottom:8 }}>Chưa có bài viết</h2>
         </div>
       ) : (
-        <p style={{textAlign:'center', color:'#888'}}>Đang tải dữ liệu từ két sắt...</p>
+        <p style={{textAlign:'center', color:'#888'}}>Đang tải dữ liệu...</p>
       )}
     </div>
   );
@@ -2163,30 +2219,27 @@ function SearchPage({ setNav }: { setNav?: any }) {
 }
 
 /* ═══════════════════════════════════════════
-   APP ROOT (ĐÃ ĐỤC ỐNG NƯỚC SUPABASE + TÌM KIẾM)
+   APP ROOT 
 ═══════════════════════════════════════════ */
 export default function App() {
-  const [nav, setNav] = useState({ page:"home", cat: "", article: null });
+  const [nav, setNav] = useState({ page:"home", cat: "", sub: "", article: null });
   const [dbLoaded, setDbLoaded] = useState(false);
 
   useEffect(() => {
-    // Rút lõi: Hút bài từ két sắt Supabase
     const fetchArts = async () => {
       const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
       if (data && data.length > 0) {
-        // Bí thuật: Trút bỏ dữ liệu ảo, bơm thẳng dữ liệu thật vào toàn bộ trang
         ARTS.length = 0; 
         ARTS.push(...(data as any[]));
       }
-      setDbLoaded(true); // Cập nhật lại toàn bộ mặt tiền
+      setDbLoaded(true); 
     };
     fetchArts();
   }, []);
 
-  // Bấm nút Quản trị sẽ nhảy thẳng vào khu App Router xịn xò anh em mình đã làm
   if (nav.page === "admin-login" || nav.page === "admin") {
     window.location.href = '/admin';
-    return <div style={{padding:50, textAlign:'center'}}>Đang chuyển hướng vào Khu vực quản trị...</div>;
+    return <div style={{padding:50, textAlign:'center'}}>Đang chuyển hướng...</div>;
   }
 
   return (
@@ -2195,12 +2248,9 @@ export default function App() {
       <Header setNav={setNav}/>
       <Ticker/>
       {nav.page === "home" && <><Hero setNav={setNav}/><Home setNav={setNav}/></>}
-      {nav.page === "category" && <CatPage cat={nav.cat} setNav={setNav}/>}
+      {nav.page === "category" && <CatPage cat={nav.cat} sub={nav.sub} setNav={setNav}/>}
       {nav.page === "article"  && <ArtPage article={nav.article} setNav={setNav}/>}
-      
-      {/* ĐÃ CHÈN THÊM TRANG TÌM KIẾM Ở ĐÂY */}
       {nav.page === "search"   && <SearchPage setNav={setNav}/>}
-      
       <Footer setNav={setNav}/>
     </div>
   );
