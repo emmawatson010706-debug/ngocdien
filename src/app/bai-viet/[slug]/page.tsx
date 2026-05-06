@@ -1,93 +1,99 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import Header from "../../../components/layout/Header";
-import Footer from "../../../components/layout/Footer";
-import { ARTS, CATS } from "../../../data/mockData";
-import ShareButton from "../../../components/ShareButton";
+'use client';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { supabase } from '@/lib/supabase/client';
 
-// --- BỘ MÁY TẠO THẺ META TỰ ĐỘNG ---
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const article = ARTS.find(a => a.slug === params.slug);
+export default function AdminArticlesPage() {
+  const [articles, setArticles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!article) return { title: 'Không tìm thấy bài viết | Xóm Ngọc Điền' };
+  // Vừa vào trang là tự động hút dữ liệu từ Supabase
+  useEffect(() => {
+    fetchArticles();
+  }, []);
 
-  const url = `https://www.ngocdien.info.vn/bai-viet/${article.slug}`;
-  const rawImageUrl = article.img.replace("400/220", "800/440");
-  
-  // CHIÊU BÀI ÉP TÊN MIỀN VÀO ẢNH CHO FACEBOOK
-  const absoluteImageUrl = rawImageUrl.startsWith("http") ? rawImageUrl : `https://www.ngocdien.info.vn${rawImageUrl}`;
-
-  return {
-    title: `${article.title} | Xóm Ngọc Điền`,
-    description: article.excerpt,
-    openGraph: {
-      title: article.title,
-      description: article.excerpt,
-      url: url,
-      siteName: 'Cổng thông tin Xóm Ngọc Điền',
-      images: [
-        {
-          url: absoluteImageUrl, // Gắn ảnh đã có tên miền
-          width: 800,
-          height: 440,
-          alt: article.title,
-        },
-      ],
-      locale: 'vi_VN',
-      type: 'article',
-    },
+  const fetchArticles = async () => {
+    setLoading(true);
+    // Hút TẤT CẢ bài viết, không lọc, xếp bài mới nhất lên trên
+    const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
+    setArticles(data || []);
+    setLoading(false);
   };
-}
-// ------------------------------------------------------
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
-  const article = ARTS.find(a => a.slug === params.slug);
-  if (!article) return notFound();
-
-  const catLabel = CATS.find(c => c.slug === article.cat)?.label || article.cat;
+  const deleteArticle = async (id: string) => {
+    if (!confirm('Anh Thái Lão có chắc chắn muốn xóa bài viết này không?')) return;
+    const { error } = await supabase.from('articles').delete().eq('id', id);
+    if (error) {
+      alert('Lỗi xóa bài: ' + error.message);
+    } else {
+      alert('Đã xóa thành công!');
+      fetchArticles(); // Xóa xong tự động load lại bảng
+    }
+  };
 
   return (
-    <div style={{ minHeight:"100vh", background:"#FEF9F2", fontFamily:"system-ui,-apple-system,sans-serif", color:"#1C1C1C" }}>
-      <Header />
-      <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px" }}>
-        <div style={{ maxWidth:800, margin:"0 auto", padding:"22px 0" }}>
-          
-          <div style={{ display:"flex", gap:6, fontSize:12, color:"#aaa", marginBottom:14, flexWrap:"wrap" }}>
-            <Link href="/" style={{ textDecoration:"none", color:"#B91C1C", fontSize:12 }}>Trang chủ</Link>
-            <span>›</span>
-            <Link href={`/chuyen-muc/${article.cat}`} style={{ textDecoration:"none", color:"#B91C1C", fontSize:12 }}>{catLabel}</Link>
-            <span>›</span>
-            <span style={{ color:"#555" }}>{article.title}</span>
-          </div>
-
-          <span style={{ background:"#B91C1C", color:"#fff", fontSize:9, fontWeight:700, padding:"2px 7px", borderRadius:2, textTransform:"uppercase", display:"inline-block" }}>{catLabel}</span>
-          
-          <h1 style={{ fontFamily:"Georgia,serif", fontSize:"clamp(20px,4vw,30px)", fontWeight:900, lineHeight:1.38, margin:"12px 0" }}>{article.title}</h1>
-          <p style={{ color:"#aaa", fontSize:12.5, marginBottom:16 }}>✍️ Ban biên tập &nbsp;·&nbsp; 📅 {article.date}</p>
-
-          <img src={article.img.replace("400/220","800/440")} alt={article.title} style={{ width:"100%", borderRadius:10, marginBottom:20, display:"block" }}/>
-          
-          <p style={{ fontStyle:"italic", color:"#555", fontSize:14, lineHeight:1.85, borderLeft:"4px solid #C8942B", paddingLeft:14, background:"#FEF9EC", padding:"12px 14px", borderRadius:"0 8px 8px 0", marginBottom:20 }}>
-            {article.excerpt}
-          </p>
-
-          <div style={{ fontSize:15, lineHeight:1.9, color:"#333" }}>
-            <p>Đây là nội dung đầy đủ của bài viết. Khi kết nối Supabase, nội dung bài sẽ được lấy từ cơ sở dữ liệu và hiển thị tại đây với đầy đủ định dạng: tiêu đề, hình ảnh, video và đoạn văn.</p>
-          </div>
-
-          <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:24, padding:"14px 0", borderTop:"1px solid #EDE5D8", borderBottom:"1px solid #EDE5D8" }}>
-            <span style={{ fontSize:12, fontWeight:700, color:"#888" }}>CHIA SẺ:</span>
-            
-            {/* GỌI NÚT CHIA SẺ MỚI */}
-            <ShareButton title={article.title} excerpt={article.excerpt} />
-
-          </div>
-
-          <Link href="/" style={{ display:"inline-block", marginTop:20, background:"#B91C1C", color:"#fff", border:"none", borderRadius:5, padding:"8px 18px", fontWeight:700, textDecoration:"none", fontSize:13 }}>← Về trang chủ</Link>
+    <div className="p-6 max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-2xl font-bold font-serif text-gray-800">Quản lý Bài viết</h1>
+          <p className="text-sm text-gray-500 mt-1">Tổng cộng: {articles.length} bài viết trong hệ thống</p>
         </div>
+        <Link href="/admin/bai-viet/tao-moi" 
+          className="bg-[#B91C1C] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-red-800 transition-colors shadow-sm">
+          + Viết bài mới
+        </Link>
       </div>
-      <Footer />
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {loading ? (
+          <div className="p-12 text-center text-gray-500 font-medium animate-pulse">⏳ Đang tải dữ liệu từ két sắt...</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                  <th className="px-5 py-4 font-bold w-24">Ảnh</th>
+                  <th className="px-5 py-4 font-bold">Tiêu đề</th>
+                  <th className="px-5 py-4 font-bold">Chuyên mục</th>
+                  <th className="px-5 py-4 font-bold">Ngày đăng</th>
+                  <th className="px-5 py-4 font-bold text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 text-sm">
+                {articles.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-10 text-center text-gray-500 italic">Chưa có bài viết nào.</td>
+                  </tr>
+                ) : articles.map((a) => (
+                  <tr key={a.id} className="hover:bg-red-50/50 transition-colors">
+                    <td className="px-5 py-3">
+                      <div className="w-16 h-10 rounded overflow-hidden border border-gray-200 shadow-sm">
+                        <img src={a.img || '/logo.png'} alt="thumbnail" className="w-full h-full object-cover" />
+                      </div>
+                    </td>
+                    <td className="px-5 py-3 font-semibold text-gray-800">{a.title}</td>
+                    <td className="px-5 py-3">
+                      <span className="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md text-xs font-medium uppercase tracking-wide">
+                        {a.cat}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-gray-500 font-medium">{a.date}</td>
+                    <td className="px-5 py-3 text-right space-x-4">
+                      {/* Link dẫn vào trang Sửa */}
+                      <Link href={`/admin/bai-viet/${a.id}`} className="text-blue-600 hover:text-blue-800 hover:underline font-bold">
+                        Sửa
+                      </Link>
+                      <button onClick={() => deleteArticle(a.id)} className="text-red-600 hover:text-red-800 hover:underline font-bold">
+                        Xóa
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
