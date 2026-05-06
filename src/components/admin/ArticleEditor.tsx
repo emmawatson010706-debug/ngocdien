@@ -16,13 +16,13 @@ import { supabase } from '@/lib/supabase/client';
 import { toSlug } from '@/lib/utils';
 import type { Article } from '@/types/database';
 
-// 🔥 GIA PHẢ CHUYÊN MỤC CỦA XÓM NGỌC ĐIỀN (Gồm cả Cha, Con, Cháu)
+// 🔥 GIA PHẢ CHUYÊN MỤC CỦA XÓM NGỌC ĐIỀN (Mục Cha giờ đã có thể bấm chọn)
 const ALL_CATEGORIES = [
-  { id: 'tin-tuc', name: '📰 TIN TỨC', isParent: true },
+  { id: 'tin-tuc', name: '🚩 TIN TỨC (Mục lớn)', isParent: true },
   { id: 'thong-bao', name: '—— Thông báo' },
   { id: 'su-kien', name: '—— Sự kiện' },
 
-  { id: 'nguoi-ngoc-dien', name: '👥 NGƯỜI NGỌC ĐIỀN', isParent: true },
+  { id: 'nguoi-ngoc-dien', name: '👥 NGƯỜI NGỌC ĐIỀN (Mục lớn)', isParent: true },
   { id: 'nguoi-ngoc-dien-chung', name: '—— Giới thiệu chung' },
   { id: 'me-vnah', name: '—— Mẹ Việt Nam Anh hùng' },
   { id: 'liet-sy', name: '—— Liệt sỹ' },
@@ -31,23 +31,23 @@ const ALL_CATEGORIES = [
 
   { id: 'lich-su', name: '📜 LỊCH SỬ', isParent: true },
 
-  { id: 'tieng-lang', name: '✍️ TIẾNG LÀNG', isParent: true },
+  { id: 'tieng-lang', name: '✍️ TIẾNG LÀNG (Mục lớn)', isParent: true },
   { id: 'tan-van', name: '—— Tản văn' },
   { id: 'tho', name: '—— Thơ' },
   { id: 'kham-pha', name: '—— Khám phá' },
   { id: 'goc-nhin-thang', name: '—— Góc nhìn thẳng' },
   { id: 'podcast', name: '—— Podcast' },
 
-  { id: 'di-tich', name: '🏛️ DI TÍCH', isParent: true },
+  { id: 'di-tich', name: '🏛️ DI TÍCH (Mục lớn)', isParent: true },
   { id: 'den', name: '—— Đền Ngọc Điền' },
   { id: 'gieng', name: '—— Giếng làng' },
 
-  { id: 'le-hoi', name: '🎊 LỄ HỘI', isParent: true },
+  { id: 'le-hoi', name: '🎊 LỄ HỘI (Mục lớn)', isParent: true },
   { id: 'le-hoi-den', name: '—— Lễ hội Đền' },
   { id: 'le-hoi-xom', name: '—— Lễ hội Xóm' },
   { id: 'le-hoi-gieng', name: '—— Lễ hội Giếng' },
 
-  { id: 'thu-vien', name: '📚 THƯ VIỆN', isParent: true },
+  { id: 'thu-vien', name: '📚 THƯ VIỆN (Mục lớn)', isParent: true },
   { id: 'huong-uoc', name: '—— Hương ước 1883' },
   { id: 'dang-bo', name: '—— Lịch sử Đảng bộ' }
 ];
@@ -84,7 +84,6 @@ export default function ArticleEditor({ article }: Props) {
       Image,
       Link.configure({ openOnClick: false }),
       Youtube.configure({ controls: true }),
-      // 🔥 BẬT CÔNG TẮC CHO 3 PHỤ TÙNG MỚI
       TextStyle,
       Color,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
@@ -135,7 +134,7 @@ export default function ArticleEditor({ article }: Props) {
       return; 
     }
 
-    alert('🎉 LƯU BÀI THÀNH CÔNG VÀO KÉT SẮT SUPABASE!');
+    alert('🎉 LƯU BÀI THÀNH CÔNG!');
     router.push('/admin/bai-viet');
     router.refresh();
   };
@@ -198,8 +197,6 @@ export default function ArticleEditor({ article }: Props) {
                 { label:'1.', action:() => editor?.chain().focus().toggleOrderedList().run(), title:'Đánh số' },
                 { label:'❝', action:() => editor?.chain().focus().toggleBlockquote().run(), title:'Trích dẫn' },
                 { label:'—', action:() => editor?.chain().focus().setHorizontalRule().run(), title:'Kẻ ngang' },
-                
-                // 🔥 NÚT CĂN LỀ CHUẨN BÁO CHÍ
                 { label:'⫷', action:() => editor?.chain().focus().setTextAlign('left').run(), title:'Căn trái' },
                 { label:'≑', action:() => editor?.chain().focus().setTextAlign('center').run(), title:'Căn giữa' },
                 { label:'≣', action:() => editor?.chain().focus().setTextAlign('justify').run(), title:'Căn đều 2 bên' },
@@ -224,7 +221,6 @@ export default function ArticleEditor({ article }: Props) {
                 </button>
               ))}
 
-              {/* 🔥 BẢNG CHỌN MÀU CHỮ THẦN THÁNH */}
               <input
                 type="color"
                 title="Đổi màu chữ"
@@ -249,7 +245,6 @@ export default function ArticleEditor({ article }: Props) {
                   type="button" 
                   onClick={() => setThumbnailUrl('')}
                   className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full font-bold shadow-md transition-transform hover:scale-110 z-10"
-                  title="Xóa ảnh này"
                   style={{ backgroundColor: '#dc2626' }}
                 >
                   ✕
@@ -279,10 +274,10 @@ export default function ArticleEditor({ article }: Props) {
                 <option 
                   key={c.id} 
                   value={c.id} 
-                  disabled={c.isParent} 
                   style={{ 
                     fontWeight: c.isParent ? 'bold' : 'normal',
-                    color: c.isParent ? '#9B1B14' : '#000'
+                    color: c.isParent ? '#B91C1C' : '#000',
+                    backgroundColor: c.isParent ? '#FFF5F5' : '#FFF'
                   }}
                 >
                   {c.name}
@@ -328,15 +323,7 @@ export default function ArticleEditor({ article }: Props) {
           padding:10px 14px; font-family:sans-serif; font-size:14px; outline:none;
           transition:border-color .15s; background:#fff; }
         .admin-input:focus { border-color:#B91C1C; }
-        select.admin-input { cursor:pointer; }
-        
-        /* Chỉnh lại nội dung bên trong khung soạn thảo để text-align hoạt động trơn tru */
-        .article-body .tiptap {
-          outline: none !important;
-        }
-        .article-body p {
-          margin-bottom: 1em;
-        }
+        select.admin-input option { padding: 8px; }
       `}</style>
     </div>
   );
