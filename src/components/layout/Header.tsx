@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-// 🔥 MENU ĐÃ ĐƯỢC CHUẨN HÓA ĐƯỜNG RAY 
 const NAV = [
   { label: 'GIỚI THIỆU', href: '/gioi-thieu', icon: '🏡', children: [] },
   { label: 'TIN TỨC', href: '/chuyen-muc/tin-tuc', icon: '📰',
@@ -35,8 +34,6 @@ const NAV = [
     ]},
   { label: 'THƯ VIỆN', href: '/chuyen-muc/thu-vien', icon: '📚',
     children: [{ label: 'Hương ước 1883', href: '/chuyen-muc/huong-uoc' }, { label: 'Lịch sử Đảng bộ', href: '/chuyen-muc/dang-bo' }] },
-  
-  // 👉 CÁC MỤC BÊN DƯỚI LÀ TRANG CHỨC NĂNG, GIỮ NGUYÊN LINK GỐC
   { label: 'CHUYỂN ĐỔI SỐ', href: '/chuyen-doi-so', icon: '💻',
     children: [
       { label: 'Dịch vụ công ↗', href: 'https://dichvucong.gov.vn', ext: true },
@@ -79,15 +76,8 @@ export default function Header() {
             📅 {new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
           <div className="flex gap-4 md:gap-5 items-center whitespace-nowrap">
-            <button onClick={() => setMenuOpen(true)} className="text-[11px] md:text-xs text-[#B91C1C] font-sans font-bold flex items-center gap-1">
-              🔍 Tìm kiếm
-            </button>
-            <Link href="/gop-y" className="text-[11px] md:text-xs text-[#B91C1C] font-sans font-bold hover:underline flex items-center gap-1">
-              🔔 Gửi bài
-            </Link>
-            <Link href="/admin" className="text-[11px] md:text-xs text-gray-500 font-sans hover:text-[#B91C1C] flex items-center gap-1">
-              ⚙ Quản trị
-            </Link>
+            <Link href="/gop-y" className="text-[11px] md:text-xs text-[#B91C1C] font-sans font-bold hover:underline">🔔 Gửi bài</Link>
+            <Link href="/admin" className="text-[11px] md:text-xs text-gray-500 font-sans hover:text-[#B91C1C]">⚙ Quản trị</Link>
           </div>
         </div>
       </div>
@@ -97,36 +87,25 @@ export default function Header() {
         <div className="max-w-[1180px] mx-auto px-4">
           <div className="flex items-center justify-center relative py-3 md:py-4">
             <Link href="/" className="text-center group">
-              <div className="font-display text-[clamp(22px,5vw,34px)] font-black text-white tracking-[3px] leading-none drop-shadow-md group-hover:text-yellow-100 transition-colors">
-                NGỌC ĐIỀN
-              </div>
-              <div className="text-[#FBBF24] text-[10px] tracking-[5px] font-sans font-light mt-1">
-                VĂN HÓA  ·  LỊCH SỬ  ·  CỘNG ĐỒNG
-              </div>
-              <div className="text-white/40 text-[9px] font-sans mt-0.5 tracking-wider">ngocdien.info.vn</div>
+              <div className="font-display text-[clamp(22px,5vw,34px)] font-black text-white tracking-[3px] leading-none drop-shadow-md group-hover:text-yellow-100 transition-colors">NGỌC ĐIỀN</div>
+              <div className="text-[#FBBF24] text-[10px] tracking-[5px] font-sans font-light mt-1">VĂN HÓA  ·  LỊCH SỬ  ·  CỘNG ĐỒNG</div>
             </Link>
-
-            <button onClick={() => setMenuOpen(true)}
-              className="absolute right-0 flex flex-col gap-[5px] p-2.5 rounded-md border border-white/20 bg-white/10 hover:bg-white/20 transition-colors lg:hidden" aria-label="Mở menu">
+            <button onClick={() => setMenuOpen(true)} className="absolute right-0 flex flex-col gap-[5px] p-2.5 rounded-md border border-white/20 bg-white/10 lg:hidden shadow-inner">
               {[0,1,2].map(i => <span key={i} className="block w-5 h-0.5 bg-white rounded" />)}
             </button>
           </div>
         </div>
 
         <div className="relative bg-black/20 border-t border-white/10 hidden lg:block">
-          <div className="max-w-[1180px] mx-auto px-4 relative">
-            {/* 🔥 NÂNG CẤP: MENU XỔ XUỐNG DÀNH CHO MÁY TÍNH */}
+          <div className="max-w-[1180px] mx-auto px-4">
             <nav className="flex items-center justify-center space-x-1">
               {NAV.map((item, i) => (
                 <div key={i} className="relative group shrink-0">
-                  <Link href={item.href}
-                    className="text-white/90 group-hover:text-[#FBBF24] group-hover:bg-white/10 font-sans font-bold text-[11px] tracking-[.6px] px-4 py-3 block whitespace-nowrap transition-all uppercase">
+                  <Link href={item.href} className="text-white/90 hover:text-[#FBBF24] hover:bg-white/10 font-sans font-bold text-[11px] tracking-[.6px] px-4 py-3 block whitespace-nowrap transition-all uppercase">
                     {item.label}
                   </Link>
-
-                  {/* Bảng Menu xổ xuống */}
                   {item.children.length > 0 && (
-                    <div className="absolute left-0 top-full hidden group-hover:block min-w-[220px] bg-[#FEF9F2] shadow-2xl border-t-4 border-[#B91C1C] rounded-b-md z-[999] overflow-hidden">
+                    <div className="absolute left-0 top-full hidden group-hover:block min-w-[200px] bg-[#FEF9F2] shadow-2xl border-t-4 border-[#B91C1C] rounded-b-md z-[999] overflow-hidden">
                       {item.children.map((child: any, j) => (
                         <Link key={j} href={child.href} target={child.ext ? '_blank' : undefined}
                           className="block px-5 py-3 text-[13px] font-sans font-bold text-gray-800 hover:bg-[#B91C1C] hover:text-white border-b border-gray-200/60 last:border-0 transition-colors">
@@ -142,44 +121,33 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Menu Mobile (Dấu 3 gạch) */}
-      {menuOpen && <div className="fixed inset-0 bg-black/55 z-[900] lg:hidden" onClick={() => setMenuOpen(false)} />}
-      <nav className={`fixed top-0 right-0 h-full w-[360px] max-w-full bg-[#181818] z-[901] flex flex-col transition-transform duration-300 ease-in-out overflow-y-auto lg:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex items-center justify-between px-5 py-4 bg-red shrink-0">
-          <div>
-            <div className="font-display text-xl font-black text-white">NGỌC ĐIỀN</div>
-            <div className="text-white/60 text-[9px] tracking-[2px] font-sans mt-0.5">CỔNG THÔNG TIN ĐIỆN TỬ</div>
-          </div>
-          <button onClick={() => setMenuOpen(false)} className="w-9 h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg transition-colors">✕</button>
+      {/* Menu Mobile */}
+      {menuOpen && <div className="fixed inset-0 bg-black/60 z-[900] lg:hidden" onClick={() => setMenuOpen(false)} />}
+      <nav className={`fixed top-0 right-0 h-full w-[300px] max-w-full bg-[#1A1A1A] z-[901] flex flex-col transition-transform duration-300 ease-in-out lg:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex items-center justify-between px-5 py-5 bg-[#B91C1C]">
+          <div className="font-display text-xl font-black text-white">NGỌC ĐIỀN</div>
+          <button onClick={() => setMenuOpen(false)} className="text-white text-xl">✕</button>
         </div>
 
-        <div className="px-4 py-3 border-b border-white/5 shrink-0">
-          <input placeholder="🔍  Tìm kiếm bài viết..." className="w-full bg-[#2a2a2a] border border-[#3a3a3a] text-white placeholder-gray-500 rounded px-3 py-2 text-sm font-sans outline-none focus:border-[#C8942B] transition-colors" />
-        </div>
-
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-[#1A1A1A]">
           {NAV.map((item, i) => (
-            <div key={i}>
-              <button onClick={() => { setExpanded(expanded === i ? null : i); if (!item.children.length) setMenuOpen(false); }} className="w-full flex justify-between items-center px-5 py-3 border-b border-white/5 text-gray-200 hover:bg-white/5 font-sans font-bold text-[12.5px] tracking-[.6px] transition-colors text-left uppercase">
+            <div key={i} className="border-b border-white/5">
+              <button onClick={() => { setExpanded(expanded === i ? null : i); if (!item.children.length) setMenuOpen(false); }} 
+                className="w-full flex justify-between items-center px-5 py-4 text-gray-200 font-sans font-bold text-[12px] uppercase tracking-wider">
                 <span>{item.icon} &nbsp;{item.label}</span>
-                {item.children.length > 0 && <span className={`text-gray-500 text-sm transition-transform duration-200 ${expanded === i ? 'rotate-90' : ''}`}>›</span>}
+                {item.children.length > 0 && <span className={`transition-transform ${expanded === i ? 'rotate-90' : ''}`}>›</span>}
               </button>
               {expanded === i && item.children.map((child: any, j) => (
-                <Link key={j} href={child.href} onClick={() => setMenuOpen(false)} target={child.ext ? '_blank' : undefined} className="block pl-12 pr-5 py-2.5 text-[#C8942B] text-[13px] font-sans border-b border-white/[.04] bg-black/25 hover:bg-[#C8942B]/10 transition-colors">
-                  ― {child.label}
+                <Link key={j} href={child.href} onClick={() => setMenuOpen(false)} className="block pl-10 pr-5 py-3 text-[#FBBF24] text-[13px] font-sans bg-black/30 hover:bg-white/5">
+                  {child.label}
                 </Link>
               ))}
             </div>
           ))}
-          <Link href="/admin" onClick={() => setMenuOpen(false)} className="block px-5 py-3 bg-red/15 text-red-400 font-sans font-bold text-[12.5px] tracking-[.6px] border-t border-red/20 hover:bg-red/25 transition-colors uppercase">
-            ⚙ &nbsp;QUẢN TRỊ HỆ THỐNG
-          </Link>
         </div>
 
-        <div className="px-5 py-4 bg-black/40 shrink-0 text-xs font-sans space-y-1.5">
-          <div className="text-gray-400">📧 tinnhanhonline247@gmail.com</div>
-          <div className="text-gray-400">📞 0914 58 75 75</div>
-          <div className="text-[#C8942B] font-bold mt-2">⚡ Phát triển bởi Thái Lão</div>
+        <div className="p-5 bg-black/50 text-[11px] font-sans text-gray-400">
+           ⚡ Phát triển bởi Thái Lão
         </div>
       </nav>
     </>
