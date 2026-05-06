@@ -1,9 +1,14 @@
 import Link from "next/link";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import { supabase } from "@/lib/supabase/client";
 
-// 🔥 1. SƠ ĐỒ GIA PHẢ: Đã bổ sung cả "tan-man" và "tan-van"
+// 🔥 1. Đã đổi lại dùng chìa khóa Server chuẩn để hút dữ liệu an toàn
+import { createServerSupabase } from "@/lib/supabase/server";
+
+// 🔥 2. ĐÂY LÀ LÁ BÙA ÉP NEXT.JS KHÔNG ĐƯỢC LƯU CACHE (LUÔN TẢI BÀI MỚI NHẤT)
+export const dynamic = 'force-dynamic';
+
+// SƠ ĐỒ GIA PHẢ: Đã bổ sung cả "tan-man" và "tan-van"
 const CATEGORY_TREE: Record<string, string[]> = {
   'tin-tuc': ['tin-tuc', 'thong-bao', 'su-kien'],
   'nguoi-ngoc-dien': ['nguoi-ngoc-dien', 'nguoi-ngoc-dien-chung', 'me-vnah', 'liet-sy', 'anh-hung', 'dang-vien'],
@@ -59,7 +64,7 @@ function ACard({ a }: { a: any }) {
 
 // Bật chế độ async để gọi dữ liệu từ Supabase
 export default async function CategoryPage({ params }: { params: any }) {
-  // 🔥 Bắt đúng tên đường link, Ép về CHỮ THƯỜNG để không bị lệch sóng
+  // Bắt đúng tên đường link, Ép về CHỮ THƯỜNG để không bị lệch sóng
   const rawCat = params?.cat || params?.slug || "";
   const currentCat = rawCat.toLowerCase();
   
@@ -68,11 +73,12 @@ export default async function CategoryPage({ params }: { params: any }) {
     icon: "📄" 
   };
   
-  // 👉 Mở kho lấy đúng danh sách các mục Con cháu
+  // Mở kho lấy đúng danh sách các mục Con cháu
   const familyIds = CATEGORY_TREE[currentCat] || [currentCat];
 
-  // 👉 Lệnh hút toàn bộ bài viết thuộc dòng họ đó
-  const { data } = await supabase
+  // 🔥 3. Gọi Supabase chuẩn để hút toàn bộ bài viết
+  const sb = createServerSupabase();
+  const { data } = await sb
     .from('articles')
     .select('*')
     .in('cat', familyIds)
