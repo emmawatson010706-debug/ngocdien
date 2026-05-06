@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// GIA PHẢ CHUYÊN MỤC CHUẨN CỦA ANH
+// 🔥 GIA PHẢ CHUẨN: Vừa để lọc bài, vừa để hiện Nút bấm
 const CATEGORY_TREE: Record<string, string[]> = {
   'tin-tuc': ['tin-tuc', 'thong-bao', 'su-kien'],
   'nguoi-ngoc-dien': ['nguoi-ngoc-dien', 'nguoi-ngoc-dien-chung', 'me-vnah', 'liet-sy', 'anh-hung', 'dang-vien'],
@@ -17,6 +17,7 @@ const CATEGORY_TREE: Record<string, string[]> = {
   'thu-vien': ['thu-vien', 'huong-uoc', 'dang-bo']
 };
 
+// Thông tin hiển thị cho Mẹ
 const PARENT_INFO: Record<string, { label: string, icon: string }> = {
   'tin-tuc': { label: 'TIN TỨC', icon: '📰' },
   'nguoi-ngoc-dien': { label: 'NGƯỜI NGỌC ĐIỀN', icon: '👥' },
@@ -27,6 +28,7 @@ const PARENT_INFO: Record<string, { label: string, icon: string }> = {
   'thu-vien': { label: 'THƯ VIỆN', icon: '📚' }
 };
 
+// Nhãn hiển thị cho Con/Cháu
 const CAT_LABELS: Record<string, string> = {
   'tin-tuc': 'Tin tức', 'thong-bao': 'Thông báo', 'su-kien': 'Sự kiện',
   'nguoi-ngoc-dien': 'Người Ngọc Điền', 'nguoi-ngoc-dien-chung': 'Giới thiệu', 'me-vnah': 'Mẹ VNAH', 'liet-sy': 'Liệt sỹ', 'anh-hung': 'Anh hùng', 'dang-vien': 'Đảng viên',
@@ -37,11 +39,11 @@ const CAT_LABELS: Record<string, string> = {
 };
 
 export default async function CategoryPage({ params }: { params: any }) {
-  // 🔥 BƯỚC 1: GIẢI MÃ VÀ GỌT RÁC (XÓA DẤU GẠCH NGANG TRANG TRÍ)
+  // 1. GỌT SẠCH RÁC TỪ URL (Chống lỗi dấu gạch ngang từ Menu)
   const rawCat = params?.cat || "";
-  let currentCat = decodeURIComponent(rawCat).toLowerCase().replace(/^[—\-\s]+/, '').trim(); 
+  const currentCat = decodeURIComponent(rawCat).toLowerCase().replace(/^[—\-\s]+/, '').trim(); 
   
-  // 🔥 BƯỚC 2: TÌM MỤC CHA ĐỂ HIỆN THANH DANH MỤC CON
+  // 2. TÌM TÌM "MẸ" ĐỂ HIỂN THỊ MENU CON VÀ BANNER
   let parentKey = currentCat;
   for (const [parent, children] of Object.entries(CATEGORY_TREE)) {
     if (children.includes(currentCat)) {
@@ -52,13 +54,16 @@ export default async function CategoryPage({ params }: { params: any }) {
 
   const subCategories = CATEGORY_TREE[parentKey] || [];
   
-  // 🔥 BƯỚC 3: LOGIC LẤY BÀI VIẾT THÔNG MINH (NHẬN DIỆN CẢ THO VÀ THƠ)
+  // 3. LOGIC LẤY BÀI VIẾT (GIA PHẢ)
+  // Nếu là Mẹ -> Lấy tất cả bài của Mẹ + Con + Cháu
+  // Nếu là Con -> Chỉ lấy bài của Con
   let searchIds = CATEGORY_TREE[currentCat] ? CATEGORY_TREE[currentCat] : [currentCat];
   
-  // Khớp bù trừ cho mục Thơ và Tản văn để không bao giờ bị trống bài
-  if (currentCat === 'thơ' || currentCat === 'tho') searchIds = ['tho', 'thơ'];
-  if (currentCat === 'tản văn' || currentCat === 'tan-van') searchIds = ['tan-van', 'tản văn'];
+  // Bù trừ chữ có dấu và không dấu trong database
+  if (currentCat === 'thơ' || currentCat === 'tho') searchIds.push('tho', 'thơ');
+  if (currentCat === 'tản văn' || currentCat === 'tan-van') searchIds.push('tan-van', 'tản văn');
 
+  // 4. HÚT DỮ LIỆU TỪ SUPABASE
   const { data: arts } = await supabase
     .from('articles')
     .select('*')
@@ -66,25 +71,25 @@ export default async function CategoryPage({ params }: { params: any }) {
     .order('id', { ascending: false });
 
   const artsList = arts || [];
-  const categoryInfo = PARENT_INFO[parentKey] || { label: 'CHUYÊN MỤC', icon: '📄' };
+  const categoryInfo = PARENT_INFO[parentKey] || { label: CAT_LABELS[currentCat] || currentCat, icon: '📄' };
 
   return (
     <div style={{ minHeight:"100vh", background:"#FEF9F2", color:"#1C1C1C" }}>
       <Header />
       <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px" }}>
         
-        {/* Banner Chuyên mục */}
+        {/* Banner Chuyên mục Đỏ */}
         <div style={{ background:"linear-gradient(135deg,#9B1B14,#B91C1C)", color:"#fff",
           borderRadius:"0 0 12px 12px", padding:"30px 20px", marginBottom:20,
-          display:"flex", alignItems:"center", gap:16 }}>
+          display:"flex", alignItems:"center", gap:16, boxShadow: "0 4px 10px rgba(0,0,0,0.1)" }}>
           <div style={{ fontSize:32 }}>{categoryInfo.icon}</div>
           <div>
-            <h1 style={{ fontSize:24, fontWeight:900 }}>{categoryInfo.label?.toUpperCase()}</h1>
-            <p style={{ opacity:.7, fontSize:13 }}>{artsList.length} bài viết nội dung</p>
+            <h1 style={{ fontSize:24, fontWeight:900, textTransform:"uppercase" }}>{categoryInfo.label}</h1>
+            <p style={{ opacity:.8, fontSize:13, marginTop:4 }}>{artsList.length} bài viết trong mục này</p>
           </div>
         </div>
 
-        {/* Thanh danh mục con */}
+        {/* 🔥 THANH MENU CON (Giúp bấm qua lại giữa Thơ, Tản Văn dễ dàng) */}
         {subCategories.length > 1 && (
           <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginBottom:25, paddingBottom:15, borderBottom:"1px solid #E8DDD0" }}>
             <Link href={`/chuyen-muc/${parentKey}`} 
@@ -108,16 +113,16 @@ export default async function CategoryPage({ params }: { params: any }) {
 
         {/* Danh sách bài viết */}
         {artsList.length > 0 ? (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:20 }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(270px,1fr))", gap:22 }}>
             {artsList.map((a: any) => (
               <Link href={`/bai-viet/${a.slug}`} key={a.id} style={{ textDecoration:"none", color:"inherit" }}>
-                <div style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:"1px solid #E8DDD0" }}>
-                  <img src={a.img || '/logo.png'} style={{ width:"100%", height:160, objectFit:"cover" }} />
+                <div style={{ background:"#fff", borderRadius:10, overflow:"hidden", border:"1px solid #E8DDD0", transition:"transform 0.2s" }}>
+                  <img src={a.img || '/logo.png'} style={{ width:"100%", height:170, objectFit:"cover" }} />
                   <div style={{ padding:15 }}>
                     <span style={{ color:"#B91C1C", fontSize:10, fontWeight:800, textTransform:"uppercase" }}>
                         {CAT_LABELS[a.cat] || a.cat}
                     </span>
-                    <h3 style={{ fontSize:15, marginTop:6, fontWeight:700, lineHeight:1.4 }}>{a.title}</h3>
+                    <h3 style={{ fontSize:15, marginTop:7, fontWeight:700, lineHeight:1.4 }}>{a.title}</h3>
                     <p style={{ fontSize:12, color:"#666", marginTop:8, lineHeight:1.5 }} className="line-clamp-2">
                         {a.excerpt}
                     </p>
@@ -128,7 +133,7 @@ export default async function CategoryPage({ params }: { params: any }) {
           </div>
         ) : (
           <div style={{ textAlign:"center", padding:"100px 0", border:"2px dashed #E8DDD0", borderRadius:12 }}>
-            <p>Hiện chưa có bài viết nào trong mục <b>{CAT_LABELS[currentCat] || currentCat}</b>.</p>
+            <p style={{ color:"#888" }}>Chưa có nội dung cho chuyên mục <b>{CAT_LABELS[currentCat] || currentCat}</b>.</p>
           </div>
         )}
       </div>
