@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 // 🔥 MENU ĐÃ ĐƯỢC CHUẨN HÓA ĐƯỜNG RAY 
-// 1. Chuyên mục nội dung -> đi qua cổng /chuyen-muc/
-// 2. Trang chức năng (góp ý, admin...) -> giữ nguyên đường dẫn gốc
 const NAV = [
   { label: 'GIỚI THIỆU', href: '/gioi-thieu', icon: '🏡', children: [] },
   { label: 'TIN TỨC', href: '/chuyen-muc/tin-tuc', icon: '📰',
@@ -38,7 +36,7 @@ const NAV = [
   { label: 'THƯ VIỆN', href: '/chuyen-muc/thu-vien', icon: '📚',
     children: [{ label: 'Hương ước 1883', href: '/chuyen-muc/huong-uoc' }, { label: 'Lịch sử Đảng bộ', href: '/chuyen-muc/dang-bo' }] },
   
-  // 👉 CÁC MỤC BÊN DƯỚI LÀ TRANG CHỨC NĂNG, GIỮ NGUYÊN LINK GỐC ĐỂ KHÔNG BỊ LỖI
+  // 👉 CÁC MỤC BÊN DƯỚI LÀ TRANG CHỨC NĂNG, GIỮ NGUYÊN LINK GỐC
   { label: 'CHUYỂN ĐỔI SỐ', href: '/chuyen-doi-so', icon: '💻',
     children: [
       { label: 'Dịch vụ công ↗', href: 'https://dichvucong.gov.vn', ext: true },
@@ -109,34 +107,44 @@ export default function Header() {
             </Link>
 
             <button onClick={() => setMenuOpen(true)}
-              className="absolute right-0 flex flex-col gap-[5px] p-2.5 rounded-md border border-white/20 bg-white/10 hover:bg-white/20 transition-colors" aria-label="Mở menu">
+              className="absolute right-0 flex flex-col gap-[5px] p-2.5 rounded-md border border-white/20 bg-white/10 hover:bg-white/20 transition-colors lg:hidden" aria-label="Mở menu">
               {[0,1,2].map(i => <span key={i} className="block w-5 h-0.5 bg-white rounded" />)}
             </button>
           </div>
         </div>
 
-        <div className="relative bg-black/20 border-t border-white/10 block">
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/50 to-transparent flex items-center justify-start pl-2 z-10 pointer-events-none md:hidden">
-            <span className="text-white/90 text-xs animate-pulse">❮</span>
-          </div>
+        <div className="relative bg-black/20 border-t border-white/10 hidden lg:block">
           <div className="max-w-[1180px] mx-auto px-4 relative">
-            <nav className="flex overflow-x-auto scrollbar-hide">
+            {/* 🔥 NÂNG CẤP: MENU XỔ XUỐNG DÀNH CHO MÁY TÍNH */}
+            <nav className="flex items-center justify-center space-x-1">
               {NAV.map((item, i) => (
-                <Link key={i} href={item.href}
-                  className="text-white/90 hover:text-[#FBBF24] hover:bg-white/10 font-sans font-bold text-[11px] tracking-[.6px] px-3.5 py-2.5 whitespace-nowrap transition-all">
-                  {item.label}
-                </Link>
+                <div key={i} className="relative group shrink-0">
+                  <Link href={item.href}
+                    className="text-white/90 group-hover:text-[#FBBF24] group-hover:bg-white/10 font-sans font-bold text-[11px] tracking-[.6px] px-4 py-3 block whitespace-nowrap transition-all uppercase">
+                    {item.label}
+                  </Link>
+
+                  {/* Bảng Menu xổ xuống */}
+                  {item.children.length > 0 && (
+                    <div className="absolute left-0 top-full hidden group-hover:block min-w-[220px] bg-[#FEF9F2] shadow-2xl border-t-4 border-[#B91C1C] rounded-b-md z-[999] overflow-hidden">
+                      {item.children.map((child: any, j) => (
+                        <Link key={j} href={child.href} target={child.ext ? '_blank' : undefined}
+                          className="block px-5 py-3 text-[13px] font-sans font-bold text-gray-800 hover:bg-[#B91C1C] hover:text-white border-b border-gray-200/60 last:border-0 transition-colors">
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </nav>
-          </div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/50 to-transparent flex items-center justify-end pr-2 z-10 pointer-events-none md:hidden">
-            <span className="text-white/90 text-xs animate-pulse">❯</span>
           </div>
         </div>
       </header>
 
-      {menuOpen && <div className="fixed inset-0 bg-black/55 z-[900]" onClick={() => setMenuOpen(false)} />}
-      <nav className={`fixed top-0 right-0 h-full w-[360px] max-w-full bg-[#181818] z-[901] flex flex-col transition-transform duration-300 ease-in-out overflow-y-auto ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      {/* Menu Mobile (Dấu 3 gạch) */}
+      {menuOpen && <div className="fixed inset-0 bg-black/55 z-[900] lg:hidden" onClick={() => setMenuOpen(false)} />}
+      <nav className={`fixed top-0 right-0 h-full w-[360px] max-w-full bg-[#181818] z-[901] flex flex-col transition-transform duration-300 ease-in-out overflow-y-auto lg:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex items-center justify-between px-5 py-4 bg-red shrink-0">
           <div>
             <div className="font-display text-xl font-black text-white">NGỌC ĐIỀN</div>
@@ -152,7 +160,7 @@ export default function Header() {
         <div className="flex-1 overflow-y-auto">
           {NAV.map((item, i) => (
             <div key={i}>
-              <button onClick={() => { setExpanded(expanded === i ? null : i); if (!item.children.length) setMenuOpen(false); }} className="w-full flex justify-between items-center px-5 py-3 border-b border-white/5 text-gray-200 hover:bg-white/5 font-sans font-bold text-[12.5px] tracking-[.6px] transition-colors text-left">
+              <button onClick={() => { setExpanded(expanded === i ? null : i); if (!item.children.length) setMenuOpen(false); }} className="w-full flex justify-between items-center px-5 py-3 border-b border-white/5 text-gray-200 hover:bg-white/5 font-sans font-bold text-[12.5px] tracking-[.6px] transition-colors text-left uppercase">
                 <span>{item.icon} &nbsp;{item.label}</span>
                 {item.children.length > 0 && <span className={`text-gray-500 text-sm transition-transform duration-200 ${expanded === i ? 'rotate-90' : ''}`}>›</span>}
               </button>
@@ -163,7 +171,7 @@ export default function Header() {
               ))}
             </div>
           ))}
-          <Link href="/admin" onClick={() => setMenuOpen(false)} className="block px-5 py-3 bg-red/15 text-red-400 font-sans font-bold text-[12.5px] tracking-[.6px] border-t border-red/20 hover:bg-red/25 transition-colors">
+          <Link href="/admin" onClick={() => setMenuOpen(false)} className="block px-5 py-3 bg-red/15 text-red-400 font-sans font-bold text-[12.5px] tracking-[.6px] border-t border-red/20 hover:bg-red/25 transition-colors uppercase">
             ⚙ &nbsp;QUẢN TRỊ HỆ THỐNG
           </Link>
         </div>
