@@ -72,7 +72,9 @@ export default async function CategoryPage({ params }: { params: any }) {
   };
   
   // 👉 Mở kho lấy đúng danh sách các mục Con cháu
-  const familyIds = CATEGORY_TREE[currentCat] || [currentCat];
+  const familyIds = CATEGORY_TREE[currentCat as keyof typeof CATEGORY_TREE] || [currentCat];
+  console.log("Đang tìm bài cho các mục:", familyIds); // Dòng này để anh kiểm tra trong Terminal
+
 
   // 🔥 3. Hút toàn bộ bài viết bằng CHÌA KHÓA CLIENT
   const { data, error } = await supabase
