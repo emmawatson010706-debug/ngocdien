@@ -6,6 +6,12 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Youtube from '@tiptap/extension-youtube';
+
+// 🔥 IMPORT 3 PHỤ TÙNG MỚI: MÀU SẮC & CĂN LỀ
+import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
+
 import { supabase } from '@/lib/supabase/client';
 import { toSlug } from '@/lib/utils';
 import type { Article } from '@/types/database';
@@ -48,7 +54,7 @@ const ALL_CATEGORIES = [
 
 interface Props {
   article?: Article;
-  categories?: any; /* Thêm dòng này để mở cửa nhận dữ liệu, chống báo lỗi */
+  categories?: any; 
 }
 
 export default function ArticleEditor({ article }: Props) {
@@ -78,6 +84,10 @@ export default function ArticleEditor({ article }: Props) {
       Image,
       Link.configure({ openOnClick: false }),
       Youtube.configure({ controls: true }),
+      // 🔥 BẬT CÔNG TẮC CHO 3 PHỤ TÙNG MỚI
+      TextStyle,
+      Color,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
     content: article?.content ?? '<p>Bắt đầu viết nội dung bài...</p>',
   });
@@ -178,7 +188,7 @@ export default function ArticleEditor({ article }: Props) {
 
           <div>
             <label className="admin-label">Nội dung bài viết *</label>
-            <div className="flex flex-wrap gap-1 p-2 bg-gray-50 border border-gray-200 rounded-t-lg">
+            <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-50 border border-gray-200 rounded-t-lg">
               {[
                 { label:'B', action:() => editor?.chain().focus().toggleBold().run(), title:'In đậm' },
                 { label:'I', action:() => editor?.chain().focus().toggleItalic().run(), title:'In nghiêng' },
@@ -188,6 +198,12 @@ export default function ArticleEditor({ article }: Props) {
                 { label:'1.', action:() => editor?.chain().focus().toggleOrderedList().run(), title:'Đánh số' },
                 { label:'❝', action:() => editor?.chain().focus().toggleBlockquote().run(), title:'Trích dẫn' },
                 { label:'—', action:() => editor?.chain().focus().setHorizontalRule().run(), title:'Kẻ ngang' },
+                
+                // 🔥 NÚT CĂN LỀ CHUẨN BÁO CHÍ
+                { label:'⫷', action:() => editor?.chain().focus().setTextAlign('left').run(), title:'Căn trái' },
+                { label:'≑', action:() => editor?.chain().focus().setTextAlign('center').run(), title:'Căn giữa' },
+                { label:'≣', action:() => editor?.chain().focus().setTextAlign('justify').run(), title:'Căn đều 2 bên' },
+
                 { label:'🔗', action:() => {
                   const url = prompt('Nhập URL:');
                   if (url) editor?.chain().focus().setLink({ href: url }).run();
@@ -207,6 +223,15 @@ export default function ArticleEditor({ article }: Props) {
                   {btn.label}
                 </button>
               ))}
+
+              {/* 🔥 BẢNG CHỌN MÀU CHỮ THẦN THÁNH */}
+              <input
+                type="color"
+                title="Đổi màu chữ"
+                onChange={e => editor?.chain().focus().setColor(e.target.value).run()}
+                value={editor?.getAttributes('textStyle').color || '#000000'}
+                className="w-7 h-7 p-0 ml-1 border-0 rounded cursor-pointer bg-transparent"
+              />
             </div>
             <div className="border border-t-0 border-gray-200 rounded-b-lg min-h-[320px] bg-white">
               <EditorContent editor={editor} className="article-body px-4 py-3" />
@@ -254,7 +279,7 @@ export default function ArticleEditor({ article }: Props) {
                 <option 
                   key={c.id} 
                   value={c.id} 
-                  disabled={c.isParent} /* Không cho chọn thẳng mục Cha nếu nó chỉ là vỏ bọc */
+                  disabled={c.isParent} 
                   style={{ 
                     fontWeight: c.isParent ? 'bold' : 'normal',
                     color: c.isParent ? '#9B1B14' : '#000'
@@ -304,6 +329,14 @@ export default function ArticleEditor({ article }: Props) {
           transition:border-color .15s; background:#fff; }
         .admin-input:focus { border-color:#B91C1C; }
         select.admin-input { cursor:pointer; }
+        
+        /* Chỉnh lại nội dung bên trong khung soạn thảo để text-align hoạt động trơn tru */
+        .article-body .tiptap {
+          outline: none !important;
+        }
+        .article-body p {
+          margin-bottom: 1em;
+        }
       `}</style>
     </div>
   );
