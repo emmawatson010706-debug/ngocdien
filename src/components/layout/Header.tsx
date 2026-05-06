@@ -2,37 +2,43 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+// 🔥 MENU ĐÃ ĐƯỢC CHUẨN HÓA ĐƯỜNG RAY 
+// 1. Chuyên mục nội dung -> đi qua cổng /chuyen-muc/
+// 2. Trang chức năng (góp ý, admin...) -> giữ nguyên đường dẫn gốc
 const NAV = [
   { label: 'GIỚI THIỆU', href: '/gioi-thieu', icon: '🏡', children: [] },
-  { label: 'TIN TỨC', href: '/tin-tuc', icon: '📰',
-    children: [{ label: 'Thông báo', href: '/tin-tuc/thong-bao' }, { label: 'Sự kiện', href: '/tin-tuc/su-kien' }] },
-  { label: 'NGƯỜI NGỌC ĐIỀN', href: '/nguoi-ngoc-dien', icon: '👥',
+  { label: 'TIN TỨC', href: '/chuyen-muc/tin-tuc', icon: '📰',
+    children: [{ label: 'Thông báo', href: '/chuyen-muc/thong-bao' }, { label: 'Sự kiện', href: '/chuyen-muc/su-kien' }] },
+  { label: 'NGƯỜI NGỌC ĐIỀN', href: '/chuyen-muc/nguoi-ngoc-dien', icon: '👥',
     children: [
-      { label: 'Giới thiệu chung', href: '/nguoi-ngoc-dien' },
-      { label: 'Mẹ Việt Nam Anh hùng', href: '/nguoi-ngoc-dien/me-vnah' },
-      { label: 'Liệt sỹ', href: '/nguoi-ngoc-dien/liet-sy' },
-      { label: 'Anh hùng lao động Cao Lục', href: '/nguoi-ngoc-dien/anh-hung' },
-      { label: 'Đảng viên đầu tiên', href: '/nguoi-ngoc-dien/dang-vien' },
+      { label: 'Giới thiệu chung', href: '/chuyen-muc/nguoi-ngoc-dien-chung' },
+      { label: 'Mẹ Việt Nam Anh hùng', href: '/chuyen-muc/me-vnah' },
+      { label: 'Liệt sỹ', href: '/chuyen-muc/liet-sy' },
+      { label: 'Anh hùng lao động Cao Lục', href: '/chuyen-muc/anh-hung' },
+      { label: 'Đảng viên đầu tiên', href: '/chuyen-muc/dang-vien' },
     ]},
-  { label: 'LỊCH SỬ', href: '/lich-su', icon: '📜', children: [] },
-  { label: 'TIẾNG LÀNG', href: '/tieng-lang', icon: '✍️',
+  { label: 'LỊCH SỬ', href: '/chuyen-muc/lich-su', icon: '📜', children: [] },
+  { label: 'TIẾNG LÀNG', href: '/chuyen-muc/tieng-lang', icon: '✍️',
     children: [
-      { label: 'Tản văn', href: '/tieng-lang/tan-van' },
-      { label: 'Thơ', href: '/tieng-lang/tho' },
-      { label: 'Khám phá', href: '/tieng-lang/kham-pha' },
-      { label: 'Góc nhìn thẳng', href: '/tieng-lang/goc-nhin-thang' },
-      { label: 'Podcast', href: '/tieng-lang/podcast' },
+      { label: 'Tản văn', href: '/chuyen-muc/tan-van' },
+      { label: 'Tản mạn', href: '/chuyen-muc/tan-man' },
+      { label: 'Thơ', href: '/chuyen-muc/tho' },
+      { label: 'Khám phá', href: '/chuyen-muc/kham-pha' },
+      { label: 'Góc nhìn thẳng', href: '/chuyen-muc/goc-nhin-thang' },
+      { label: 'Podcast', href: '/chuyen-muc/podcast' },
     ]},
-  { label: 'DI TÍCH', href: '/di-tich', icon: '🏛️',
-    children: [{ label: 'Đền Ngọc Điền', href: '/di-tich/den' }, { label: 'Giếng làng', href: '/di-tich/gieng' }] },
-  { label: 'LỄ HỘI', href: '/le-hoi', icon: '🎊',
+  { label: 'DI TÍCH', href: '/chuyen-muc/di-tich', icon: '🏛️',
+    children: [{ label: 'Đền Ngọc Điền', href: '/chuyen-muc/den' }, { label: 'Giếng làng', href: '/chuyen-muc/gieng' }] },
+  { label: 'LỄ HỘI', href: '/chuyen-muc/le-hoi', icon: '🎊',
     children: [
-      { label: 'Lễ hội Đền', href: '/le-hoi/den' },
-      { label: 'Lễ hội Xóm', href: '/le-hoi/xom' },
-      { label: 'Lễ hội Giếng', href: '/le-hoi/gieng' },
+      { label: 'Lễ hội Đền', href: '/chuyen-muc/le-hoi-den' },
+      { label: 'Lễ hội Xóm', href: '/chuyen-muc/le-hoi-xom' },
+      { label: 'Lễ hội Giếng', href: '/chuyen-muc/le-hoi-gieng' },
     ]},
-  { label: 'THƯ VIỆN', href: '/thu-vien', icon: '📚',
-    children: [{ label: 'Hương ước 1883', href: '/thu-vien/huong-uoc' }, { label: 'Lịch sử Đảng bộ', href: '/thu-vien/dang-bo' }] },
+  { label: 'THƯ VIỆN', href: '/chuyen-muc/thu-vien', icon: '📚',
+    children: [{ label: 'Hương ước 1883', href: '/chuyen-muc/huong-uoc' }, { label: 'Lịch sử Đảng bộ', href: '/chuyen-muc/dang-bo' }] },
+  
+  // 👉 CÁC MỤC BÊN DƯỚI LÀ TRANG CHỨC NĂNG, GIỮ NGUYÊN LINK GỐC ĐỂ KHÔNG BỊ LỖI
   { label: 'CHUYỂN ĐỔI SỐ', href: '/chuyen-doi-so', icon: '💻',
     children: [
       { label: 'Dịch vụ công ↗', href: 'https://dichvucong.gov.vn', ext: true },
