@@ -1,15 +1,11 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-
-// 🔥 1. TRẢ LẠI CHÌA KHÓA CLIENT
 import { supabase } from "@/lib/supabase/client";
 
-// 🔥 2. ĐÓNG ĐINH 2 LÁ BÙA CHỐNG CACHE MẠNH NHẤT
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// SƠ ĐỒ GIA PHẢ: Giúp trang Cha tìm thấy bài của các mục Con/Cháu
 const CATEGORY_TREE: Record<string, string[]> = {
   'tin-tuc': ['tin-tuc', 'thong-bao', 'su-kien'],
   'nguoi-ngoc-dien': ['nguoi-ngoc-dien', 'nguoi-ngoc-dien-chung', 'me-vnah', 'liet-sy', 'anh-hung', 'dang-vien'],
@@ -18,16 +14,6 @@ const CATEGORY_TREE: Record<string, string[]> = {
   'di-tich': ['di-tich', 'den', 'gieng'],
   'le-hoi': ['le-hoi', 'le-hoi-den', 'le-hoi-xom', 'le-hoi-gieng'],
   'thu-vien': ['thu-vien', 'huong-uoc', 'dang-bo']
-};
-
-const PARENT_INFO: Record<string, { label: string, icon: string }> = {
-  'tin-tuc': { label: 'TIN TỨC', icon: '📰' },
-  'nguoi-ngoc-dien': { label: 'NGƯỜI NGỌC ĐIỀN', icon: '👥' },
-  'lich-su': { label: 'LỊCH SỬ', icon: '📜' },
-  'tieng-lang': { label: 'TIẾNG LÀNG', icon: '✍️' },
-  'di-tich': { label: 'DI TÍCH', icon: '🏛️' },
-  'le-hoi': { label: 'LỄ HỘI', icon: '🎊' },
-  'thu-vien': { label: 'THƯ VIỆN', icon: '📚' }
 };
 
 const CAT_LABELS: Record<string, string> = {
@@ -39,109 +25,63 @@ const CAT_LABELS: Record<string, string> = {
   'thu-vien': 'Thư viện', 'huong-uoc': 'Hương ước', 'dang-bo': 'Đảng bộ'
 };
 
-function ACard({ a }: { a: any }) {
-  return (
-    <Link href={`/bai-viet/${a.slug}`} 
-      style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:"1px solid #E8DDD0", 
-        textDecoration:"none", color:"inherit", display:"block", transition:"box-shadow .15s" }}>
-      <img src={a.img || '/logo.png'} alt={a.title} style={{ width:"100%", height:140, objectFit:"cover", display:"block" }} />
-      <div style={{ padding:"10px 12px" }}>
-        <div style={{ display:"flex", gap:6, marginBottom:6 }}>
-          <span style={{ background:"#B91C1C", color:"#fff", fontSize:9, fontWeight:700, 
-            letterSpacing:".8px", padding:"2px 7px", borderRadius:2, textTransform:"uppercase" }}>
-            {CAT_LABELS[a.cat] || a.cat || "Tin tức"}
-          </span>
-          <span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
-        </div>
-        <p style={{ fontWeight:700, fontSize:13.5, lineHeight:1.5 }}>{a.title}</p>
-        <p style={{ fontSize:12, color:"#666", marginTop:4, lineHeight:1.6, 
-          display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>
-          {a.excerpt}
-        </p>
-      </div>
-    </Link>
-  );
-}
-
 export default async function CategoryPage({ params }: { params: any }) {
-  const rawCat = params?.cat || params?.slug || "";
+  const rawCat = params?.cat || "";
   const currentCat = rawCat.toLowerCase();
   
-  // Xác định thông tin hiển thị (Banner)
-  // Nếu là mục con, Banner vẫn lấy theo mục cha để đồng bộ giao diện
-  let parentKey = currentCat;
-  for (const [parent, children] of Object.entries(CATEGORY_TREE)) {
-    if (children.includes(currentCat)) {
-      parentKey = parent;
-      break;
-    }
+  // 🔥 LOGIC MỚI: Tự động phân loại Cha/Con
+  let searchIds: string[] = [];
+  
+  if (CATEGORY_TREE[currentCat]) {
+    // Nếu là mục CHA (như tieng-lang) -> Lấy cả họ
+    searchIds = CATEGORY_TREE[currentCat];
+  } else {
+    // Nếu là mục CON (như tho, tan-van) -> Chỉ lấy đúng chính nó
+    searchIds = [currentCat];
   }
 
-  const categoryInfo = PARENT_INFO[parentKey] || { 
-    label: CAT_LABELS[currentCat] || currentCat.replace("-", " ").toUpperCase(), 
-    icon: "📄" 
-  };
-  
-  // 🔥 LOGIC THÔNG MINH:
-  // 1. Nếu currentCat là mục CHA (ví dụ: tieng-lang) -> familyIds lấy tất cả con cháu.
-  // 2. Nếu currentCat là mục CON (ví dụ: tan-van) -> familyIds chỉ chứa chính nó.
-  const familyIds = CATEGORY_TREE[currentCat as keyof typeof CATEGORY_TREE] || [currentCat];
-
-  // 🔥 3. Hút toàn bộ bài viết bài bản bằng CHÌA KHÓA CLIENT
-  const { data, error } = await supabase
+  const { data: arts } = await supabase
     .from('articles')
     .select('*')
-    .in('cat', familyIds)
+    .in('cat', searchIds)
     .order('id', { ascending: false });
-    
-  if (error) console.error("Lỗi hút bài:", error);
-  const arts = data || [];
+
+  const artsList = arts || [];
+  const label = CAT_LABELS[currentCat] || currentCat.toUpperCase();
 
   return (
-    <div style={{ minHeight:"100vh", background:"#FEF9F2", fontFamily:"system-ui,-apple-system,sans-serif", color:"#1C1C1C" }}>
+    <div style={{ minHeight:"100vh", background:"#FEF9F2" }}>
       <Header />
-      
-      <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px", minHeight: "60vh" }}>
-        {/* Banner Chuyên mục */}
+      <div style={{ maxWidth:1160, margin:"0 auto", padding:"20px 16px" }}>
+        
         <div style={{ background:"linear-gradient(135deg,#9B1B14,#B91C1C)", color:"#fff",
-          borderRadius:"0 0 12px 12px", padding:"22px 20px", marginBottom:22,
-          display:"flex", alignItems:"center", gap:16 }}>
-          <div style={{ width:50, height:50, background:"rgba(255,255,255,.15)",
-            borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center",
-            fontSize:24 }}>{categoryInfo.icon}</div>
-          <div>
-            <h1 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900 }}>
-              {currentCat === parentKey ? categoryInfo.label?.toUpperCase() : CAT_LABELS[currentCat]?.toUpperCase()}
-            </h1>
-            <p style={{ opacity:.7, fontSize:12, marginTop:3 }}>
-              {arts.length > 0 ? `${arts.length} bài viết` : "Chuyên mục nội dung"}
-            </p>
-          </div>
+          borderRadius:12, padding:"30px", marginBottom:25 }}>
+          <h1 style={{ fontSize:24, fontWeight:900, margin:0 }}>{label}</h1>
+          <p style={{ opacity:.8, margin:"5px 0 0 0" }}>{artsList.length} bài viết</p>
         </div>
 
-        {/* Danh sách bài viết */}
-        {arts.length > 0 ? (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:16 }}>
-            {arts.map((a: any) => <ACard key={a.id} a={a} />)}
+        {artsList.length > 0 ? (
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:20 }}>
+            {artsList.map((a: any) => (
+              <Link href={`/bai-viet/${a.slug}`} key={a.id} style={{ textDecoration:"none", color:"inherit" }}>
+                <div style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:"1px solid #eee shadow-sm" }}>
+                  <img src={a.img || '/logo.png'} style={{ width:"100%", height:160, objectFit:"cover" }} />
+                  <div style={{ padding:15 }}>
+                    <span style={{ color:"#B91C1C", fontSize:11, fontWeight:700, textTransform:"uppercase" }}>
+                        {CAT_LABELS[a.cat] || a.cat}
+                    </span>
+                    <h3 style={{ fontSize:15, marginTop:5, fontWeight:700, lineHeight:1.4 }}>{a.title}</h3>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         ) : (
-          <div style={{ background:"#fff", border:"2px dashed #E8DDD0", borderRadius:12,
-            padding:"60px 20px", textAlign:"center" }}>
-            <div style={{ fontSize:44, marginBottom:12 }}>{categoryInfo.icon}</div>
-            <h2 style={{ fontFamily:"'Lora', serif", fontSize:18, fontWeight:700, marginBottom:8 }}>
-              Chưa có bài viết
-            </h2>
-            <p style={{ color:"#888", fontSize:13, marginBottom:16 }}>
-              Ban biên tập đang cập nhật nội dung cho chuyên mục này.
-            </p>
-            <Link href="/" style={{ display:"inline-block", background:"#B91C1C", color:"#fff", 
-              textDecoration:"none", padding:"8px 18px", borderRadius:5, fontWeight:700, fontSize:13 }}>
-              ← Về trang chủ
-            </Link>
+          <div style={{ textAlign:"center", padding:"100px 0", border:"2px dashed #ccc", borderRadius:12 }}>
+            <p>Chưa có bài viết nào trong chuyên mục <b>{label}</b>.</p>
           </div>
         )}
       </div>
-      
       <Footer />
     </div>
   );
