@@ -11,8 +11,11 @@
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.44.4",
+    "@tiptap/extension-color": "^3.22.5",
     "@tiptap/extension-image": "^2.4.0",
     "@tiptap/extension-link": "^2.4.0",
+    "@tiptap/extension-text-align": "^3.22.5",
+    "@tiptap/extension-text-style": "^3.22.5",
     "@tiptap/extension-youtube": "^2.4.0",
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
