@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+// GIA PHẢ CHUYÊN MỤC CHUẨN CỦA ANH
 const CATEGORY_TREE: Record<string, string[]> = {
   'tin-tuc': ['tin-tuc', 'thong-bao', 'su-kien'],
   'nguoi-ngoc-dien': ['nguoi-ngoc-dien', 'nguoi-ngoc-dien-chung', 'me-vnah', 'liet-sy', 'anh-hung', 'dang-vien'],
@@ -36,10 +37,11 @@ const CAT_LABELS: Record<string, string> = {
 };
 
 export default async function CategoryPage({ params }: { params: any }) {
+  // 🔥 BƯỚC 1: GIẢI MÃ VÀ GỌT RÁC (XÓA DẤU GẠCH NGANG TRANG TRÍ)
   const rawCat = params?.cat || "";
   let currentCat = decodeURIComponent(rawCat).toLowerCase().replace(/^[—\-\s]+/, '').trim(); 
   
-  // 1. Tìm mục Cha để hiện Sub-menu
+  // 🔥 BƯỚC 2: TÌM MỤC CHA ĐỂ HIỆN THANH DANH MỤC CON
   let parentKey = currentCat;
   for (const [parent, children] of Object.entries(CATEGORY_TREE)) {
     if (children.includes(currentCat)) {
@@ -48,12 +50,14 @@ export default async function CategoryPage({ params }: { params: any }) {
     }
   }
 
-  // 2. Lấy danh sách con để hiện các nút bấm
   const subCategories = CATEGORY_TREE[parentKey] || [];
   
-  // 3. Logic lấy bài viết
-  const searchIds = CATEGORY_TREE[currentCat] ? CATEGORY_TREE[currentCat] : [currentCat];
-  if (currentCat === 'thơ' || currentCat === 'tho') searchIds.push('tho', 'thơ');
+  // 🔥 BƯỚC 3: LOGIC LẤY BÀI VIẾT THÔNG MINH (NHẬN DIỆN CẢ THO VÀ THƠ)
+  let searchIds = CATEGORY_TREE[currentCat] ? CATEGORY_TREE[currentCat] : [currentCat];
+  
+  // Khớp bù trừ cho mục Thơ và Tản văn để không bao giờ bị trống bài
+  if (currentCat === 'thơ' || currentCat === 'tho') searchIds = ['tho', 'thơ'];
+  if (currentCat === 'tản văn' || currentCat === 'tan-van') searchIds = ['tan-van', 'tản văn'];
 
   const { data: arts } = await supabase
     .from('articles')
@@ -80,14 +84,14 @@ export default async function CategoryPage({ params }: { params: any }) {
           </div>
         </div>
 
-        {/* 🔥 THANH DANH MỤC CON (Mới bổ sung theo ý anh) */}
+        {/* Thanh danh mục con */}
         {subCategories.length > 1 && (
           <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginBottom:25, paddingBottom:15, borderBottom:"1px solid #E8DDD0" }}>
             <Link href={`/chuyen-muc/${parentKey}`} 
               style={{ padding:"6px 15px", borderRadius:20, fontSize:13, fontWeight:600, textDecoration:"none",
               background: currentCat === parentKey ? "#B91C1C" : "#fff",
               color: currentCat === parentKey ? "#fff" : "#666",
-              border: "1px solid" + (currentCat === parentKey ? "#B91C1C" : "#E8DDD0") }}>
+              border: "1px solid " + (currentCat === parentKey ? "#B91C1C" : "#E8DDD0") }}>
               Tất cả
             </Link>
             {subCategories.map(sub => (
@@ -95,7 +99,7 @@ export default async function CategoryPage({ params }: { params: any }) {
                 style={{ padding:"6px 15px", borderRadius:20, fontSize:13, fontWeight:600, textDecoration:"none",
                 background: currentCat === sub ? "#B91C1C" : "#fff",
                 color: currentCat === sub ? "#fff" : "#666",
-                border: "1px solid" + (currentCat === sub ? "#B91C1C" : "#E8DDD0") }}>
+                border: "1px solid " + (currentCat === sub ? "#B91C1C" : "#E8DDD0") }}>
                 {CAT_LABELS[sub] || sub}
               </Link>
             ))}
@@ -124,7 +128,7 @@ export default async function CategoryPage({ params }: { params: any }) {
           </div>
         ) : (
           <div style={{ textAlign:"center", padding:"100px 0", border:"2px dashed #E8DDD0", borderRadius:12 }}>
-            <p>Hiện chưa có bài viết nào trong mục này.</p>
+            <p>Hiện chưa có bài viết nào trong mục <b>{CAT_LABELS[currentCat] || currentCat}</b>.</p>
           </div>
         )}
       </div>
