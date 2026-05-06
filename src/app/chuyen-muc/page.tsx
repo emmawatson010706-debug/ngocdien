@@ -3,7 +3,6 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { supabase } from "@/lib/supabase/client";
 
-// 🔥 BÙA CHỐNG CACHE MẠNH NHẤT
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -27,34 +26,27 @@ const CAT_LABELS: Record<string, string> = {
 };
 
 export default async function CategoryPage({ params }: { params: any }) {
-  // 🛡️ GIẢI MÃ URL ĐỂ NHẬN DIỆN CHỮ CÓ DẤU (Ví dụ: %E1%BB%9D -> thơ)
+  // 1. LẤY URL VÀ "GỌT SẠCH" TRANG TRÍ
   const rawCat = params?.cat || "";
-  const decodedCat = decodeURIComponent(rawCat);
-  const currentCat = decodedCat.toLowerCase();
+  let currentCat = decodeURIComponent(rawCat).toLowerCase();
+  
+  // 🔥 BÙA MỚI: Xóa bỏ dấu gạch ngang dài (—) và khoảng trắng dư thừa
+  currentCat = currentCat.replace(/^—\s*/, '').trim(); 
   
   let searchIds: string[] = [];
   
-  // 🚩 KIỂM TRA MỤC CHA (Tiếng làng, Tin tức...)
+  // 2. KIỂM TRA GIA PHẢ
   if (CATEGORY_TREE[currentCat]) {
     searchIds = CATEGORY_TREE[currentCat];
-  } 
-  // 🚩 KIỂM TRA MỤC CON (Thơ, Tản văn...)
-  else {
+  } else {
     searchIds = [currentCat];
     
-    // 🔥 CƠ CHẾ TỰ ĐỘNG BÙ ĐẮP DẤU (Dành cho database lưu không dấu)
-    if (currentCat === 'thơ' || currentCat === 'tho') {
-        searchIds = ['tho', 'thơ'];
-    }
-    if (currentCat === 'tản văn' || currentCat === 'tan-van') {
-        searchIds = ['tan-van', 'tản văn'];
-    }
-    if (currentCat === 'tản mạn' || currentCat === 'tan-man') {
-        searchIds = ['tan-man', 'tản mạn'];
-    }
+    // Tự động khớp lỗi có dấu/không dấu cho các mục phổ biến
+    if (currentCat === 'thơ' || currentCat === 'tho') searchIds = ['tho', 'thơ'];
+    if (currentCat === 'tản văn' || currentCat === 'tan-van') searchIds = ['tan-van', 'tản văn'];
   }
 
-  // 📡 TRUY VẤN SUPABASE
+  // 3. HÚT DỮ LIỆU
   const { data: arts } = await supabase
     .from('articles')
     .select('*')
@@ -65,40 +57,36 @@ export default async function CategoryPage({ params }: { params: any }) {
   const label = CAT_LABELS[currentCat] || currentCat.toUpperCase();
 
   return (
-    <div style={{ minHeight:"100vh", background:"#FEF9F2", color:"#1C1C1C" }}>
+    <div style={{ minHeight:"100vh", background:"#FEF9F2" }}>
       <Header />
       <div style={{ maxWidth:1160, margin:"0 auto", padding:"20px 16px" }}>
         
-        {/* Banner Chuyên mục */}
         <div style={{ background:"linear-gradient(135deg,#9B1B14,#B91C1C)", color:"#fff",
           borderRadius:12, padding:"30px", marginBottom:25 }}>
-          <h1 style={{ fontFamily:"'Lora', serif", fontSize:24, fontWeight:900, margin:0 }}>{label}</h1>
-          <p style={{ opacity:.8, fontSize:13, marginTop:5 }}>{artsList.length} bài viết trong mục này</p>
+          <h1 style={{ fontSize:24, fontWeight:900, margin:0 }}>{label}</h1>
+          <p style={{ opacity:.8, margin:"5px 0 0 0" }}>{artsList.length} bài viết</p>
         </div>
 
-        {/* Danh sách bài viết */}
         {artsList.length > 0 ? (
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:20 }}>
             {artsList.map((a: any) => (
               <Link href={`/bai-viet/${a.slug}`} key={a.id} style={{ textDecoration:"none", color:"inherit" }}>
-                <div style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:"1px solid #E8DDD0", transition:"box-shadow .2s" }}>
-                  <img src={a.img || '/logo.png'} style={{ width:"100%", height:160, objectFit:"cover" }} alt={a.title} />
+                <div style={{ background:"#fff", borderRadius:8, overflow:"hidden", border:"1px solid #E8DDD0" }}>
+                  <img src={a.img || '/logo.png'} style={{ width:"100%", height:160, objectFit:"cover" }} />
                   <div style={{ padding:15 }}>
-                    <span style={{ color:"#B91C1C", fontSize:10, fontWeight:800, textTransform:"uppercase", letterSpacing:".5px" }}>
+                    <span style={{ color:"#B91C1C", fontSize:11, fontWeight:700 }}>
                         {CAT_LABELS[a.cat] || a.cat}
                     </span>
-                    <h3 style={{ fontSize:15, marginTop:6, fontWeight:700, lineHeight:1.4 }}>{a.title}</h3>
-                    <p style={{ fontSize:12, color:"#666", marginTop:8, lineHeight:1.5, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>
-                        {a.excerpt}
-                    </p>
+                    <h3 style={{ fontSize:15, marginTop:5, fontWeight:700 }}>{a.title}</h3>
+                    <p style={{ fontSize:12, color:"#666", marginTop:5 }} className="line-clamp-2">{a.excerpt}</p>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <div style={{ textAlign:"center", padding:"100px 0", border:"2px dashed #E8DDD0", borderRadius:12, background:"#fff" }}>
-            <p style={{ color:"#888" }}>Chưa có nội dung cho chuyên mục <b>{label}</b>.</p>
+          <div style={{ textAlign:"center", padding:"100px 0", border:"2px dashed #ccc", borderRadius:12 }}>
+            <p>Không thấy bài viết nào cho mục <b>{label}</b>.</p>
           </div>
         )}
       </div>
