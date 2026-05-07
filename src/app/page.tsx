@@ -748,7 +748,7 @@ function Home({ setNav }: { setNav?: any }) {
 ═══════════════════════════════════════════ */
 function GopYPage() {
   const [type,    setType]    = useState("gop_y");
-  const [name,{    setName]    = useState("");
+  const [name,    setName]    = useState("");
   const [phone,   setPhone]   = useState("");
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
