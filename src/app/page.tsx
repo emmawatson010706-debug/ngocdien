@@ -2032,7 +2032,12 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
   const defaultImg = "https://picsum.photos/seed/" + (a?.id || 1) + "nd/800/440";
   const [fSize, setFSize] = useState(15);
   
-  const textContent = a?.content ? a.content.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
+  // 1. TỰ ĐỘNG DỌN RÁC: Xóa câu chữ nháp mặc định nếu lỡ lưu vào dữ liệu
+  const cleanContent = a?.content 
+    ? a.content.replace(/<p>Bắt đầu viết nội dung bài\.\.\.<\/p>/g, '').replace(/Bắt đầu viết nội dung bài\.\.\./g, '') 
+    : '';
+
+  const textContent = cleanContent ? cleanContent.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
   const readTime = Math.max(1, Math.ceil(textContent.split(/\s+/).length / 200));
 
   const handleNativeShare = async () => {
@@ -2060,18 +2065,18 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
           <button onClick={() => setNav({ page: "home" })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>Trang chủ</button>
           <span>›</span>
           <button onClick={() => setNav({ page: "category", cat: a?.cat })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>
-            {CATS.find(c => c.slug === a?.cat)?.label || a?.cat}
+            {/* Nếu file này chưa import CATS thì anh cứ để nguyên, nó sẽ fallback về a.cat */}
+            {typeof CATS !== 'undefined' ? CATS.find((c: any) => c.slug === a?.cat)?.label || a?.cat : a?.cat}
           </button>
           <span>›</span>
           <span style={{ color: "#555" }}>{a?.title}</span>
         </div>
         
-        <Tag label={a?.cat}/>
-        <h1 style={{ fontFamily: "'Lora', serif", fontSize: "clamp(20px,4vw,30px)", fontWeight: 900, lineHeight: 1.38, margin: "12px 0" }}>{a?.title}</h1>
+        <h1 style={{ fontFamily: "'Lora', serif", fontSize: "clamp(20px,4vw,30px)", fontWeight: 900, lineHeight: 1.38, margin: "12px 0", color: "#111" }}>{a?.title}</h1>
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EAE0D0", paddingBottom: 12, marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
           <p style={{ color: "#aaa", fontSize: 12.5, margin: 0 }}>
-            ✍️ Ban biên tập  ·  📅 {a?.date}  ·  <span style={{ color: "#0891B2", fontWeight: 700 }}>⏱️ Đọc {readTime} phút</span>
+            ✍️ {a?.author_name || 'Ban biên tập'}  ·  📅 {a?.date}  ·  <span style={{ color: "#0891B2", fontWeight: 700 }}>⏱️ Đọc {readTime} phút</span>
           </p>
           <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#FFFBF5", padding: "4px 8px", borderRadius: 6, border: "1px solid #E8DDD0" }}>
             <span style={{ fontSize: 10, color: "#888", fontWeight: 700, letterSpacing: "1px" }}>CỠ CHỮ:</span>
@@ -2083,7 +2088,15 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         
         <img src={a?.img || defaultImg} alt={a?.title} style={{ width: "100%", borderRadius: 10, marginBottom: 20, display: "block", maxHeight: 450, objectFit: 'cover' }}/>
         
-        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", marginTop: 24, transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: a?.content || a?.excerpt || "<p>Chưa có nội dung chi tiết.</p>" }} />
+        {/* 2. HIỂN THỊ MÔ TẢ NGẮN (SAPO) CỰC KỲ CHUYÊN NGHIỆP TỰA NHƯ BÁO CHÍ */}
+        {a?.excerpt && (
+          <div style={{ fontSize: fSize + 1, fontWeight: 700, fontStyle: "italic", color: "#4b5563", marginBottom: 24, borderLeft: "4px solid #B91C1C", lineHeight: 1.6, background: "#fdfbf7", padding: "14px 18px", borderRadius: "0 8px 8px 0" }}>
+            {a.excerpt}
+          </div>
+        )}
+        
+        {/* 3. NỘI DUNG ĐÃ ĐƯỢC DỌN RÁC (Gồm chữ và Máy nghe nhạc) */}
+        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: cleanContent || "<p>Chưa có nội dung chi tiết.</p>" }} />
         
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8", flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT NÀY:</span>
@@ -2096,12 +2109,11 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
           </button>
         </div>
         
-        <BtnRed onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ marginTop: 20 }}>← Quay lại Trang chủ</BtnRed>
+        <button onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ background: "#B91C1C", color: "#fff", border: "none", borderRadius: 5, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", marginTop: 24, display: "inline-block" }}>← Quay lại Trang chủ</button>
       </div>
     </div>
   );
 }
-
 /* ═══════════════════════════════════════════
    APP ROOT (ĐÃ THÊM BỘ MÁY ĐÓN KHÁCH TỪ ZALO/FB)
 ═══════════════════════════════════════════ */
