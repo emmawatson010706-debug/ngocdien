@@ -1,39 +1,42 @@
 import { supabase } from '@/lib/supabase/client';
 import { Metadata } from 'next';
-import App from '@/app/page'; // Kéo nguyên giao diện chuẩn của Trang chủ vào đây
+import App from '@/app/page';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// TẠO THẺ THÔNG TIN CHO FACEBOOK / ZALO ĐỌC
+// 🔥 PHẦN NÀY DÀNH RIÊNG CHO ROBOT FB/ZALO QUÉT DỮ LIỆU
 export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
   const slug = params?.slug;
   const { data } = await supabase.from('articles').select('*').eq('slug', slug).single();
   
-  if (!data) return { title: 'Không tìm thấy bài viết - Xóm Ngọc Điền' };
+  if (!data) return { title: 'Xóm Ngọc Điền' };
+
+  const shareTitle = data.title;
+  const shareDesc = data.excerpt || "Mời bà con xem bài viết mới nhất trên Cổng thông tin điện tử Xóm Ngọc Điền.";
+  const shareImg = data.img || 'https://ngocdien.info.vn/logo.png';
 
   return {
-    title: data.title,
-    description: data.excerpt || "Mời bà con đọc chi tiết bài viết trên Cổng thông tin Xóm Ngọc Điền.",
+    title: shareTitle,
+    description: shareDesc,
     openGraph: {
-      title: data.title,
-      description: data.excerpt || "Mời bà con đọc chi tiết bài viết trên Cổng thông tin Xóm Ngọc Điền.",
-      url: `https://ngocdien.info.vn/bai-viet/${data.slug}`,
+      title: shareTitle,
+      description: shareDesc,
+      url: `https://ngocdien.info.vn/bai-viet/${slug}`,
       siteName: 'Xóm Ngọc Điền',
-      images: [
-        {
-          url: data.img || 'https://ngocdien.info.vn/logo.png',
-          width: 1200,
-          height: 630,
-          alt: data.title,
-        }
-      ],
+      images: [{ url: shareImg, width: 1200, height: 630 }],
       type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: shareTitle,
+      description: shareDesc,
+      images: [shareImg],
     },
   };
 }
 
-// HIỂN THỊ GIAO DIỆN Y HỆT TRANG CHỦ
-export default function ArticleSinglePage() {
+// HIỂN THỊ GIAO DIỆN CHUẨN (MƯỢN TỪ TRANG CHỦ)
+export default function Page() {
   return <App />;
 }
