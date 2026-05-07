@@ -215,7 +215,7 @@ function Header({ setNav }: { setNav?: any }) {
             <button onClick={() => go("search")} style={{ background:"none", border:"none", color:"#B91C1C", fontSize:12, fontWeight:900, cursor:"pointer" }}>🔍 Tìm kiếm</button>
             
             <button onClick={() => go("category",{ cat:"gop-y" })} style={{ background:"none", border:"none", color:"#B91C1C", fontSize:11, fontWeight:700, cursor:"pointer" }}>🔔 Gửi bài</button>
-            <button onClick={() => go("admin-login")} style={{ background:"none", border:"none", color:"#777", fontSize:11, cursor:"pointer" }}>⚙ Quản trị</button>
+            
           </div>
         </div>
       </div>
