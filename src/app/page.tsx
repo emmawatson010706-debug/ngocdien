@@ -477,41 +477,41 @@ function Sidebar({ setNav }: { setNav?: any }) {
 ═══════════════════════════════════════════ */}
 <TramPhatThanh ARTS={typeof ARTS !== 'undefined' ? ARTS : []} setNav={setNav} />
 
-      {/* Cộng đồng */}
-      <div style={{ background:"#fff", border:"1px solid #E8DDD0", borderRadius:10, overflow:"hidden" }}>
-        <div style={{ background:"#0057B8", padding:"9px 13px",
-          color:"#fff", fontSize:12.5, fontWeight:700 }}>🤝 CỘNG ĐỒNG NGỌC ĐIỀN</div>
-        <div style={{ padding:14 }}>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:10 }}>
-            <a href="https://zalo.me/g/i8vuebonziplqy2c06ux" target="_blank" rel="noopener"
-              style={{ background:"#0057B8", color:"#fff", borderRadius:8,
-                padding:"12px 6px", textAlign:"center", textDecoration:"none", display:"block" }}>
-              <div style={{ fontSize:24 }}>💬</div>
-              <div style={{ fontSize:13, fontWeight:700, marginTop:4 }}>Zalo</div>
-              <div style={{ fontSize:10.5, opacity:.8, marginTop:2 }}>Nhóm cộng đồng</div>
-            </a>
-            <a href="https://www.facebook.com/share/1BFnoXVtDB/" target="_blank" rel="noopener"
-              style={{ background:"#1877F2", color:"#fff", borderRadius:8,
-                padding:"12px 6px", textAlign:"center", textDecoration:"none", display:"block" }}>
-              <div style={{ fontSize:24 }}>📘</div>
-              <div style={{ fontSize:13, fontWeight:700, marginTop:4 }}>Facebook</div>
-              <div style={{ fontSize:10.5, opacity:.8, marginTop:2 }}>Trang Ngọc Điền</div>
-            </a>
-          </div>
-          <a href="https://maps.app.goo.gl/gnWBNeAbnu7XK8N67" target="_blank" rel="noopener"
-            style={{ display:"flex", alignItems:"center", gap:10, background:"#F9FAFB",
-              border:"1px solid #E5E7EB", borderRadius:8, padding:"10px 12px",
-              textDecoration:"none", color:"#374151" }}>
-            <div style={{ width:36, height:36, background:"#EA4335", borderRadius:8,
-              display:"flex", alignItems:"center", justifyContent:"center",
-              fontSize:18, flexShrink:0 }}>📍</div>
-            <div>
-              <div style={{ fontSize:12, fontWeight:700 }}>Bản đồ Xóm Ngọc Điền</div>
-              <div style={{ fontSize:11, color:"#888", marginTop:2 }}>Xem trên Google Maps →</div>
-            </div>
-          </a>
-        </div>
-      </div>
+      {/* ═══════════════════════════════════════════
+    CỘNG ĐỒNG NGỌC ĐIỀN (KHỐI CHUẨN ĐẸP CÓ LINK THẬT)
+═══════════════════════════════════════════ */}
+<div style={{ marginTop: 24, marginBottom: 24 }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 8, borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
+    <span style={{ fontSize: 18 }}>🤝</span>
+    <h2 style={{ fontFamily: "'Lora', serif", fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>CỘNG ĐỒNG NGỌC ĐIỀN</h2>
+  </div>
+
+  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+    {/* Nút Zalo */}
+    <a href="https://zalo.me/g/i8vuebonziplqy2c06ux" target="_blank" rel="noopener noreferrer" style={{ background: "#0068FF", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(0,104,255,0.2)" }}>
+      <div style={{ width: 36, height: 36, background: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 12 }}>💬</div>
+      <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Nhóm Zalo</div>
+      <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Cộng đồng<br/>Ngọc Điền</div>
+      <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Bấm để tham gia →</div>
+    </a>
+
+    {/* Nút Facebook */}
+    <a href="https://www.facebook.com/share/1BFnoXVtDB/" target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(24,119,242,0.2)" }}>
+      <div style={{ fontSize: 32, marginBottom: 14, lineHeight: 1 }}>📘</div>
+      <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Facebook</div>
+      <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Trang Xóm<br/>Ngọc Điền</div>
+      <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Bấm để theo dõi →</div>
+    </a>
+
+    {/* Nút Bản đồ */}
+    <a href="https://maps.app.goo.gl/gnWBNeAbnu7XK8N67" target="_blank" rel="noopener noreferrer" style={{ background: "#F05252", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(240,82,82,0.2)" }}>
+      <div style={{ fontSize: 32, marginBottom: 14, lineHeight: 1, opacity: 0.9 }}>📍</div>
+      <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Bản đồ</div>
+      <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Xóm Ngọc<br/>Điền</div>
+      <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Xem Google Maps →</div>
+    </a>
+  </div>
+</div>
 
       {/* Góp ý */}
       <div style={{ background:"linear-gradient(135deg,#FEF3C7,#FFFBF0)",
