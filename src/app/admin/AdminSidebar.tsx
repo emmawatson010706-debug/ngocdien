@@ -9,9 +9,7 @@ import { useRouter } from 'next/navigation';
 const MENU = [
   { label: 'Tổng quan',    href: '/admin',                icon: '📊' },
   { label: 'Bài viết',     href: '/admin/bai-viet',       icon: '📝' },
-  { label: 'Người ND',     href: '/admin/nguoi',          icon: '👥' },
-  { label: 'Podcast',      href: '/admin/podcast',        icon: '🎙' },
-  { label: 'Thư viện',     href: '/admin/thu-vien',       icon: '📚' },
+  
   { label: 'Cài đặt',      href: '/admin/cai-dat',        icon: '⚙️' },
 ];
 

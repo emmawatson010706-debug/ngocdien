@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const NAV = [
-  { label: 'GIỚI THIỆU', href: '/gioi-thieu', icon: '🏡', children: [] },
+  { label: 'TRANG CHỦ', href: '/', icon: '🏡', children: [] },
   { label: 'TIN TỨC', href: '/chuyen-muc/tin-tuc', icon: '📰',
     children: [{ label: 'Thông báo', href: '/chuyen-muc/thong-bao' }, { label: 'Sự kiện', href: '/chuyen-muc/su-kien' }] },
+  { label: 'GIỚI THIỆU', href: '/chuyen-muc/gioi-thieu', icon: 'ℹ️', children: [] },
   { label: 'NGƯỜI NGỌC ĐIỀN', href: '/chuyen-muc/nguoi-ngoc-dien', icon: '👥',
     children: [
       { label: 'Giới thiệu chung', href: '/chuyen-muc/nguoi-ngoc-dien-chung' },
