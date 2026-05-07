@@ -740,43 +740,7 @@ function Home({ setNav }: { setNav?: any }) {
 
           
 
-          {/* GÓP Ý & GỬI BÀI */}
-          <section style={{ marginBottom:26 }}>
-            <SecHead icon="✉️" title="GÓP Ý & GỬI BÀI" color="#B45309"
-              onMore={() => go("gop-y")}/>
-            <div style={{ background:"linear-gradient(135deg,#FEF3C7,#FFFBF0)",
-              border:"1px solid #FCD34D", borderRadius:12, padding:"20px 22px",
-              display:"flex", gap:20, alignItems:"center", flexWrap:"wrap" }}>
-              <div style={{ flex:1, minWidth:200 }}>
-                <p style={{ fontSize:13.5, color:"#444", lineHeight:1.8, marginBottom:14 }}>
-                  Bà con có bài viết, ý kiến đóng góp, phản ánh sự việc hoặc kiến nghị về xóm —
-                  hãy gửi tới Ban quản trị qua form bên dưới.
-                </p>
-                <div style={{ display:"flex", gap:8 }}>
-                  <a href="tel:0914587575"
-                    style={{ background:"#0057B8", color:"#fff", borderRadius:7,
-                      padding:"8px 14px", textDecoration:"none", fontSize:13,
-                      fontWeight:700, display:"flex", alignItems:"center", gap:6 }}>
-                    💬 Zalo: 0914 587 575
-                  </a>
-                </div>
-              </div>
-              <button onClick={() => go("gop-y")}
-                style={{ background:"#B45309", color:"#fff", border:"none",
-                  borderRadius:8, padding:"12px 22px", fontSize:14, fontWeight:700,
-                  cursor:"pointer", flexShrink:0 }}>
-                ✉️ Vào trang gửi bài →
-              </button>
-            </div>
-          </section>
-
-        </div>
-
-        <div className="nd-sidebar"><Sidebar setNav={setNav}/></div>
-      </div>
-    </div>
-  );
-}
+          
 
 /* ═══════════════════════════════════════════
    GÓP Ý & GỬI BÀI PAGE
