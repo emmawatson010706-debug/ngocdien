@@ -2133,13 +2133,16 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:30, padding:"14px 0", borderTop:"1px solid #EDE5D8", borderBottom:"1px solid #EDE5D8" }}>
   <span style={{ fontSize:12, fontWeight:700, color:"#888" }}>CHIA SẺ BÀI VIẾT:</span>
   
-  {/* Nút Facebook: Giữ nguyên link chia sẻ chuẩn */}
+  <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:30, padding:"14px 0", borderTop:"1px solid #EDE5D8", borderBottom:"1px solid #EDE5D8" }}>
+  <span style={{ fontSize:12, fontWeight:700, color:"#888" }}>CHIA SẺ BÀI VIẾT:</span>
+  
+  {/* Nút Facebook: Giữ nguyên */}
   <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} 
      target="_blank" rel="noopener noreferrer" 
      style={{ background:"#1877F2", color:"#fff", borderRadius:5, padding:"6px 14px", fontSize:12.5, fontWeight:700, textDecoration:"none" }}>📘 Facebook</a>
   
-  {/* Nút Zalo: Đã sửa lại đường link share chuẩn của Zalo (bỏ chữ /article) */}
-  <a href={`https://zalo.me/share?url=${encodeURIComponent(url)}`} 
+  {/* Nút Zalo: ĐÃ ĐỔI SANG LINK PLUGIN CHUYÊN DỤNG TRỊ LỖI TRÊN MÁY TÍNH */}
+  <a href={`https://sp.zalo.me/plugins/share?url=${encodeURIComponent(url)}`} 
      target="_blank" rel="noopener noreferrer" 
      style={{ background:"#0057B8", color:"#fff", borderRadius:5, padding:"6px 14px", fontSize:12.5, fontWeight:700, textDecoration:"none" }}>💬 Zalo</a>
 </div>
