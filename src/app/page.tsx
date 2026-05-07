@@ -473,128 +473,9 @@ function Sidebar({ setNav }: { setNav?: any }) {
       </div>
 
       {/* ═══════════════════════════════════════════
-    TRẠM PHÁT THANH PODCAST (TỰ ĐỘNG LẤY MP3)
+    TRẠM PHÁT THANH PODCAST
 ═══════════════════════════════════════════ */}
-{(() => {
-  // 1. Lấy bài Podcast mới nhất và ép kiểu 'any' để thằng Vercel không xét nét
-  const latestPodcast: any = typeof ARTS !== 'undefined' ? (ARTS as any[]).find((a: any) => a.cat === 'podcast') : null;
-
-  // 2. Trích xuất link file MP3 từ nội dung bài viết
-  const audioMatch = latestPodcast?.content?.match(/<audio.*?src="([^"]+)"/);
-  const audioUrl = audioMatch ? audioMatch[1] : null;
-
-  // 3. Nếu chưa có bài Podcast nào hoặc không có file MP3 thì ẩn máy nghe nhạc đi
-  if (!latestPodcast || !audioUrl) return null;
-
-  // Cỗ máy điều khiển âm thanh thực thụ
-  const [isPlay, setIsPlay] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState("0:00");
-  const [duration, setDuration] = useState("0:00");
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const formatTime = (time: number) => {
-    if (isNaN(time)) return "0:00";
-    const m = Math.floor(time / 60);
-    const s = Math.floor(time % 60);
-    return `${m}:${s < 10 ? '0' + s : s}`;
-  };
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (isPlay) audioRef.current.pause();
-    else audioRef.current.play();
-    setIsPlay(!isPlay);
-  };
-
-  return (
-    <div style={{ background:"#fff", border:"1px solid #E8DDD0", borderRadius:10, overflow:"hidden", boxShadow: "0 4px 15px rgba(0,0,0,0.05)" }}>
-      {/* Thẻ audio ẩn để xử lý âm thanh thật */}
-      <audio 
-        ref={audioRef} 
-        src={audioUrl} 
-        onTimeUpdate={() => {
-          if (audioRef.current) {
-            setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
-            setCurrentTime(formatTime(audioRef.current.currentTime));
-          }
-        }}
-        onLoadedMetadata={() => setDuration(formatTime(audioRef.current?.duration || 0))}
-        onEnded={() => setIsPlay(false)}
-      />
-
-      <div style={{ background:"#1C1C1C", padding:"10px 14px", display:"flex", gap:7, alignItems:"center", justifyContent:"space-between" }}>
-        <div style={{ display:"flex", gap:7, alignItems:"center" }}>
-          <span style={{ width:8, height:8, borderRadius:"50%", background:"#C8942B", display:"inline-block", boxShadow: "0 0 8px #C8942B" }}/>
-          <span style={{ color:"#fff", fontSize:13, fontWeight:800, letterSpacing: 0.5 }}>🎙 TRẠM PHÁT THANH XÓM</span>
-        </div>
-        <button onClick={() => setNav({ page:"category", cat:"podcast" })}
-          style={{ background:"none", border:"1px solid rgba(200,148,43,.4)", color:"#C8942B", fontSize:10.5, fontWeight:700, cursor:"pointer", borderRadius:4, padding:"3px 8px", transition: "all 0.2s" }}>
-          Tất cả tập →
-        </button>
-      </div>
-      
-      <div style={{ padding: "16px 14px" }}>
-        {/* Lời nhắn nhủ cho bà con */}
-        <div style={{ background: "#FFF8EE", border: "1px dashed #EAE0D0", borderRadius: 8, padding: "10px 12px", marginBottom: 16 }}>
-          <p style={{ fontSize: 13, color: "#333", lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>
-            📻 Nơi lưu giữ hồn quê qua những dòng tản văn, câu chuyện lịch sử. <br/>
-            👉 <span style={{ fontWeight: 700, color: "#B91C1C" }}>Bà con hãy bấm vào nút ▶ (Hình tam giác màu đỏ) bên dưới để nghe nhé!</span>
-          </p>
-        </div>
-
-        <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:14 }}>
-          <div style={{ width:56, height:56, background:"#1C1C1C", borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0, boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)" }}>🎙</div>
-          <div style={{ flex: 1, overflow: "hidden" }}>
-            <div style={{ fontSize:10, color:"#B91C1C", fontWeight:800, letterSpacing: 0.5 }}>BÀI ĐĂNG MỚI NHẤT</div>
-            {/* Tự động lấy tiêu đề bài viết */}
-            <p style={{ fontSize:14, fontWeight:800, lineHeight:1.3, marginTop:4, color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {latestPodcast.title}
-            </p>
-          </div>
-        </div>
-
-        {/* Thanh tiến trình chạy thật */}
-        <input 
-          type="range" min="0" max="100" value={progress || 0}
-          onChange={(e) => {
-            const manualChange = Number(e.target.value);
-            if (audioRef.current) {
-              audioRef.current.currentTime = (audioRef.current.duration / 100) * manualChange;
-              setProgress(manualChange);
-            }
-          }}
-          style={{ width: "100%", height: 4, borderRadius: 4, cursor: "pointer", accentColor: "#B91C1C", marginBottom: 6 }}
-        />
-        <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:"#888", marginBottom:16, fontWeight: 500 }}>
-          <span>{currentTime}</span><span>{duration}</span>
-        </div>
-        
-        {/* NÚT PLAY THẬT CÓ HIỆU ỨNG */}
-        <div style={{ display:"flex", justifyContent:"center", gap:20, marginBottom:16 }}>
-          <button style={{ background:"none", border:"none", color:"#aaa", fontSize:20, cursor:"pointer" }}>⏮</button>
-          
-          <button onClick={togglePlay}
-            style={{ 
-              background: "#B91C1C", color: "#fff", width: 48, height: 48, borderRadius: "50%", 
-              border: "none", cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", 
-              justifyContent: "center", boxShadow: isPlay ? "0 0 15px rgba(185,28,28,0.4)" : "0 4px 10px rgba(185,28,28,0.3)",
-              transition: "all 0.2s transform"
-            }}>
-            {isPlay ? "⏸" : "▶"}
-          </button>
-          
-          <button style={{ background:"none", border:"none", color:"#aaa", fontSize:20, cursor:"pointer" }}>⏭</button>
-        </div>
-
-        <button onClick={() => setNav({ page:"category", cat:"podcast" })}
-          style={{ width:"100%", background:"#1A1A1A", color:"#C8942B", border:"none", borderRadius:8, padding:"10px", fontSize:13, fontWeight:700, cursor:"pointer", transition: "background 0.2s" }}>
-          Nghe thêm các tập khác →
-        </button>
-      </div>
-    </div>
-  );
-})()}
+<TramPhatThanh ARTS={typeof ARTS !== 'undefined' ? ARTS : []} setNav={setNav} />
 
       {/* Cộng đồng */}
       <div style={{ background:"#fff", border:"1px solid #E8DDD0", borderRadius:10, overflow:"hidden" }}>
@@ -2287,6 +2168,119 @@ export default function App() {
       {nav.page === "article"  && <ArtPage article={nav.article} setNav={setNav}/>}
       {nav.page === "search"   && <SearchPage setNav={setNav}/>}
       <Footer setNav={setNav}/>
+    </div>
+  );
+}
+
+// 🚀 ĐÂY LÀ NHÀ MÁY XỬ LÝ PODCAST ĐỘC LẬP (Đúng chuẩn React)
+function TramPhatThanh({ ARTS, setNav }: { ARTS: any[], setNav: any }) {
+  const latestPodcast = ARTS?.find((a: any) => a.cat === 'podcast');
+  const audioMatch = latestPodcast?.content?.match(/<audio.*?src="([^"]+)"/);
+  const audioUrl = audioMatch ? audioMatch[1] : null;
+
+  // Khai báo công cụ đếm (Đã được đặt đúng chuẩn, không bao giờ bị đơ nữa)
+  const [isPlay, setIsPlay] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState("0:00");
+  const [duration, setDuration] = useState("0:00");
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Nếu không có bài thì tàng hình
+  if (!latestPodcast || !audioUrl) return null;
+
+  const formatTime = (time: number) => {
+    if (isNaN(time)) return "0:00";
+    const m = Math.floor(time / 60);
+    const s = Math.floor(time % 60);
+    return `${m}:${s < 10 ? '0' + s : s}`;
+  };
+
+  const togglePlay = () => {
+    if (!audioRef.current) return;
+    if (isPlay) audioRef.current.pause();
+    else audioRef.current.play();
+    setIsPlay(!isPlay);
+  };
+
+  return (
+    <div style={{ background:"#fff", border:"1px solid #E8DDD0", borderRadius:10, overflow:"hidden", boxShadow: "0 4px 15px rgba(0,0,0,0.05)" }}>
+      <audio 
+        ref={audioRef} 
+        src={audioUrl} 
+        onTimeUpdate={() => {
+          if (audioRef.current) {
+            setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+            setCurrentTime(formatTime(audioRef.current.currentTime));
+          }
+        }}
+        onLoadedMetadata={() => setDuration(formatTime(audioRef.current?.duration || 0))}
+        onEnded={() => setIsPlay(false)}
+      />
+
+      <div style={{ background:"#1C1C1C", padding:"10px 14px", display:"flex", gap:7, alignItems:"center", justifyContent:"space-between" }}>
+        <div style={{ display:"flex", gap:7, alignItems:"center" }}>
+          <span style={{ width:8, height:8, borderRadius:"50%", background:"#C8942B", display:"inline-block", boxShadow: "0 0 8px #C8942B" }}/>
+          <span style={{ color:"#fff", fontSize:13, fontWeight:800, letterSpacing: 0.5 }}>🎙 TRẠM PHÁT THANH XÓM</span>
+        </div>
+        <button onClick={() => setNav({ page:"category", cat:"podcast" })}
+          style={{ background:"none", border:"1px solid rgba(200,148,43,.4)", color:"#C8942B", fontSize:10.5, fontWeight:700, cursor:"pointer", borderRadius:4, padding:"3px 8px" }}>
+          Tất cả tập →
+        </button>
+      </div>
+      
+      <div style={{ padding: "16px 14px" }}>
+        <div style={{ background: "#FFF8EE", border: "1px dashed #EAE0D0", borderRadius: 8, padding: "10px 12px", marginBottom: 16 }}>
+          <p style={{ fontSize: 13, color: "#333", lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>
+            📻 Nơi lưu giữ hồn quê qua những dòng tản văn, câu chuyện lịch sử. <br/>
+            👉 <span style={{ fontWeight: 700, color: "#B91C1C" }}>Bà con hãy bấm vào nút ▶ bên dưới để nghe nhé!</span>
+          </p>
+        </div>
+
+        <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:14 }}>
+          <div style={{ width:56, height:56, background:"#1C1C1C", borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0, boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)" }}>🎙</div>
+          <div style={{ flex: 1, overflow: "hidden" }}>
+            <div style={{ fontSize:10, color:"#B91C1C", fontWeight:800, letterSpacing: 0.5 }}>BÀI ĐĂNG MỚI NHẤT</div>
+            <p style={{ fontSize:14, fontWeight:800, lineHeight:1.3, marginTop:4, color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {latestPodcast.title}
+            </p>
+          </div>
+        </div>
+
+        <input 
+          type="range" min="0" max="100" value={progress || 0}
+          onChange={(e) => {
+            const manualChange = Number(e.target.value);
+            if (audioRef.current) {
+              audioRef.current.currentTime = (audioRef.current.duration / 100) * manualChange;
+              setProgress(manualChange);
+            }
+          }}
+          style={{ width: "100%", height: 4, borderRadius: 4, cursor: "pointer", accentColor: "#B91C1C", marginBottom: 6 }}
+        />
+        <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:"#888", marginBottom:16, fontWeight: 500 }}>
+          <span>{currentTime}</span><span>{duration}</span>
+        </div>
+        
+        <div style={{ display:"flex", justifyContent:"center", gap:20, marginBottom:16 }}>
+          <button style={{ background:"none", border:"none", color:"#aaa", fontSize:20, cursor:"pointer" }}>⏮</button>
+          
+          <button onClick={togglePlay}
+            style={{ 
+              background: "#B91C1C", color: "#fff", width: 48, height: 48, borderRadius: "50%", 
+              border: "none", cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", 
+              justifyContent: "center", boxShadow: isPlay ? "0 0 15px rgba(185,28,28,0.4)" : "0 4px 10px rgba(185,28,28,0.3)"
+            }}>
+            {isPlay ? "⏸" : "▶"}
+          </button>
+          
+          <button style={{ background:"none", border:"none", color:"#aaa", fontSize:20, cursor:"pointer" }}>⏭</button>
+        </div>
+
+        <button onClick={() => setNav({ page:"category", cat:"podcast" })}
+          style={{ width:"100%", background:"#1A1A1A", color:"#C8942B", border:"none", borderRadius:8, padding:"10px", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+          Nghe thêm các tập khác →
+        </button>
+      </div>
     </div>
   );
 }
