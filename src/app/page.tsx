@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import {import { useState, useEffect, useRef } from "react";
 import { supabase } from '@/lib/supabase/client';
 /* ═══════════════════════════════════════════
    DỮ LIỆU
@@ -187,11 +187,20 @@ const BtnRed = ({ children, onClick, style={} }: { children?: any, onClick?: any
 );
 
 /* ═══════════════════════════════════════════
-   HEADER
+   HEADER (ĐÃ THÊM MŨI TÊN TRƯỢT NGANG & BỎ NÚT THỪA)
 ═══════════════════════════════════════════ */
 function Header({ setNav }: { setNav?: any }) {
   const [open, setOpen] = useState(false);
   const [exp, setExp]   = useState<number | null>(null);
+  
+  // Lắp bộ điều khiển trượt ngang
+  const navRef = useRef<HTMLDivElement>(null);
+  const handleScroll = (direction: string) => {
+    if (navRef.current) {
+      const scrollAmount = 250; // Quãng đường mỗi lần trượt (px)
+      navRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
 
   const go = (page: any, extra: any = {}) => {
     setNav({ page, ...extra });
@@ -202,8 +211,7 @@ function Header({ setNav }: { setNav?: any }) {
 
   return (
     <>
-
-      {/* top bar */}
+      {/* top bar (Đã xóa nút Quản trị thừa ở đây) */}
       <div style={{ background:"#FFF8EE", borderBottom:"1px solid #EAE0D0", padding:"4px 0" }}>
         <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px",
           display:"flex", justifyContent:"space-between", alignItems:"center" }}>
@@ -211,134 +219,105 @@ function Header({ setNav }: { setNav?: any }) {
             📅 {new Date().toLocaleDateString("vi-VN",{ weekday:"long", year:"numeric", month:"long", day:"numeric" })}
           </span>
           <div style={{ display:"flex", gap:14 }}>
-            {/* THÊM NÚT TÌM KIẾM Ở ĐÂY */}
             <button onClick={() => go("search")} style={{ background:"none", border:"none", color:"#B91C1C", fontSize:12, fontWeight:900, cursor:"pointer" }}>🔍 Tìm kiếm</button>
-            
             <button onClick={() => go("category",{ cat:"gop-y" })} style={{ background:"none", border:"none", color:"#B91C1C", fontSize:11, fontWeight:700, cursor:"pointer" }}>🔔 Gửi bài</button>
-            
           </div>
         </div>
       </div>
 
       {/* main header */}
-      <header style={{ background:"linear-gradient(180deg,#9B1B14,#B91C1C)",
-        position:"sticky", top:0, zIndex:200, boxShadow:"0 2px 12px rgba(0,0,0,.3)" }}>
+      <header style={{ background:"linear-gradient(180deg,#9B1B14,#B91C1C)", position:"sticky", top:0, zIndex:200, boxShadow:"0 2px 12px rgba(0,0,0,.3)" }}>
         <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px" }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"center",
-            position:"relative", padding:"11px 0" }}>
-            <button onClick={() => go("home")}
-              style={{ background:"none", border:"none", cursor:"pointer", textAlign:"center" }}>
-              {/* LOGO CHÍNH THỨC (ĐÃ ÉP CÂN BỤC TRẮNG) */}
-          <div style={{ background: "#fff", padding: "5px 14px", borderRadius: "8px", display: "inline-block", boxShadow: "0 2px 10px rgba(0,0,0,0.15)" }}>
-            <img 
-              src="/logo.png" 
-              alt="Cổng thông tin Xóm Ngọc Điền" 
-              style={{ height: "42px", width: "auto", display: "block", objectFit: "contain" }} 
-            />
-          </div>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"center", position:"relative", padding:"11px 0" }}>
+            <button onClick={() => go("home")} style={{ background:"none", border:"none", cursor:"pointer", textAlign:"center" }}>
+              <div style={{ background: "#fff", padding: "5px 14px", borderRadius: "8px", display: "inline-block", boxShadow: "0 2px 10px rgba(0,0,0,0.15)" }}>
+                <img src="/logo.png" alt="Cổng thông tin Xóm Ngọc Điền" style={{ height: "42px", width: "auto", display: "block", objectFit: "contain" }} />
+              </div>
             </button>
             {/* hamburger */}
             <button onClick={() => setOpen(true)}
-              style={{ position:"absolute", right:0, background:"rgba(255,255,255,.12)",
-                border:"1px solid rgba(255,255,255,.2)", borderRadius:6,
-                width:36, height:36, cursor:"pointer", display:"flex",
-                flexDirection:"column", alignItems:"center", justifyContent:"center", gap:5 }}>
-              {[0,1,2].map(i=><span key={i} style={{ width:18,height:2,background:"#fff",
-                borderRadius:1,display:"block" }}/>)}
+              style={{ position:"absolute", right:0, background:"rgba(255,255,255,.12)", border:"1px solid rgba(255,255,255,.2)", borderRadius:6, width:36, height:36, cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:5 }}>
+              {[0,1,2].map(i=><span key={i} style={{ width:18,height:2,background:"#fff", borderRadius:1,display:"block" }}/>)}
             </button>
           </div>
         </div>
 
-        {/* desktop nav */}
-        <div style={{ background:"rgba(0,0,0,.18)", borderTop:"1px solid rgba(255,255,255,.08)" }}>
-          <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px" }}>
-            <nav className="nd-dnav">
+        {/* desktop nav (CÓ 2 MŨI TÊN TRƯỢT 2 BÊN) */}
+        <div style={{ background:"rgba(0,0,0,.18)", borderTop:"1px solid rgba(255,255,255,.08)", position:"relative" }}>
+          <div style={{ maxWidth:1160, margin:"0 auto", position:"relative", display:"flex", alignItems:"center" }}>
+            
+            {/* NÚT GẠT TRÁI */}
+            <button onClick={() => handleScroll("left")} 
+              style={{ background:"linear-gradient(to right, #80120d 50%, transparent)", border:"none", color:"#FBBF24", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 15px 6px 10px", zIndex:10, height:"100%" }}>
+              ⟨
+            </button>
+
+            {/* KHUNG CHỨA MENU */}
+            <nav className="nd-dnav" ref={navRef} style={{ flex:1, display:"flex", overflowX:"auto", scrollbarWidth:"none", scrollBehavior:"smooth" }}>
               {CATS.map(c => (
                 <button key={c.slug} onClick={() => go("category",{ cat:c.slug })}
-                  style={{ background:"none", border:"none", color:"rgba(255,255,255,.88)",
-                    fontSize:10.5, fontWeight:700, letterSpacing:".6px",
-                    padding:"8px 10px", cursor:"pointer", whiteSpace:"nowrap" }}
+                  style={{ background:"none", border:"none", color:"rgba(255,255,255,.88)", fontSize:10.5, fontWeight:700, letterSpacing:".6px", padding:"8px 10px", cursor:"pointer", whiteSpace:"nowrap" }}
                   onMouseEnter={e=>(e.target as any).style.color="#FBBF24"}
                   onMouseLeave={e=>(e.target as any).style.color="rgba(255,255,255,.88)"}>
                   {c.label.toUpperCase()}
                 </button>
               ))}
               <button onClick={() => go("admin-login")}
-                style={{ background:"none", border:"none", color:"#F87171",
-                  fontSize:10.5, fontWeight:700, padding:"8px 10px", cursor:"pointer" }}>
+                style={{ background:"none", border:"none", color:"#F87171", fontSize:10.5, fontWeight:700, padding:"8px 10px", cursor:"pointer", whiteSpace:"nowrap" }}>
                 ⚙ QUẢN TRỊ
               </button>
             </nav>
+
+            {/* NÚT GẠT PHẢI */}
+            <button onClick={() => handleScroll("right")} 
+              style={{ background:"linear-gradient(to left, #80120d 50%, transparent)", border:"none", color:"#FBBF24", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 10px 6px 15px", zIndex:10, height:"100%" }}>
+              ⟩
+            </button>
+
           </div>
         </div>
       </header>
 
       {/* overlay */}
-      {open && <div onClick={() => setOpen(false)} style={{ position:"fixed", inset:0,
-        background:"rgba(0,0,0,.52)", zIndex:900 }}/>}
+      {open && <div onClick={() => setOpen(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.52)", zIndex:900 }}/>}
 
-      {/* side menu */}
+      {/* side menu (Mục lục 3 gạch) */}
       <nav className={`nd-menu${open?" open":""}`}>
-        <div style={{ background:"#B91C1C", padding:"13px 14px",
-          display:"flex", justifyContent:"space-between", alignItems:"center", flexShrink:0 }}>
+        <div style={{ background:"#B91C1C", padding:"13px 14px", display:"flex", justifyContent:"space-between", alignItems:"center", flexShrink:0 }}>
           <div>
             <div style={{ fontFamily:"'Lora', serif", fontSize:17, fontWeight:900, color:"#fff" }}>NGỌC ĐIỀN</div>
-            <div style={{ fontSize:9, color:"rgba(255,255,255,.55)", marginTop:2, letterSpacing:"1.5px" }}>
-              CỔNG THÔNG TIN ĐIỆN TỬ
-            </div>
+            <div style={{ fontSize:9, color:"rgba(255,255,255,.55)", marginTop:2, letterSpacing:"1.5px" }}>CỔNG THÔNG TIN ĐIỆN TỬ</div>
           </div>
-          <button onClick={() => setOpen(false)}
-            style={{ background:"rgba(255,255,255,.15)", border:"none",
-              borderRadius:"50%", width:30, height:30, color:"#fff",
-              fontSize:14, cursor:"pointer" }}>✕</button>
+          <button onClick={() => setOpen(false)} style={{ background:"rgba(255,255,255,.15)", border:"none", borderRadius:"50%", width:30, height:30, color:"#fff", fontSize:14, cursor:"pointer" }}>✕</button>
         </div>
 
         <div style={{ flex:1, overflowY:"auto" }}>
-          <button onClick={() => go("home")} style={{ width:"100%", textAlign:"left",
-            padding:"10px 14px", background:"none", border:"none",
-            borderBottom:"1px solid #242424", color:"#F0F0F0",
-            cursor:"pointer", fontWeight:700, fontSize:12 }}>
-            🏡 &nbsp;TRANG CHỦ
+          <button onClick={() => go("home")} style={{ width:"100%", textAlign:"left", padding:"10px 14px", background:"none", border:"none", borderBottom:"1px solid #242424", color:"#F0F0F0", cursor:"pointer", fontWeight:700, fontSize:12 }}>
+            🏡  TRANG CHỦ
           </button>
 
           {CATS.map((cat: any, i: any) => (
-                <div key={cat.slug}>
-                  <button onClick={() => {
-                    if ((SUBS as any)[cat.slug]) setExp(exp===i?null:i);
-                    else go("category",{ cat:cat.slug });
-                  }} style={{ width:"100%", textAlign:"left", padding:"10px 14px",
-                    background:"none", border:"none", borderBottom:"1px solid #242424",
-                    color:"#F0F0F0", cursor:"pointer", fontWeight:700, fontSize:12,
-                    display:"flex", justifyContent:"space-between" }}>
-                    <span>{cat.icon} &nbsp;{cat.label.toUpperCase()}</span>
-                    {(SUBS as any)[cat.slug] && (
-                      <span style={{ opacity:.5, display:"inline-block",
-                        transform:exp===i?"rotate(90deg)":"none", transition:"transform .2s" }}>›</span>
-                    )}
-                  </button>
-                  {exp===i && (SUBS as any)[cat.slug]?.map((sub: any, j: any) => (
-                    <button key={j} onClick={() => go("category",{ cat:cat.slug, sub })}
-                      style={{ width:"100%", textAlign:"left", padding:"8px 14px 8px 38px",
-                        background:"rgba(0,0,0,.2)", border:"none",
-                        borderBottom:"1px solid #1e1e1e",
-                        color:"#C8942B", cursor:"pointer", fontSize:12.5 }}>
-                      ― {sub}
-                    </button>
-                  ))}
-                </div>
+            <div key={cat.slug}>
+              <button onClick={() => { if ((SUBS as any)[cat.slug]) setExp(exp===i?null:i); else go("category",{ cat:cat.slug }); }} 
+                style={{ width:"100%", textAlign:"left", padding:"10px 14px", background:"none", border:"none", borderBottom:"1px solid #242424", color:"#F0F0F0", cursor:"pointer", fontWeight:700, fontSize:12, display:"flex", justifyContent:"space-between" }}>
+                <span>{cat.icon}  {cat.label.toUpperCase()}</span>
+                {(SUBS as any)[cat.slug] && ( <span style={{ opacity:.5, display:"inline-block", transform:exp===i?"rotate(90deg)":"none", transition:"transform .2s" }}>›</span> )}
+              </button>
+              {exp===i && (SUBS as any)[cat.slug]?.map((sub: any, j: any) => (
+                <button key={j} onClick={() => go("category",{ cat:cat.slug, sub })}
+                  style={{ width:"100%", textAlign:"left", padding:"8px 14px 8px 38px", background:"rgba(0,0,0,.2)", border:"none", borderBottom:"1px solid #1e1e1e", color:"#C8942B", cursor:"pointer", fontSize:12.5 }}>
+                  ― {sub}
+                </button>
               ))}
+            </div>
+          ))}
 
-          <button onClick={() => go("admin-login")}
-            style={{ width:"100%", textAlign:"left", padding:"10px 14px",
-              background:"rgba(185,28,28,.15)", border:"none",
-              borderTop:"1px solid rgba(185,28,28,.3)",
-              color:"#F87171", cursor:"pointer", fontWeight:700, fontSize:12 }}>
-            ⚙ &nbsp;QUẢN TRỊ HỆ THỐNG
+          <button onClick={() => go("admin-login")} style={{ width:"100%", textAlign:"left", padding:"10px 14px", background:"rgba(185,28,28,.15)", border:"none", borderTop:"1px solid rgba(185,28,28,.3)", color:"#F87171", cursor:"pointer", fontWeight:700, fontSize:12 }}>
+            ⚙  QUẢN TRỊ HỆ THỐNG
           </button>
         </div>
 
-        <div style={{ padding:"12px 14px", background:"rgba(0,0,0,.3)",
-          fontSize:11.5, color:"#888", lineHeight:1.9 }}>
+        <div style={{ padding:"12px 14px", background:"rgba(0,0,0,.3)", fontSize:11.5, color:"#888", lineHeight:1.9 }}>
           📧 tinnhanhonline247@gmail.com<br/>
           📞 0914 58 75 75<br/>
           <span style={{ color:"#C8942B", fontWeight:700 }}>⚡ Phát triển bởi Thái Lão</span>
