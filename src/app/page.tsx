@@ -2215,7 +2215,7 @@ function TramPhatThanh({ ARTS, setNav }: { ARTS: any[], setNav: any }) {
       <div style={{ background:"#1C1C1C", padding:"10px 14px", display:"flex", gap:7, alignItems:"center", justifyContent:"space-between" }}>
         <div style={{ display:"flex", gap:7, alignItems:"center" }}>
           <span style={{ width:8, height:8, borderRadius:"50%", background:"#C8942B", display:"inline-block", boxShadow: "0 0 8px #C8942B" }}/>
-          <span style={{ color:"#fff", fontSize:13, fontWeight:800, letterSpacing: 0.5 }}>🎙 TRẠM PHÁT THANH XÓM</span>
+          <span style={{ color:"#fff", fontSize:13, fontWeight:800, letterSpacing: 0.5 }}>🎙 RADIO XÓM</span>
         </div>
         <button onClick={() => setNav({ page:"category", cat:"podcast" })}
           style={{ background:"none", border:"1px solid rgba(200,148,43,.4)", color:"#C8942B", fontSize:10.5, fontWeight:700, cursor:"pointer", borderRadius:4, padding:"3px 8px" }}>
