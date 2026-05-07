@@ -668,14 +668,22 @@ function Home({ setNav }: { setNav?: any }) {
           </section>
 
           {/* ═══════════════════════════════════════════
-    CHUYỂN ĐỔI SỐ (ĐÃ CHỈNH VỀ ĐÚNG KÍCH THƯỚC CHUẨN)
+    CHUYỂN ĐỔI SỐ (CHUẨN FORM 100% THEO ẢNH)
 ═══════════════════════════════════════════ */}
 <div style={{ marginTop: 24, marginBottom: 32 }}>
-  <div style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
-    <span style={{ fontSize: 16 }}>💻</span>
-    <div style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>CHUYỂN ĐỔI SỐ</div>
+  {/* Thanh Tiêu Đề Chuẩn Form */}
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div style={{ width: 32, height: 32, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
+        💻
+      </div>
+      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 16, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
+        CHUYỂN ĐỔI SỐ
+      </h2>
+    </div>
   </div>
 
+  {/* Khối 4 nút (kích thước nhỏ gọn) */}
   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
     {/* Ô 1: Dịch vụ công */}
     <a href="https://dichvucong.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "12px 6px", textAlign: "center", textDecoration: "none" }}>
