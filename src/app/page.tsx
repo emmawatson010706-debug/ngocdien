@@ -2081,23 +2081,25 @@ function SearchPage({ setNav }: { setNav?: any }) {
 }
 
 /* ═══════════════════════════════════════════
-   ARTICLE PAGE (HIỂN THỊ NỘI DUNG THẬT & UX ĐỌC)
+   ARTICLE PAGE (SỬA NÚT CHIA SẺ ĐỘNG THEO TRÌNH DUYỆT)
 ═══════════════════════════════════════════ */
 function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
-  const url = `https://ngocdien.info.vn/bai-viet/${a?.slug || ''}`;
+  // Lấy link thực tế đang hiện trên thanh địa chỉ để chia sẻ cho chuẩn
+  const [currentUrl, setCurrentUrl] = useState("");
+  useEffect(() => {
+    if (typeof window !== "undefined") setCurrentUrl(window.location.href);
+  }, [a]);
+
   const defaultImg = "https://picsum.photos/seed/" + (a?.id || 1) + "nd/800/440";
-  
   const [fSize, setFSize] = useState(15);
   
   const textContent = a?.content ? a.content.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
-  const wordCount = textContent.split(/\s+/).length;
-  const readTime = Math.max(1, Math.ceil(wordCount / 200));
+  const readTime = Math.max(1, Math.ceil(textContent.split(/\s+/).length / 200));
 
   return (
     <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 16px" }}>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "22px 0" }}>
         
-        {/* Breadcrumb (Đường dẫn) */}
         <div style={{ display: "flex", gap: 6, fontSize: 12, color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
           <button onClick={() => setNav({ page: "home" })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>Trang chủ</button>
           <span>›</span>
@@ -2129,10 +2131,8 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8" }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT:</span>
-          {/* NÚT FACEBOOK */}
-          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
-          {/* NÚT ZALO NGUYÊN THỦY: Tuyệt đối không bao giờ ra tiếng Tàu */}
-          <a href={`https://zalo.me/share?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#0057B8", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>💬 Zalo</a>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
+          <a href={`https://zalo.me/share?url=${encodeURIComponent(currentUrl)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#0057B8", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>💬 Zalo</a>
         </div>
         
         <BtnRed onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ marginTop: 20 }}>← Quay lại Trang chủ</BtnRed>
@@ -2142,7 +2142,7 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
 }
 
 /* ═══════════════════════════════════════════
-   APP ROOT 
+   APP ROOT (ĐÃ ÉP NHẢY LINK 100%)
 ═══════════════════════════════════════════ */
 export default function App() {
   const [nav, setNav] = useState({ page: "home", cat: "", sub: "", article: null });
@@ -2152,21 +2152,14 @@ export default function App() {
     const initApp = async () => {
       const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
       if (data && data.length > 0) {
-        ARTS.length = 0;
-        ARTS.push(...(data as any[]));
+        ARTS.length = 0; ARTS.push(...(data as any[]));
       }
-      
       if (typeof window !== "undefined") {
         const path = window.location.pathname;
         if (path.startsWith('/bai-viet/')) {
           const slug = path.split('/')[2];
           const foundArt = data?.find((a: any) => a.slug === slug);
-          if (foundArt) {
-            setNav({ page: "article", cat: foundArt.cat, sub: "", article: foundArt as any });
-          }
-        } else if (path.startsWith('/chuyen-muc/')) {
-          const cat = path.split('/')[2];
-          setNav({ page: "category", cat: cat, sub: "", article: null });
+          if (foundArt) setNav({ page: "article", cat: foundArt.cat, sub: "", article: foundArt as any });
         }
       }
       setDbLoaded(true);
@@ -2174,26 +2167,18 @@ export default function App() {
     initApp();
   }, []);
 
-  // ĐÁNH LỪA NEXT.JS ĐỂ LINK THAY ĐỔI THÀNH CÔNG TRÊN THANH TÌM KIẾM
+  // Ép trình duyệt đổi link và nằm im ở đó
   useEffect(() => {
     if (typeof window !== "undefined" && dbLoaded) {
-      const timer = setTimeout(() => {
-        if (nav.page === "home") {
-          window.history.replaceState(null, '', '/');
-        } else if (nav.page === "category") {
-          window.history.replaceState(null, '', `/chuyen-muc/${nav.cat}`);
-        } else if (nav.page === "article" && nav.article) {
-          window.history.replaceState(null, '', `/bai-viet/${(nav.article as any).slug}`);
-        }
-      }, 100); 
-      return () => clearTimeout(timer);
+      let targetPath = '/';
+      if (nav.page === "category") targetPath = `/chuyen-muc/${nav.cat}`;
+      else if (nav.page === "article" && nav.article) targetPath = `/bai-viet/${(nav.article as any).slug}`;
+      
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState(null, '', targetPath);
+      }
     }
   }, [nav, dbLoaded]);
-
-  if (nav.page === "admin-login" || nav.page === "admin") {
-    window.location.href = '/admin';
-    return <div style={{padding:50, textAlign:'center'}}>Đang chuyển hướng...</div>;
-  }
 
   return (
     <div style={{ minHeight:"100vh", background:"#FEF9F2", fontFamily:"system-ui,-apple-system,sans-serif", color:"#1C1C1C" }}>
