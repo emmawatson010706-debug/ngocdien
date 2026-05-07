@@ -667,28 +667,41 @@ function Home({ setNav }: { setNav?: any }) {
             </div>
           </section>
 
-          {/* CHUYỂN ĐỔI SỐ */}
-          <section style={{ marginBottom:26 }}>
-            <SecHead icon="💻" title="CHUYỂN ĐỔI SỐ" color="#1D4ED8"/>
-            <div className="nd-g4">
-              {[{ic:"🏛️",n:"Dịch vụ công",c:"#1D4ED8",url:"https://dichvucong.gov.vn"},
-                {ic:"🪪",n:"VNeID",c:"#065F46",url:"https://vneid.gov.vn"},
-                {ic:"🌐",n:"Cổng tỉnh NA",c:"#7C3AED",url:"https://nghean.gov.vn"},
-                {ic:"🗺️",n:"Bản đồ số",c:"#B45309",url:"https://maps.app.goo.gl/gnWBNeAbnu7XK8N67"}
-              ].map(s=>(
-                <a key={s.n} href={s.url} target="_blank" rel="noopener"
-                  style={{ background:"#fff", border:`1px solid ${s.c}20`,
-                    borderTop:`4px solid ${s.c}`, borderRadius:8, padding:"14px 8px",
-                    textAlign:"center", textDecoration:"none", display:"block",
-                    transition:"box-shadow .15s" }}
-                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 12px rgba(0,0,0,.1)"}
-                  onMouseLeave={e=>e.currentTarget.style.boxShadow=""}>
-                  <div style={{ fontSize:26, marginBottom:6 }}>{s.ic}</div>
-                  <div style={{ fontSize:11, fontWeight:700, color:s.c }}>{s.n}</div>
-                </a>
-              ))}
-            </div>
-          </section>
+          {/* ═══════════════════════════════════════════
+    CHUYỂN ĐỔI SỐ (ĐÃ CẬP NHẬT THEO Ý ANH)
+═══════════════════════════════════════════ */}
+<div style={{ marginTop: 24 }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 8, borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
+    <span style={{ fontSize: 18 }}>💻</span>
+    <h2 style={{ fontFamily: "'Lora', serif", fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>CHUYỂN ĐỔI SỐ</h2>
+  </div>
+
+  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+    {/* Ô 1: Dịch vụ công */}
+    <a href="https://dichvucong.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 12, padding: "16px 10px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 28, marginBottom: 8 }}>🏛️</div>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#0056b3" }}>Dịch vụ công</div>
+    </a>
+
+    {/* Ô 2: VNeID */}
+    <a href="https://vneid.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 12, padding: "16px 10px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 28, marginBottom: 8 }}>🪪</div>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#0056b3" }}>VNeID</div>
+    </a>
+
+    {/* Ô 3: Cổng tỉnh (Đã đổi tên) */}
+    <a href="https://nghean.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 12, padding: "16px 10px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 28, marginBottom: 8 }}>🌐</div>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#6d28d9" }}>Cổng TTĐT tỉnh Nghệ An</div>
+    </a>
+
+    {/* Ô 4: Cổng xã (Đã thay cho Bản đồ và gắn link xã Hưng Nguyên) */}
+    <a href="https://hungnguyen.nghean.gov.vn/" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 12, padding: "16px 10px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 28, marginBottom: 8 }}>🏛️</div>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#b45309" }}>Cổng TTĐT xã Hưng Nguyên</div>
+    </a>
+  </div>
+</div>
 
           {/* THƯ VIỆN */}
           <section style={{ marginBottom:26 }}>
