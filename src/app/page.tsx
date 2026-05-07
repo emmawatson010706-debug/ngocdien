@@ -476,12 +476,11 @@ function Sidebar({ setNav }: { setNav?: any }) {
     TRẠM PHÁT THANH PODCAST (TỰ ĐỘNG LẤY MP3)
 ═══════════════════════════════════════════ */}
 {(() => {
-  // Lấy bài Podcast mới nhất từ mảng ARTS toàn cục
-  const latestPodcast = typeof ARTS !== 'undefined' ? ARTS.find((a: any) => a.cat === 'podcast') : null;
+  // Lấy bài Podcast mới nhất từ mảng ARTS toàn cục (Ép kiểu any để bỏ qua lỗi TypeScript)
+  const latestPodcast: any = typeof ARTS !== 'undefined' ? (ARTS as any[]).find((a: any) => a.cat === 'podcast') : null;
   
   // Trích xuất link file MP3 từ nội dung bài viết
   const audioMatch = latestPodcast?.content?.match(/<audio.*?src="([^"]+)"/);
-  const audioUrl = audioMatch ? audioMatch[1] : null;
 
   // Nếu chưa có bài Podcast nào hoặc không có file MP3 thì ẩn máy nghe nhạc đi
   if (!latestPodcast || !audioUrl) return null;
