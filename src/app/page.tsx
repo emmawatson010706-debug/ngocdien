@@ -2131,7 +2131,7 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
           <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT:</span>
           {/* NÚT FACEBOOK */}
           <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
-          {/* NÚT ZALO ĐÃ TRẢ VỀ CHUẨN ĐỂ KHÔNG BỊ MÀN HÌNH ĐEN */}
+          {/* NÚT ZALO NGUYÊN THỦY: Tuyệt đối không bao giờ ra tiếng Tàu */}
           <a href={`https://zalo.me/share?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#0057B8", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>💬 Zalo</a>
         </div>
         
@@ -2142,7 +2142,7 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
 }
 
 /* ═══════════════════════════════════════════
-   APP ROOT (ĐÃ THÊM BỘ MÁY ĐỔI ĐƯỜNG LINK THANH TÌM KIẾM)
+   APP ROOT 
 ═══════════════════════════════════════════ */
 export default function App() {
   const [nav, setNav] = useState({ page: "home", cat: "", sub: "", article: null });
@@ -2156,7 +2156,6 @@ export default function App() {
         ARTS.push(...(data as any[]));
       }
       
-      // Khôi phục bài viết nếu bà con mở link trực tiếp từ bên ngoài vào
       if (typeof window !== "undefined") {
         const path = window.location.pathname;
         if (path.startsWith('/bai-viet/')) {
@@ -2175,16 +2174,19 @@ export default function App() {
     initApp();
   }, []);
 
-  // ÉP TRÌNH DUYỆT ĐỔI LINK TRÊN THANH ĐỊA CHỈ MỖI KHI ANH BẤM CHUYỂN TRANG
+  // ĐÁNH LỪA NEXT.JS ĐỂ LINK THAY ĐỔI THÀNH CÔNG TRÊN THANH TÌM KIẾM
   useEffect(() => {
     if (typeof window !== "undefined" && dbLoaded) {
-      if (nav.page === "home") {
-        window.history.pushState(null, '', '/');
-      } else if (nav.page === "category") {
-        window.history.pushState(null, '', `/chuyen-muc/${nav.cat}`);
-      } else if (nav.page === "article" && nav.article) {
-        window.history.pushState(null, '', `/bai-viet/${(nav.article as any).slug}`);
-      }
+      const timer = setTimeout(() => {
+        if (nav.page === "home") {
+          window.history.replaceState(null, '', '/');
+        } else if (nav.page === "category") {
+          window.history.replaceState(null, '', `/chuyen-muc/${nav.cat}`);
+        } else if (nav.page === "article" && nav.article) {
+          window.history.replaceState(null, '', `/bai-viet/${(nav.article as any).slug}`);
+        }
+      }, 100); 
+      return () => clearTimeout(timer);
     }
   }, [nav, dbLoaded]);
 
