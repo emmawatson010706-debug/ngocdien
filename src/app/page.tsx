@@ -668,45 +668,45 @@ function Home({ setNav }: { setNav?: any }) {
           </section>
 
           {/* ═══════════════════════════════════════════
-    CHUYỂN ĐỔI SỐ (CHUẨN FORM 100% THEO ẢNH)
+    CHUYỂN ĐỔI SỐ (SIZE NHỎ GỌN CHUẨN FORM)
 ═══════════════════════════════════════════ */}
-<div style={{ marginTop: 24, marginBottom: 32 }}>
-  {/* Thanh Tiêu Đề Chuẩn Form */}
-  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-      <div style={{ width: 32, height: 32, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
+<div style={{ marginTop: 20, marginBottom: 30 }}>
+  {/* Thanh Tiêu Đề Chuẩn Form - Ép size nhỏ lại */}
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #0056b3", paddingBottom: 8, marginBottom: 14 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ width: 28, height: 28, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>
         💻
       </div>
-      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 16, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
+      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
         CHUYỂN ĐỔI SỐ
       </h2>
     </div>
   </div>
 
-  {/* Khối 4 nút (kích thước nhỏ gọn) */}
-  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+  {/* Khối 4 nút thu nhỏ tột độ */}
+  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
     {/* Ô 1: Dịch vụ công */}
-    <a href="https://dichvucong.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "12px 6px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 24, marginBottom: 6 }}>🏛️</div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>Dịch vụ công</div>
+    <a href="https://dichvucong.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 20, marginBottom: 4 }}>🏛️</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>Dịch vụ công</div>
     </a>
 
     {/* Ô 2: VNeID */}
-    <a href="https://vneid.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "12px 6px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 24, marginBottom: 6 }}>🪪</div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>VNeID</div>
+    <a href="https://vneid.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 20, marginBottom: 4 }}>🪪</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>VNeID</div>
     </a>
 
     {/* Ô 3: Cổng tỉnh */}
-    <a href="https://nghean.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "12px 6px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 24, marginBottom: 6 }}>🌐</div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#6d28d9", lineHeight: 1.3 }}>Cổng TTĐT<br/>tỉnh Nghệ An</div>
+    <a href="https://nghean.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 20, marginBottom: 4 }}>🌐</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#6d28d9", lineHeight: 1.3 }}>Cổng TTĐT<br/>tỉnh Nghệ An</div>
     </a>
 
     {/* Ô 4: Cổng xã */}
-    <a href="https://hungnguyen.nghean.gov.vn/" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "12px 6px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 24, marginBottom: 6 }}>🏛️</div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#b45309", lineHeight: 1.3 }}>Cổng TTĐT<br/>xã Hưng Nguyên</div>
+    <a href="https://hungnguyen.nghean.gov.vn/" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+      <div style={{ fontSize: 20, marginBottom: 4 }}>🏛️</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#b45309", lineHeight: 1.3 }}>Cổng TTĐT<br/>xã Hưng Nguyên</div>
     </a>
   </div>
 </div>
