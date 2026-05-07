@@ -677,7 +677,7 @@ function Home({ setNav }: { setNav?: any }) {
       <div style={{ width: 28, height: 28, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>
         💻
       </div>
-      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
+      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 14, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
         CHUYỂN ĐỔI SỐ
       </h2>
     </div>
