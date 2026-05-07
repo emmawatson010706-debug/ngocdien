@@ -717,45 +717,7 @@ function Home({ setNav }: { setNav?: any }) {
             </div>
           </section>
 
-          {/* CỘNG ĐỒNG */}
-          <section style={{ marginBottom:26 }}>
-            <SecHead icon="🤝" title="CỘNG ĐỒNG NGỌC ĐIỀN" color="#0057B8"/>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12 }}>
-              <a href="https://zalo.me/g/i8vuebonziplqy2c06ux" target="_blank" rel="noopener"
-                style={{ background:"#0057B8", color:"#fff", borderRadius:10,
-                  padding:"18px 12px", textAlign:"center", textDecoration:"none",
-                  display:"block", transition:"opacity .15s" }}
-                onMouseEnter={e=>e.currentTarget.style.opacity=".85"}
-                onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-                <div style={{ fontSize:32 }}>💬</div>
-                <div style={{ fontSize:14, fontWeight:700, marginTop:8 }}>Nhóm Zalo</div>
-                <div style={{ fontSize:11.5, opacity:.8, marginTop:4 }}>Cộng đồng Ngọc Điền</div>
-                <div style={{ fontSize:10.5, opacity:.65, marginTop:3 }}>Bấm để tham gia →</div>
-              </a>
-              <a href="https://www.facebook.com/share/1BFnoXVtDB/" target="_blank" rel="noopener"
-                style={{ background:"#1877F2", color:"#fff", borderRadius:10,
-                  padding:"18px 12px", textAlign:"center", textDecoration:"none",
-                  display:"block", transition:"opacity .15s" }}
-                onMouseEnter={e=>e.currentTarget.style.opacity=".85"}
-                onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-                <div style={{ fontSize:32 }}>📘</div>
-                <div style={{ fontSize:14, fontWeight:700, marginTop:8 }}>Facebook</div>
-                <div style={{ fontSize:11.5, opacity:.8, marginTop:4 }}>Trang Xóm Ngọc Điền</div>
-                <div style={{ fontSize:10.5, opacity:.65, marginTop:3 }}>Bấm để theo dõi →</div>
-              </a>
-              <a href="https://maps.app.goo.gl/gnWBNeAbnu7XK8N67" target="_blank" rel="noopener"
-                style={{ background:"#EA4335", color:"#fff", borderRadius:10,
-                  padding:"18px 12px", textAlign:"center", textDecoration:"none",
-                  display:"block", transition:"opacity .15s" }}
-                onMouseEnter={e=>e.currentTarget.style.opacity=".85"}
-                onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-                <div style={{ fontSize:32 }}>📍</div>
-                <div style={{ fontSize:14, fontWeight:700, marginTop:8 }}>Bản đồ</div>
-                <div style={{ fontSize:11.5, opacity:.8, marginTop:4 }}>Xóm Ngọc Điền</div>
-                <div style={{ fontSize:10.5, opacity:.65, marginTop:3 }}>Xem Google Maps →</div>
-              </a>
-            </div>
-          </section>
+          
 
           {/* GÓP Ý & GỬI BÀI */}
           <section style={{ marginBottom:26 }}>
