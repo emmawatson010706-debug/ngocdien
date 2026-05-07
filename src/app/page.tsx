@@ -668,12 +668,12 @@ function Home({ setNav }: { setNav?: any }) {
           </section>
 
           {/* ═══════════════════════════════════════════
-    CHUYỂN ĐỔI SỐ (THU NHỎ & TẠO KHOẢNG CÁCH)
+    CHUYỂN ĐỔI SỐ (ĐÃ CHỈNH VỀ ĐÚNG KÍCH THƯỚC CHUẨN)
 ═══════════════════════════════════════════ */}
-<div style={{ marginTop: 24, marginBottom: 32 }}> {/* Đã thêm marginBottom: 32 để tạo khoảng cách thở với mục Thư viện */}
-  <div style={{ display: "flex", alignItems: "center", gap: 8, borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
-    <span style={{ fontSize: 18 }}>💻</span>
-    <h2 style={{ fontFamily: "'Lora', serif", fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>CHUYỂN ĐỔI SỐ</h2>
+<div style={{ marginTop: 24, marginBottom: 32 }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
+    <span style={{ fontSize: 16 }}>💻</span>
+    <div style={{ fontSize: 15, fontWeight: 700, color: "#111" }}>CHUYỂN ĐỔI SỐ</div>
   </div>
 
   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
