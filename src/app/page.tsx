@@ -188,17 +188,16 @@ const BtnRed = ({ children, onClick, style={} }: { children?: any, onClick?: any
 );
 
 /* ═══════════════════════════════════════════
-   HEADER (ĐÃ THÊM MŨI TÊN TRƯỢT NGANG & BỎ NÚT THỪA)
+   HEADER (MŨI TÊN TRẮNG & ĐÃ BỎ NÚT QUẢN TRỊ THỪA)
 ═══════════════════════════════════════════ */
 function Header({ setNav }: { setNav?: any }) {
   const [open, setOpen] = useState(false);
   const [exp, setExp]   = useState<number | null>(null);
   
-  // Lắp bộ điều khiển trượt ngang
   const navRef = useRef<HTMLDivElement>(null);
   const handleScroll = (direction: string) => {
     if (navRef.current) {
-      const scrollAmount = 250; // Quãng đường mỗi lần trượt (px)
+      const scrollAmount = 250;
       navRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
     }
   };
@@ -212,7 +211,7 @@ function Header({ setNav }: { setNav?: any }) {
 
   return (
     <>
-      {/* top bar (Đã xóa nút Quản trị thừa ở đây) */}
+      {/* top bar */}
       <div style={{ background:"#FFF8EE", borderBottom:"1px solid #EAE0D0", padding:"4px 0" }}>
         <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px",
           display:"flex", justifyContent:"space-between", alignItems:"center" }}>
@@ -243,13 +242,13 @@ function Header({ setNav }: { setNav?: any }) {
           </div>
         </div>
 
-        {/* desktop nav (CÓ 2 MŨI TÊN TRƯỢT 2 BÊN) */}
+        {/* desktop nav */}
         <div style={{ background:"rgba(0,0,0,.18)", borderTop:"1px solid rgba(255,255,255,.08)", position:"relative" }}>
           <div style={{ maxWidth:1160, margin:"0 auto", position:"relative", display:"flex", alignItems:"center" }}>
             
-            {/* NÚT GẠT TRÁI */}
+            {/* NÚT GẠT TRÁI (Đã đổi màu #fff) */}
             <button onClick={() => handleScroll("left")} 
-              style={{ background:"linear-gradient(to right, #80120d 50%, transparent)", border:"none", color:"#FBBF24", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 15px 6px 10px", zIndex:10, height:"100%" }}>
+              style={{ background:"linear-gradient(to right, #80120d 50%, transparent)", border:"none", color:"#fff", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 15px 6px 10px", zIndex:10, height:"100%" }}>
               ⟨
             </button>
 
@@ -263,15 +262,11 @@ function Header({ setNav }: { setNav?: any }) {
                   {c.label.toUpperCase()}
                 </button>
               ))}
-              <button onClick={() => go("admin-login")}
-                style={{ background:"none", border:"none", color:"#F87171", fontSize:10.5, fontWeight:700, padding:"8px 10px", cursor:"pointer", whiteSpace:"nowrap" }}>
-                ⚙ QUẢN TRỊ
-              </button>
             </nav>
 
-            {/* NÚT GẠT PHẢI */}
+            {/* NÚT GẠT PHẢI (Đã đổi màu #fff) */}
             <button onClick={() => handleScroll("right")} 
-              style={{ background:"linear-gradient(to left, #80120d 50%, transparent)", border:"none", color:"#FBBF24", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 10px 6px 15px", zIndex:10, height:"100%" }}>
+              style={{ background:"linear-gradient(to left, #80120d 50%, transparent)", border:"none", color:"#fff", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 10px 6px 15px", zIndex:10, height:"100%" }}>
               ⟩
             </button>
 
@@ -282,7 +277,7 @@ function Header({ setNav }: { setNav?: any }) {
       {/* overlay */}
       {open && <div onClick={() => setOpen(false)} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.52)", zIndex:900 }}/>}
 
-      {/* side menu (Mục lục 3 gạch) */}
+      {/* side menu */}
       <nav className={`nd-menu${open?" open":""}`}>
         <div style={{ background:"#B91C1C", padding:"13px 14px", display:"flex", justifyContent:"space-between", alignItems:"center", flexShrink:0 }}>
           <div>
