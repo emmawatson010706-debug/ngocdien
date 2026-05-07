@@ -476,17 +476,14 @@ function Sidebar({ setNav }: { setNav?: any }) {
     TRẠM PHÁT THANH PODCAST (TỰ ĐỘNG LẤY MP3)
 ═══════════════════════════════════════════ */}
 {(() => {
-  // Lấy bài Podcast mới nhất từ mảng ARTS toàn cục (Ép kiểu any để bỏ qua lỗi TypeScript)
-  const latestPodcast: any = typeof ARTS !== 'undefined' ? (ARTS as any[]).find((a: any) => a.cat === 'podcast') : null;
-  
   // 1. Lấy bài Podcast mới nhất và ép kiểu 'any' để thằng Vercel không xét nét
   const latestPodcast: any = typeof ARTS !== 'undefined' ? (ARTS as any[]).find((a: any) => a.cat === 'podcast') : null;
-  
-  // 2. Trích xuất link file MP3 từ nội dung bài viết (Dòng này cực kỳ quan trọng)
+
+  // 2. Trích xuất link file MP3 từ nội dung bài viết
   const audioMatch = latestPodcast?.content?.match(/<audio.*?src="([^"]+)"/);
   const audioUrl = audioMatch ? audioMatch[1] : null;
 
-  // 3. Nếu chưa có bài Podcast nào hoặc không có file MP3 thì ẩn máy phát đi
+  // 3. Nếu chưa có bài Podcast nào hoặc không có file MP3 thì ẩn máy nghe nhạc đi
   if (!latestPodcast || !audioUrl) return null;
 
   // Cỗ máy điều khiển âm thanh thực thụ
