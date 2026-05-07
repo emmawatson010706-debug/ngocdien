@@ -677,7 +677,7 @@ function Home({ setNav }: { setNav?: any }) {
       <div style={{ width: 28, height: 28, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>
         💻
       </div>
-      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 14, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
+      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
         CHUYỂN ĐỔI SỐ
       </h2>
     </div>
@@ -711,32 +711,33 @@ function Home({ setNav }: { setNav?: any }) {
   </div>
 </div>
 
-          {/* THƯ VIỆN */}
-          <section style={{ marginBottom:26 }}>
-            <SecHead icon="📚" title="THƯ VIỆN" color="#7C3AED"
-              onMore={() => go("thu-vien")}/>
-            <div onClick={() => go("thu-vien")}
-              style={{ display:"flex", borderRadius:10, overflow:"hidden",
-                border:"1px solid #F3DDB5", cursor:"pointer" }}
-              onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)"}
-              onMouseLeave={e=>e.currentTarget.style.boxShadow=""}>
-              <div style={{ background:"#92400E", color:"#fff", padding:"20px 16px",
-                display:"flex", flexDirection:"column", alignItems:"center",
-                justifyContent:"center", gap:4, minWidth:82, flexShrink:0 }}>
-                <div style={{ fontSize:32 }}>📜</div>
-                <div style={{ fontSize:18, fontWeight:900 }}>1883</div>
-                <div style={{ fontSize:8.5, letterSpacing:"1px", opacity:.75 }}>HƯƠNG ƯỚC</div>
-              </div>
-              <div style={{ padding:"16px 20px", flex:1,
-                background:"linear-gradient(135deg,#FEF7E4,#FFFBF2)" }}>
-                <h3 style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:900,
-                  color:"#92400E", marginBottom:8 }}>Hương ước Xóm Ngọc Điền năm 1883</h3>
-                <p style={{ fontSize:13, color:"#555", lineHeight:1.75 }}>
-                  Bản hương ước lập từ năm 1883, lưu giữ nguyên vẹn qua 140 năm — tài sản văn hóa vô giá phản ánh luật tục và đạo lý của cha ông.
-                </p>
-              </div>
-            </div>
-          </section>
+{/* THƯ VIỆN */}
+<section style={{ marginBottom:26 }}>
+  <SecHead icon="📚" title="THƯ VIỆN" color="#7C3AED" onMore={() => go("thu-vien")}/>
+  <div onClick={() => go("thu-vien")}
+    style={{ display:"flex", borderRadius:10, overflow:"hidden", border:"1px solid #F3DDB5", cursor:"pointer" }}
+    onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)"}
+    onMouseLeave={e=>e.currentTarget.style.boxShadow=""}>
+    <div style={{ background:"#92400E", color:"#fff", padding:"20px 16px",
+      display:"flex", flexDirection:"column", alignItems:"center",
+      justifyContent:"center", gap:4, minWidth:82, flexShrink:0 }}>
+      <div style={{ fontSize:32 }}>📜</div>
+      <div style={{ fontSize:18, fontWeight:900 }}>1883</div>
+      <div style={{ fontSize:8.5, letterSpacing:"1px", opacity:.75 }}>HƯƠNG ƯỚC</div>
+    </div>
+    <div style={{ padding:"16px 20px", flex:1, background:"linear-gradient(135deg,#FEF7E4,#FFFBF2)" }}>
+      <h3 style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:900, color:"#92400E", marginBottom:8 }}>Hương ước Xóm Ngọc Điền năm 1883</h3>
+      <p style={{ fontSize:13, color:"#555", lineHeight:1.75 }}>
+        Bản hương ước lập từ năm 1883, lưu giữ nguyên vẹn qua 140 năm — tài sản văn hóa vô giá phản ánh luật tục và đạo lý của cha ông.
+      </p>
+    </div>
+  </div>
+</section>
+
+      </div>
+    </div>
+  );
+}
 
           
 
@@ -747,7 +748,7 @@ function Home({ setNav }: { setNav?: any }) {
 ═══════════════════════════════════════════ */
 function GopYPage() {
   const [type,    setType]    = useState("gop_y");
-  const [name,    setName]    = useState("");
+  const [name,{    setName]    = useState("");
   const [phone,   setPhone]   = useState("");
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
