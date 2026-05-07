@@ -2083,76 +2083,64 @@ function SearchPage({ setNav }: { setNav?: any }) {
 /* ═══════════════════════════════════════════
    ARTICLE PAGE (HIỂN THỊ NỘI DUNG THẬT & UX ĐỌC)
 ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   ARTICLE PAGE (HIỂN THỊ NỘI DUNG THẬT & UX ĐỌC)
+═══════════════════════════════════════════ */
 function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
-  const url = `https://ngocdien.info.vn/bai-viet/${a.slug}`;
-  const defaultImg = "https://picsum.photos/seed/" + (a.id || 1) + "nd/800/440";
+  const url = `https://ngocdien.info.vn/bai-viet/${a?.slug || ''}`;
+  const defaultImg = "https://picsum.photos/seed/" + (a?.id || 1) + "nd/800/440";
   
-  // UX 1: Quản lý nút Tăng/Giảm cỡ chữ (Mặc định cỡ 15px)
   const [fSize, setFSize] = useState(15);
   
-  // UX 2: Tự động tính thời gian đọc (Giả định tốc độ đọc 200 từ/phút)
-  const textContent = a.content ? a.content.replace(/<[^>]*>?/gm, '') : (a.excerpt || '');
+  const textContent = a?.content ? a.content.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
   const wordCount = textContent.split(/\s+/).length;
   const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 16px" }}>
-      <div style={{ maxWidth:800, margin:"0 auto", padding:"22px 0" }}>
+    <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 16px" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "22px 0" }}>
         
         {/* Breadcrumb (Đường dẫn) */}
-        <div style={{ display:"flex", gap:6, fontSize:12, color:"#aaa", marginBottom:14, flexWrap:"wrap" }}>
-          <button onClick={() => setNav({ page:"home" })} style={{ background:"none", border:"none", color:"#B91C1C", cursor:"pointer", fontSize:12 }}>Trang chủ</button>
+        <div style={{ display: "flex", gap: 6, fontSize: 12, color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
+          <button onClick={() => setNav({ page: "home" })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>Trang chủ</button>
           <span>›</span>
-          <button onClick={() => setNav({ page:"category", cat:a.cat })} style={{ background:"none", border:"none", color:"#B91C1C", cursor:"pointer", fontSize:12 }}>
-            {CATS.find(c=>c.slug===a.cat)?.label||a.cat}
+          <button onClick={() => setNav({ page: "category", cat: a?.cat })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>
+            {CATS.find(c => c.slug === a?.cat)?.label || a?.cat}
           </button>
           <span>›</span>
-          <span style={{ color:"#555" }}>{a.title}</span>
+          <span style={{ color: "#555" }}>{a?.title}</span>
         </div>
         
-        <Tag label={a.cat}/>
-        <h1 style={{ fontFamily:"'Lora', serif", fontSize:"clamp(20px,4vw,30px)", fontWeight:900, lineHeight:1.38, margin:"12px 0" }}>{a.title}</h1>
+        <Tag label={a?.cat}/>
+        <h1 style={{ fontFamily: "'Lora', serif", fontSize: "clamp(20px,4vw,30px)", fontWeight: 900, lineHeight: 1.38, margin: "12px 0" }}>{a?.title}</h1>
         
-        {/* THANH CÔNG CỤ ĐỌC */}
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", borderBottom:"1px solid #EAE0D0", paddingBottom:12, marginBottom:16, flexWrap:"wrap", gap:10 }}>
-          <p style={{ color:"#aaa", fontSize:12.5, margin:0 }}>
-            ✍️ Ban biên tập  ·  📅 {a.date}  ·  <span style={{color:"#0891B2", fontWeight:700}}>⏱️ Đọc {readTime} phút</span>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EAE0D0", paddingBottom: 12, marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+          <p style={{ color: "#aaa", fontSize: 12.5, margin: 0 }}>
+            ✍️ Ban biên tập  ·  📅 {a?.date}  ·  <span style={{ color: "#0891B2", fontWeight: 700 }}>⏱️ Đọc {readTime} phút</span>
           </p>
-          <div style={{ display:"flex", alignItems:"center", gap:8, background:"#FFFBF5", padding:"4px 8px", borderRadius:6, border:"1px solid #E8DDD0" }}>
-            <span style={{ fontSize:10, color:"#888", fontWeight:700, letterSpacing:"1px" }}>CỠ CHỮ:</span>
-            <button onClick={() => setFSize(s => Math.max(14, s - 2))} style={{ border:"1px solid #E5E7EB", background:"#fff", width:26, height:26, borderRadius:4, cursor:"pointer", fontWeight:900, color:"#555" }}>A-</button>
-            <span style={{ fontSize:13, fontWeight:700, width:18, textAlign:"center", color:"#1C1C1C" }}>{fSize}</span>
-            <button onClick={() => setFSize(s => Math.min(26, s + 2))} style={{ border:"1px solid #E5E7EB", background:"#fff", width:26, height:26, borderRadius:4, cursor:"pointer", fontWeight:900, color:"#555" }}>A+</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#FFFBF5", padding: "4px 8px", borderRadius: 6, border: "1px solid #E8DDD0" }}>
+            <span style={{ fontSize: 10, color: "#888", fontWeight: 700, letterSpacing: "1px" }}>CỠ CHỮ:</span>
+            <button onClick={() => setFSize(s => Math.max(14, s - 2))} style={{ border: "1px solid #E5E7EB", background: "#fff", width: 26, height: 26, borderRadius: 4, cursor: "pointer", fontWeight: 900, color: "#555" }}>A-</button>
+            <span style={{ fontSize: 13, fontWeight: 700, width: 18, textAlign: "center", color: "#1C1C1C" }}>{fSize}</span>
+            <button onClick={() => setFSize(s => Math.min(26, s + 2))} style={{ border: "1px solid #E5E7EB", background: "#fff", width: 26, height: 26, borderRadius: 4, cursor: "pointer", fontWeight: 900, color: "#555" }}>A+</button>
           </div>
         </div>
         
-        <img src={a.img || defaultImg} alt={a.title} style={{ width:"100%", borderRadius:10, marginBottom:20, display:"block", maxHeight:450, objectFit:'cover' }}/>
+        <img src={a?.img || defaultImg} alt={a?.title} style={{ width: "100%", borderRadius: 10, marginBottom: 20, display: "block", maxHeight: 450, objectFit: 'cover' }}/>
         
-        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", marginTop: 24, transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: a.content || a.excerpt || "<p>Chưa có nội dung chi tiết.</p>" }} />
+        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", marginTop: 24, transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: a?.content || a?.excerpt || "<p>Chưa có nội dung chi tiết.</p>" }} />
         
-        <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:30, padding:"14px 0", borderTop:"1px solid #EDE5D8", borderBottom:"1px solid #EDE5D8" }}>
-  <span style={{ fontSize:12, fontWeight:700, color:"#888" }}>CHIA SẺ BÀI VIẾT:</span>
-  
-  <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:30, padding:"14px 0", borderTop:"1px solid #EDE5D8", borderBottom:"1px solid #EDE5D8" }}>
-  <span style={{ fontSize:12, fontWeight:700, color:"#888" }}>CHIA SẺ BÀI VIẾT:</span>
-  
-  {/* Nút Facebook: Giữ nguyên */}
-  <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} 
-     target="_blank" rel="noopener noreferrer" 
-     style={{ background:"#1877F2", color:"#fff", borderRadius:5, padding:"6px 14px", fontSize:12.5, fontWeight:700, textDecoration:"none" }}>📘 Facebook</a>
-  
-  {/* Nút Zalo: ĐÃ ĐỔI SANG LINK PLUGIN CHUYÊN DỤNG TRỊ LỖI TRÊN MÁY TÍNH */}
-  <a href={`https://sp.zalo.me/plugins/share?url=${encodeURIComponent(url)}`} 
-     target="_blank" rel="noopener noreferrer" 
-     style={{ background:"#0057B8", color:"#fff", borderRadius:5, padding:"6px 14px", fontSize:12.5, fontWeight:700, textDecoration:"none" }}>💬 Zalo</a>
-</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT:</span>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
+          <a href={`https://sp.zalo.me/plugins/share?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#0057B8", color: "#fff", borderRadius: 5, padding: "6px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>💬 Zalo</a>
+        </div>
         
-        <BtnRed onClick={() => { setNav({ page:"home" }); window.scrollTo(0,0); }} style={{ marginTop:20 }}>← Quay lại Trang chủ</BtnRed>
+        <BtnRed onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ marginTop: 20 }}>← Quay lại Trang chủ</BtnRed>
       </div>
     </div>
   );
 }
-
 /* ═══════════════════════════════════════════
    APP ROOT 
 ═══════════════════════════════════════════ */
