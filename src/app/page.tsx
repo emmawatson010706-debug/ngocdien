@@ -1636,52 +1636,72 @@ function ADash({ setTab }: { setTab?: any }) {
   );
 }
 
+/* ═══════════════════════════════════════════
+   ADMIN: QUẢN LÝ BÀI VIẾT (ĐÃ KẾT NỐI SUPABASE THỰC)
+═══════════════════════════════════════════ */
 function AArts() {
-  const [list, setList] = useState<any[]>([...ARTS]);
+  const [list, setList] = useState<any[]>([]);
   const [show, setShow] = useState(false);
-  const [editId, setEditId] = useState(null); // Lưu ID bài đang sửa
+  const [editId, setEditId] = useState(null); 
+  const [isSaving, setIsSaving] = useState(false);
   
   const initForm = {
-    title: "", slug: "", excerpt: "", content: "", status: "draft",
+    title: "", slug: "", excerpt: "", content: "", status: "published",
     cat: "", author: "Ban biên tập", featured: false, img: "", video: "", audio: ""
   };
   const [form, setForm] = useState(initForm);
 
-  // Tạo danh sách Option gồm Danh mục cha + Danh mục con
-  const catOptions: any[] = [];
-  CATS.forEach(c => {
-    catOptions.push({ value: c.slug, label: c.label, isSub: false });
-    if ((SUBS as any)[c.slug]) {
-        (SUBS as any)[c.slug].forEach((sub: any) => {
-          catOptions.push({ value: `${c.slug}|${sub}`, label: `— ${sub}`, isSub: true });
-        });
-    }
-  });
+  // Danh sách chuyên mục chuẩn xác để lưu thẳng vào Supabase
+  const ADMIN_OPTIONS = [
+    { val: "tin-tuc", lbl: "Tin tức" }, { val: "thong-bao", lbl: "— Thông báo" }, { val: "su-kien", lbl: "— Sự kiện" },
+    { val: "nguoi-ngoc-dien", lbl: "Người Ngọc Điền" }, { val: "me-vnah", lbl: "— Mẹ VNAH" }, { val: "liet-sy", lbl: "— Liệt sỹ" }, { val: "anh-hung", lbl: "— Anh hùng" }, { val: "dang-vien", lbl: "— Đảng viên" },
+    { val: "tieng-lang", lbl: "Tiếng làng" }, { val: "tan-van", lbl: "— Tản văn" }, { val: "tho", lbl: "— Thơ" }, { val: "kham-pha", lbl: "— Khám phá" }, { val: "goc-nhin-thang", lbl: "— Góc nhìn" }, { val: "podcast", lbl: "— Podcast" },
+    { val: "di-tich", lbl: "Di tích" }, { val: "den", lbl: "— Đền Ngọc Điền" }, { val: "gieng", lbl: "— Giếng làng" },
+    { val: "le-hoi", lbl: "Lễ hội" }, { val: "le-hoi-den", lbl: "— Lễ hội Đền" }, { val: "le-hoi-xom", lbl: "— Lễ hội Xóm" }, { val: "le-hoi-gieng", lbl: "— Lễ hội Giếng" },
+    { val: "thu-vien", lbl: "Thư viện" }, { val: "huong-uoc", lbl: "— Hương ước" }, { val: "dang-bo", lbl: "— Đảng bộ" }
+  ];
 
-  const handleSave = () => {
+  // 1. Tự động lấy tất cả bài viết từ Supabase khi mở Quản trị
+  const loadAdminArts = async () => {
+    const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
+    if (data) setList(data);
+  };
+
+  useEffect(() => {
+    loadAdminArts();
+  }, []);
+
+  // 2. Lưu hoặc Sửa bài viết thẳng vào Supabase
+  const handleSave = async () => {
     if (!form.title || !form.slug || !form.cat) {
       alert("Vui lòng điền đủ Tiêu đề, Slug và Chọn chuyên mục!");
       return;
     }
+    setIsSaving(true);
+    
+    const payload = {
+      title: form.title, slug: form.slug, excerpt: form.excerpt, content: form.content,
+      status: form.status, cat: form.cat, author: form.author, featured: form.featured,
+      img: form.img || "https://picsum.photos/seed/"+Date.now()+"/400/220",
+      video: form.video, audio: form.audio,
+      date: new Date().toLocaleDateString("vi-VN")
+    };
     
     if (editId) {
-      // Cập nhật bài cũ
-      setList(l => l.map(a => a.id === editId ? { ...a, ...form } : a));
+      const { error } = await supabase.from('articles').update(payload).eq('id', editId);
+      if (error) alert("Lỗi khi sửa: " + error.message);
+      else alert("Cập nhật thành công!");
     } else {
-      // Thêm bài mới
-      setList(l => [{ 
-        id: Date.now(), 
-        ...form, 
-        date: new Date().toLocaleDateString("vi-VN"),
-        img: form.img || "https://picsum.photos/seed/"+Date.now()+"/400/220" 
-      }, ...l]);
+      const { error } = await supabase.from('articles').insert([payload]);
+      if (error) alert("Lỗi khi thêm mới: " + error.message);
+      else alert("Thêm bài viết thành công!");
     }
     
-    setForm(initForm);
-    setEditId(null);
-    setShow(false);
+    await loadAdminArts(); // Load lại ngay sau khi lưu
+    setForm(initForm); setEditId(null); setShow(false); setIsSaving(false);
   };
 
+  // 3. Chuẩn bị dữ liệu khi bấm nút Sửa
   const handleEdit = (article: any) => {
     setForm({
       title: article.title || "", slug: article.slug || "", excerpt: article.excerpt || "",
@@ -1694,18 +1714,19 @@ function AArts() {
     setShow(true);
   };
 
-  const handleDelete = (id: any) => { 
-    if(confirm("Bác có chắc chắn muốn xóa bài viết này không?")) {
-      setList(l => l.filter(x => x.id !== id)); 
+  // 4. Xóa bài viết vĩnh viễn khỏi Supabase
+  const handleDelete = async (id: any) => { 
+    if(confirm("Bác có chắc chắn muốn xóa bài viết này khỏi hệ thống không? Hành động này không thể hoàn tác!")) {
+      const { error } = await supabase.from('articles').delete().eq('id', id);
+      if (error) alert("Lỗi khi xóa: " + error.message);
+      else {
+        alert("Đã xóa bài viết!");
+        await loadAdminArts();
+      }
     }
   };
 
-  const mockUpload = (type: any) => {
-    alert(`Mô phỏng: Cửa sổ chọn file ${type} sẽ mở ra.\n(Cần kết nối Supabase Storage để file thực sự được tải lên server)`);
-    // Giả lập điền link sau khi upload thành công
-    if (type === 'image') setForm(f => ({...f, img: "https://ngocdien.info.vn/uploads/demo-image.jpg"}));
-    if (type === 'audio') setForm(f => ({...f, audio: "https://ngocdien.info.vn/uploads/demo-audio.mp3"}));
-  };
+  const mockUpload = (type: any) => { alert(`Tính năng này cần thiết lập Supabase Storage.`); };
 
   return (
     <div>
@@ -1721,49 +1742,26 @@ function AArts() {
       </div>
 
       {show && (
-        <div style={{ background:"#FFFBF5", borderRadius:12, padding:"24px 20px", marginBottom:20, 
-          border:"1px solid #E8DDD0", boxShadow:"0 4px 12px rgba(0,0,0,0.05)" }}>
-          
+        <div style={{ background:"#FFFBF5", borderRadius:12, padding:"24px 20px", marginBottom:20, border:"1px solid #E8DDD0", boxShadow:"0 4px 12px rgba(0,0,0,0.05)" }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20, borderBottom:"2px solid #B91C1C", paddingBottom:12 }}>
             <h2 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900, color:"#1C1C1C", margin:0 }}>
               {editId ? "Chỉnh sửa bài viết" : "Bài viết mới"}
             </h2>
             <div style={{ display:"flex", gap:10 }}>
-              <button onClick={() => setShow(false)} style={{ background:"#F3F4F6", border:"1px solid #E5E7EB", 
-                padding:"8px 16px", borderRadius:7, cursor:"pointer", fontSize:13, fontWeight:700, color:"#4B5563" }}>
+              <button onClick={() => setShow(false)} style={{ background:"#F3F4F6", border:"1px solid #E5E7EB", padding:"8px 16px", borderRadius:7, cursor:"pointer", fontSize:13, fontWeight:700, color:"#4B5563" }}>
                 Hủy
               </button>
-              <button onClick={handleSave} style={{ background:"#B91C1C", color:"#fff", border:"none", 
-                padding:"8px 24px", borderRadius:7, fontWeight:700, cursor:"pointer", fontSize:13 }}>
-                Lưu
+              <button onClick={handleSave} disabled={isSaving} style={{ background:"#B91C1C", color:"#fff", border:"none", padding:"8px 24px", borderRadius:7, fontWeight:700, cursor:"pointer", fontSize:13 }}>
+                {isSaving ? "Đang lưu..." : "Lưu"}
               </button>
             </div>
           </div>
 
-          {/* Form Fields */}
           <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
-            <div>
-              <label style={FL}>Tiêu đề *</label>
-              <input value={form.title} onChange={e=>setForm(f=>({...f, title:e.target.value}))} style={FI as any} />
-            </div>
-            
-            <div>
-              <label style={FL}>Slug (URL) *</label>
-              <input value={form.slug} onChange={e=>setForm(f=>({...f, slug:e.target.value}))} 
-                placeholder="vi-du-tieu-de-khong-dau" style={FI as any} />
-            </div>
-
-            <div>
-              <label style={FL}>Mô tả ngắn (hiện trên thẻ + share)</label>
-              <textarea value={form.excerpt} onChange={e=>setForm(f=>({...f, excerpt:e.target.value}))} 
-                rows={3} style={{ ...FI, resize:"vertical" } as any} />
-            </div>
-
-            <div>
-              <label style={FL}>Nội dung (mỗi đoạn cách bằng dòng trống)</label>
-              <textarea value={form.content} onChange={e=>setForm(f=>({...f, content:e.target.value}))} 
-                rows={10} style={{ ...FI, resize:"vertical" } as any} />
-            </div>
+            <div><label style={FL}>Tiêu đề *</label><input value={form.title} onChange={e=>setForm(f=>({...f, title:e.target.value}))} style={FI as any} /></div>
+            <div><label style={FL}>Slug (URL) *</label><input value={form.slug} onChange={e=>setForm(f=>({...f, slug:e.target.value}))} placeholder="vi-du-tieu-de-khong-dau" style={FI as any} /></div>
+            <div><label style={FL}>Mô tả ngắn (hiện trên thẻ + share)</label><textarea value={form.excerpt} onChange={e=>setForm(f=>({...f, excerpt:e.target.value}))} rows={3} style={{ ...FI, resize:"vertical" } as any} /></div>
+            <div><label style={FL}>Nội dung (HTML hỗ trợ)</label><textarea value={form.content} onChange={e=>setForm(f=>({...f, content:e.target.value}))} rows={10} style={{ ...FI, resize:"vertical" } as any} /></div>
 
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <div>
@@ -1777,27 +1775,18 @@ function AArts() {
                 <label style={FL}>Chuyên mục *</label>
                 <select value={form.cat} onChange={e=>setForm(f=>({...f, cat:e.target.value}))} style={FI as any}>
                   <option value="">— Chọn chuyên mục —</option>
-                  <option value="tin-tuc">Tin tức</option>
-                  {catOptions.map(c => (
-                    <option key={c.value} value={c.value} style={{ fontWeight: c.isSub ? "normal" : "bold" }}>
-                      {c.label}
-                    </option>
+                  {ADMIN_OPTIONS.map(c => (
+                    <option key={c.val} value={c.val} style={{ fontWeight: c.lbl.startsWith("—") ? "normal" : "bold" }}>{c.lbl}</option>
                   ))}
                 </select>
               </div>
             </div>
 
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, alignItems:"center" }}>
-              <div>
-                <label style={FL}>Tác giả</label>
-                <input value={form.author} onChange={e=>setForm(f=>({...f, author:e.target.value}))} style={FI as any} />
-              </div>
+              <div><label style={FL}>Tác giả</label><input value={form.author} onChange={e=>setForm(f=>({...f, author:e.target.value}))} style={FI as any} /></div>
               <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:18 }}>
-                <input type="checkbox" id="featured" checked={form.featured} 
-                  onChange={e=>setForm(f=>({...f, featured:e.target.checked}))} style={{ width:16, height:16 }} />
-                <label htmlFor="featured" style={{ fontSize:13, fontWeight:700, color:"#374151", cursor:"pointer" }}>
-                  Đánh dấu nổi bật
-                </label>
+                <input type="checkbox" id="featured" checked={form.featured} onChange={e=>setForm(f=>({...f, featured:e.target.checked}))} style={{ width:16, height:16 }} />
+                <label htmlFor="featured" style={{ fontSize:13, fontWeight:700, color:"#374151", cursor:"pointer" }}>Đánh dấu nổi bật</label>
               </div>
             </div>
 
@@ -1805,67 +1794,45 @@ function AArts() {
 
             <div>
               <label style={FL}>Ảnh đại diện (URL)</label>
-              <input value={form.img} onChange={e=>setForm(f=>({...f, img:e.target.value}))} 
-                placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} />
-              <button onClick={() => mockUpload('image')} style={{ background:"none", border:"none", 
-                color:"#B91C1C", fontWeight:700, fontSize:12, cursor:"pointer", display:"flex", gap:4, alignItems:"center" }}>
-                <span style={{ fontSize:16 }}>↑</span> Upload file ảnh
-              </button>
+              <input value={form.img} onChange={e=>setForm(f=>({...f, img:e.target.value}))} placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} />
             </div>
-
             <div>
               <label style={FL}>Video (URL nhúng)</label>
-              <input value={form.video} onChange={e=>setForm(f=>({...f, video:e.target.value}))} 
-                placeholder="https://www.youtube.com/embed/..." style={FI as any} />
+              <input value={form.video} onChange={e=>setForm(f=>({...f, video:e.target.value}))} placeholder="https://www.youtube.com/embed/..." style={FI as any} />
             </div>
-
             <div>
               <label style={FL}>Audio / Podcast (URL)</label>
-              <input value={form.audio} onChange={e=>setForm(f=>({...f, audio:e.target.value}))} 
-                placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} />
-              <button onClick={() => mockUpload('audio')} style={{ background:"none", border:"none", 
-                color:"#B91C1C", fontWeight:700, fontSize:12, cursor:"pointer", display:"flex", gap:4, alignItems:"center" }}>
-                <span style={{ fontSize:16 }}>↑</span> Upload file mp3
-              </button>
+              <input value={form.audio} onChange={e=>setForm(f=>({...f, audio:e.target.value}))} placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} />
             </div>
-
           </div>
         </div>
       )}
 
-      {/* Danh sách bài viết */}
+      {/* Danh sách bài viết tải từ Supabase */}
       <div style={{ background:"#fff", borderRadius:10, overflow:"hidden", border:"1px solid #E5E7EB", boxShadow:"0 1px 4px rgba(0,0,0,.05)" }}>
         {list.map((a, i) => (
-          <div key={a.id} style={{ display:"flex", gap:14, alignItems:"center", 
-            padding:"12px 16px", borderBottom: i < list.length - 1 ? "1px solid #F3F4F6" : "none",
-            background: a.id === editId ? "#FEF2F2" : "#fff" }}>
-            
-            <img src={a.img} alt="" style={{ width:60, height:42, objectFit:"cover", borderRadius:6, flexShrink:0, border:"1px solid #eee" }}/>
-            
+          <div key={a.id} style={{ display:"flex", gap:14, alignItems:"center", padding:"12px 16px", borderBottom: i < list.length - 1 ? "1px solid #F3F4F6" : "none", background: a.id === editId ? "#FEF2F2" : "#fff" }}>
+            <img src={a.img || '/logo.png'} alt="" style={{ width:60, height:42, objectFit:"cover", borderRadius:6, flexShrink:0, border:"1px solid #eee" }}/>
             <div style={{ flex:1, minWidth:0 }}>
               <p style={{ fontWeight:700, fontSize:13.5, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", color:"#111" }}>
                 {a.title} {(a as any).featured && <span style={{ color:"#EAB308", marginLeft:4 }}>★</span>}
               </p>
               <div style={{ display:"flex", gap:8, alignItems:"center", marginTop:4 }}>
-                <span style={{ fontSize:11, color:"#6B7280" }}>{a.cat.split('|').pop()}</span>
+                <span style={{ fontSize:11, color:"#6B7280", fontWeight:"bold" }}>
+                  {ADMIN_OPTIONS.find(opt => opt.val === a.cat)?.lbl.replace("— ", "") || a.cat}
+                </span>
                 <span style={{ fontSize:10, color:"#D1D5DB" }}>|</span>
                 <span style={{ fontSize:11, color:"#6B7280" }}>{a.date}</span>
               </div>
             </div>
-            
-            <span style={{ fontSize:11, fontWeight:700, padding:"4px 10px", borderRadius:12, 
-               background: (a as any).status === 'draft' ? "#F3F4F6" : "#D1FAE5", 
-               color: (a as any).status === 'draft' ? "#4B5563" : "#065F46", flexShrink:0 }}>
-               {(a as any).status === 'draft' ? "Nháp" : "Đã đăng"}
-             </span>
-            
+            <span style={{ fontSize:11, fontWeight:700, padding:"4px 10px", borderRadius:12, background: (a as any).status === 'draft' ? "#F3F4F6" : "#D1FAE5", color: (a as any).status === 'draft' ? "#4B5563" : "#065F46", flexShrink:0 }}>
+              {(a as any).status === 'draft' ? "Nháp" : "Đã đăng"}
+            </span>
             <div style={{ display:"flex", gap:8, flexShrink:0, marginLeft:10 }}>
-              <button onClick={() => handleEdit(a)} style={{ background:"#F3F4F6", border:"none", 
-                color:"#374151", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>
+              <button onClick={() => handleEdit(a)} style={{ background:"#F3F4F6", border:"none", color:"#374151", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>
                 ✏️ Sửa
               </button>
-              <button onClick={() => handleDelete(a.id)} style={{ background:"#FEE2E2", border:"none", 
-                color:"#B91C1C", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>
+              <button onClick={() => handleDelete(a.id)} style={{ background:"#FEE2E2", border:"none", color:"#B91C1C", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>
                 🗑 Xóa
               </button>
             </div>
@@ -1873,7 +1840,7 @@ function AArts() {
         ))}
         {list.length === 0 && (
           <div style={{ padding:"40px 20px", textAlign:"center", color:"#9CA3AF", fontSize:13 }}>
-            Chưa có bài viết nào.
+            Chưa có bài viết nào trong CSDL Supabase.
           </div>
         )}
       </div>
