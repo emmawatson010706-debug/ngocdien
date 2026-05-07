@@ -2084,16 +2084,13 @@ function SearchPage({ setNav }: { setNav?: any }) {
    ARTICLE PAGE (CHIA SẺ ĐA NĂNG & ÉP CỨNG LINK)
 ═══════════════════════════════════════════ */
 function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
-  // 1. ÉP CỨNG ĐƯỜNG LINK CHUẨN (Không phụ thuộc vào thanh địa chỉ nữa)
   const shareUrl = `https://ngocdien.info.vn/bai-viet/${a?.slug || ''}`;
-  
   const defaultImg = "https://picsum.photos/seed/" + (a?.id || 1) + "nd/800/440";
   const [fSize, setFSize] = useState(15);
   
   const textContent = a?.content ? a.content.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
   const readTime = Math.max(1, Math.ceil(textContent.split(/\s+/).length / 200));
 
-  // 2. TÍNH NĂNG CHIA SẺ NGUYÊN BẢN CỦA ĐIỆN THOẠI (Chống mọi lỗi Zalo Tàu)
   const handleNativeShare = async () => {
     if (navigator.share) {
       try {
@@ -2106,7 +2103,6 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         console.log("Lỗi chia sẻ:", error);
       }
     } else {
-      // Nếu dùng máy tính bàn không có Native Share, tự động copy link
       navigator.clipboard.writeText(shareUrl);
       alert("Đã copy đường link bài viết!\nAnh hãy dán vào Zalo để gửi cho bà con nhé.");
     }
@@ -2145,19 +2141,12 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         
         <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", marginTop: 24, transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: a?.content || a?.excerpt || "<p>Chưa có nội dung chi tiết.</p>" }} />
         
-        {/* KHU VỰC CHIA SẺ ĐÃ ĐƯỢC THIẾT KẾ LẠI HOÀN TOÀN */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8", flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT NÀY:</span>
-          
-          {/* 1. NÚT CHIA SẺ NATIVE (Dùng trên điện thoại cực mượt) */}
           <button onClick={handleNativeShare} style={{ background: "#C8942B", color: "#fff", border: "none", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
             <span style={{fontSize: 16}}>➦</span> Chia sẻ qua Zalo/App
           </button>
-          
-          {/* 2. NÚT FACEBOOK TRUYỀN THỐNG (ĐÃ ÉP CỨNG LINK BÀI VIẾT) */}
           <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
-          
-          {/* 3. NÚT COPY LINK DỰ PHÒNG (Cho Zalo trên máy tính) */}
           <button onClick={() => { navigator.clipboard.writeText(shareUrl); alert("Đã copy link bài viết:\n" + shareUrl + "\n\nGiờ anh mở Zalo lên bấm Dán (Paste) là xong!"); }} style={{ background: "#4B5563", color: "#fff", border: "none", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
             📋 Copy Link
           </button>
@@ -2165,6 +2154,76 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         
         <BtnRed onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ marginTop: 20 }}>← Quay lại Trang chủ</BtnRed>
       </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   APP ROOT (ĐÃ THÊM BỘ MÁY ĐÓN KHÁCH TỪ ZALO/FB)
+═══════════════════════════════════════════ */
+export default function App() {
+  const [nav, setNav] = useState({ page: "home", cat: "", sub: "", article: null });
+  const [dbLoaded, setDbLoaded] = useState(false);
+
+  useEffect(() => {
+    const initApp = async () => {
+      const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
+      if (data && data.length > 0) {
+        ARTS.length = 0; ARTS.push(...(data as any[]));
+      }
+
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname;
+        const urlParams = new URLSearchParams(window.location.search);
+        const xemBai = urlParams.get('xem-bai'); 
+
+        if (xemBai) {
+          const foundArt = data?.find((a: any) => a.slug === xemBai);
+          if (foundArt) setNav({ page: "article", cat: foundArt.cat, sub: "", article: foundArt as any });
+        } else if (path.startsWith('/bai-viet/')) {
+          const slug = path.split('/')[2];
+          const foundArt = data?.find((a: any) => a.slug === slug);
+          if (foundArt) setNav({ page: "article", cat: foundArt.cat, sub: "", article: foundArt as any });
+        } else if (path.startsWith('/chuyen-muc/')) {
+          const cat = path.split('/')[2];
+          setNav({ page: "category", cat: cat, sub: "", article: null });
+        }
+      }
+      setDbLoaded(true);
+    };
+    initApp();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && dbLoaded) {
+      const timer = setTimeout(() => {
+        if (nav.page === "home") {
+          window.history.replaceState(null, '', '/');
+        } else if (nav.page === "category") {
+          window.history.replaceState(null, '', `/chuyen-muc/${nav.cat}`);
+        } else if (nav.page === "article" && nav.article) {
+          window.history.replaceState(null, '', `/bai-viet/${(nav.article as any).slug}`);
+        }
+      }, 100); 
+      return () => clearTimeout(timer);
+    }
+  }, [nav, dbLoaded]);
+
+  if (nav.page === "admin-login" || nav.page === "admin") {
+    window.location.href = '/admin';
+    return <div style={{padding:50, textAlign:'center'}}>Đang chuyển hướng...</div>;
+  }
+
+  return (
+    <div style={{ minHeight:"100vh", background:"#FEF9F2", fontFamily:"system-ui,-apple-system,sans-serif", color:"#1C1C1C" }}>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      <Header setNav={setNav}/>
+      <Ticker/>
+      {nav.page === "home" && <><Hero setNav={setNav}/><Home setNav={setNav}/></>}
+      {nav.page === "category" && <CatPage cat={nav.cat} sub={nav.sub} setNav={setNav}/>}
+      {nav.page === "article"  && <ArtPage article={nav.article} setNav={setNav}/>}
+      {nav.page === "search"   && <SearchPage setNav={setNav}/>}
+      <Footer setNav={setNav}/>
     </div>
   );
 }
