@@ -2150,15 +2150,29 @@ export default function App() {
   const [dbLoaded, setDbLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchArts = async () => {
+    const initApp = async () => {
+      // 1. Hút dữ liệu từ két sắt
       const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
       if (data && data.length > 0) {
         ARTS.length = 0; 
         ARTS.push(...(data as any[]));
       }
       setDbLoaded(true); 
+
+      // 2. BỘ QUÉT LINK: Tự động mở bài viết nếu bà con bấm từ Zalo/Facebook vào
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname;
+        if (path.startsWith('/bai-viet/')) {
+          const slug = path.split('/')[2];
+          // Tìm đúng bài có mã slug đó
+          const foundArt = data?.find((a: any) => a.slug === slug);
+          if (foundArt) {
+            setNav({ page: "article", cat: foundArt.cat, sub: "", article: foundArt as any });
+          }
+        }
+      }
     };
-    fetchArts();
+    initApp();
   }, []);
 
   if (nav.page === "admin-login" || nav.page === "admin") {
