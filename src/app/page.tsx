@@ -483,7 +483,7 @@ function Sidebar({ setNav }: { setNav?: any }) {
 <div style={{ marginTop: 24, marginBottom: 24 }}>
   <div style={{ display: "flex", alignItems: "center", gap: 8, borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
     <span style={{ fontSize: 18 }}>🤝</span>
-    <h2 style={{ fontFamily: "'Lora', serif", fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>CỘNG ĐỒNG NGỌC ĐIỀN</h2>
+    <h2 style={{ fontFamily: "'Lora', serif", fontSize: 14, fontWeight: 900, color: "#111", margin: 0 }}>CỘNG ĐỒNG NGỌC ĐIỀN</h2>
   </div>
 
   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
