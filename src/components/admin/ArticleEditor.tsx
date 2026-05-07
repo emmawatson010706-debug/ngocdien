@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -16,7 +16,7 @@ import { supabase } from '@/lib/supabase/client';
 import { toSlug } from '@/lib/utils';
 import type { Article } from '@/types/database';
 
-// 🔥 GIA PHẢ CHUYÊN MỤC CỦA XÓM NGỌC ĐIỀN (Mục Cha giờ đã có thể bấm chọn)
+// 🔥 GIA PHẢ CHUYÊN MỤC CỦA XÓM NGỌC ĐIỀN
 const ALL_CATEGORIES = [
   { id: 'tin-tuc', name: '🚩 TIN TỨC (Mục lớn)', isParent: true },
   { id: 'thong-bao', name: '—— Thông báo' },
@@ -61,6 +61,12 @@ export default function ArticleEditor({ article }: Props) {
   const router = useRouter();
   const isEdit = !!article;
 
+  // 1. CHỐNG ĐƠ TRANG: Đảm bảo giao diện chỉ load sau khi Server đã nhả ra
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [form, setForm] = useState({
     title:       article?.title ?? '',
     slug:        article?.slug ?? '',
@@ -78,6 +84,7 @@ export default function ArticleEditor({ article }: Props) {
   const [saving, setSaving]             = useState(false);
   const [error, setError]               = useState('');
 
+  // 2. CHỐNG ĐƠ TIPTAP: Thêm immediatelyRender: false
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -89,6 +96,7 @@ export default function ArticleEditor({ article }: Props) {
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
     content: article?.content ?? '<p>Bắt đầu viết nội dung bài...</p>',
+    immediatelyRender: false, 
   });
 
   const set = (k: string, v: any) => setForm(f => ({ ...f, [k]: v }));
@@ -138,6 +146,15 @@ export default function ArticleEditor({ article }: Props) {
     router.push('/admin/bai-viet');
     router.refresh();
   };
+
+  // MÀN HÌNH CHỜ (Để Server không bị nghẹn)
+  if (!mounted) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-[#B91C1C] font-bold text-lg animate-pulse">⏳ Đang tải bộ máy soạn thảo...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-[920px]">
