@@ -27,22 +27,22 @@ const AudioPlayer = Node.create({
   },
 });
 
-// 🔥 ĐÃ BỔ SUNG MỤC "GIỚI THIỆU" SAU MỤC "TIN TỨC"
+// 🔥 ĐÃ ĐỔI "TIN TỨC" THÀNH "LOA XÓM" VÀ BỔ SUNG MỤC "GIỚI THIỆU"
 const ALL_CATEGORIES = [
-  { id: 'tin-tuc', name: '🚩 TIN TỨC (Mục lớn)', isParent: true },
- 
+  { id: 'loa-xom', name: '📢 LOA XÓM (Mục lớn)', isParent: true },
   { id: 'thong-bao', name: '—— Thông báo' },
   { id: 'su-kien', name: '—— Sự kiện' },
-  { id: 'gioi-thieu', name: 'ℹ️ GIỚI THIỆU (Mục lớn)', isParent: true },
 
+  { id: 'gioi-thieu', name: 'ℹ️ GIỚI THIỆU (Mục lớn)', isParent: true },
+  
   { id: 'nguoi-ngoc-dien', name: '👥 NGƯỜI NGỌC ĐIỀN (Mục lớn)', isParent: true },
-  { id: 'nguoi-ngoc-dien-chung', name: '—— Giới thiệu chung' },
+  { id: 'gioi-thieu-chung', name: '—— Giới thiệu chung' },
   { id: 'me-vnah', name: '—— Mẹ Việt Nam Anh hùng' },
   { id: 'liet-sy', name: '—— Liệt sỹ' },
   { id: 'anh-hung', name: '—— Anh hùng LĐ Cao Lục' },
   { id: 'dang-vien', name: '—— Đảng viên đầu tiên' },
 
-  { id: 'lich-su', name: '📜 LỊCH SỬ', isParent: true },
+  { id: 'lich-su', name: '📜 LỊCH SỬ XÓM NGỌC ĐIỀN', isParent: true },
 
   { id: 'tieng-lang', name: '✍️ TIẾNG LÀNG (Mục lớn)', isParent: true },
   { id: 'tan-van', name: '—— Tản văn' },
@@ -56,13 +56,13 @@ const ALL_CATEGORIES = [
   { id: 'gieng', name: '—— Giếng làng' },
 
   { id: 'le-hoi', name: '🎊 LỄ HỘI (Mục lớn)', isParent: true },
-  { id: 'le-hoi-den', name: '—— Lễ hội Đền' },
+  { id: 'le-hoi-den', name: '—— Lễ hội Đền (15-17/3 âm)' },
   { id: 'le-hoi-xom', name: '—— Lễ hội Xóm' },
-  { id: 'le-hoi-gieng', name: '—— Lễ hội Giếng' },
+  { id: 'le-hoi-gieng', name: '—— Lễ hội Giếng đầu năm' },
 
   { id: 'thu-vien', name: '📚 THƯ VIỆN (Mục lớn)', isParent: true },
-  { id: 'huong-uoc', name: '—— Hương ước 1883' },
-  { id: 'dang-bo', name: '—— Lịch sử Đảng bộ' }
+  { id: 'huong-uoc', name: '—— Hương ước' },
+  { id: 'dang-bo', name: '—— Đảng bộ' }
 ];
 
 interface Props { article?: Article; categories?: any; }
