@@ -255,6 +255,15 @@ function Header({ setNav }: { setNav?: any }) {
 
             {/* KHUNG CHỨA MENU */}
             <nav className="nd-dnav" ref={navRef} style={{ flex:1, display:"flex", overflowX:"auto", scrollbarWidth:"none", scrollBehavior:"smooth" }}>
+              
+              {/* NÚT TRANG CHỦ */}
+              <button onClick={() => go("home")}
+                style={{ background:"none", border:"none", color:"rgba(255,255,255,.88)", fontSize:10.5, fontWeight:700, letterSpacing:".6px", padding:"8px 10px", cursor:"pointer", whiteSpace:"nowrap" }}
+                onMouseEnter={e=>(e.target as any).style.color="#FBBF24"}
+                onMouseLeave={e=>(e.target as any).style.color="rgba(255,255,255,.88)"}>
+                TRANG CHỦ
+              </button>
+
               {CATS.map(c => (
                 <button key={c.slug} onClick={() => go("category",{ cat:c.slug })}
                   style={{ background:"none", border:"none", color:"rgba(255,255,255,.88)", fontSize:10.5, fontWeight:700, letterSpacing:".6px", padding:"8px 10px", cursor:"pointer", whiteSpace:"nowrap" }}
