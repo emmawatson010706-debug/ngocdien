@@ -27,6 +27,17 @@ const SUBS = {
   "chuyen-doi-so":["Dịch vụ công","Hướng dẫn VNeID","Cổng thông tin","Bản đồ số"],
   "gop-y":["Góp ý","Phản ánh","Kiến nghị","Gửi bài"],
 };
+
+// 👇 ANH DÁN BỔ SUNG KHỐI MỚI VÀO NGAY ĐÂY:
+const CAT_LABELS: any = {
+  "gioi-thieu": "Giới thiệu", "loa-xom": "Loa Xóm", "tin-tuc": "Tin tức", "thong-bao": "Thông báo", "su-kien": "Sự kiện",
+  "nguoi-ngoc-dien": "Người Ngọc Điền", "gioi-thieu-chung": "Giới thiệu chung", "me-vnah": "Mẹ VNAH", "liet-sy": "Liệt sỹ", "anh-hung": "Anh hùng lao động", "dang-vien": "Đảng viên đầu tiên",
+  "lich-su": "Lịch sử xóm",
+  "tieng-lang": "Tiếng làng", "tan-van": "Tản văn", "tho": "Thơ", "kham-pha": "Khám phá", "goc-nhin-thang": "Góc nhìn thẳng", "podcast": "Podcast",
+  "di-tich": "Di tích", "den": "Đền Ngọc Điền", "gieng": "Giếng làng",
+  "le-hoi": "Lễ hội", "le-hoi-den": "Lễ hội Đền", "le-hoi-xom": "Lễ hội Xóm", "le-hoi-gieng": "Lễ hội Giếng",
+  "thu-vien": "Thư viện", "huong-uoc": "Hương ước", "dang-bo": "Đảng bộ", "gop-y": "Góp ý"
+};
 const SLIDES = [
   { title:"Lễ hội truyền thống Đền Ngọc Điền 2025 thu hút hàng nghìn người dân về tham dự",
     cat:"Lễ hội", desc:"Suốt 3 ngày từ 15 đến 17 tháng 3 âm lịch, Đền Ngọc Điền tràn ngập tiếng trống hội và hương khói. Lễ rước kiệu uy nghiêm, màn hát ví dặm ngân vang cùng trò chơi dân gian đặc sắc đã kéo hàng nghìn con dân về hội tụ — một năm nữa quê hương sống lại trong hồn thiêng cội nguồn.",
@@ -173,7 +184,7 @@ function ACard({ a, onClick }: { a: any, onClick?: any }) {
       <img src={a.img} alt={a.title} style={{ width:"100%", height:140, objectFit:"cover", display:"block" }} />
       <div style={{ padding:"10px 12px" }}>
         <div style={{ display:"flex", gap:6, marginBottom:6 }}>
-          <Tag label={a.cat} /><span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
+          <Tag label={CAT_LABELS[a.cat] || a.cat} /><span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
         </div>
         <p style={{ fontWeight:700, fontSize:13.5, lineHeight:1.5 }}>{a.title}</p>
         <p style={{ fontSize:12, color:"#666", marginTop:4, lineHeight:1.6 }}>{a.excerpt}</p>
@@ -380,8 +391,6 @@ function Hero({ setNav }: { setNav?: any }) {
   const s = heroArts[idx];
   if (!s) return null;
 
-  const catLabel = CATS.find(c => c.slug === s.cat)?.label || s.cat;
-
   return (
     <div style={{ position:"relative", height:"clamp(400px,58vw,540px)", overflow:"hidden", background:"#111" }}>
       {heroArts.map((sl,i) => (
@@ -393,21 +402,19 @@ function Hero({ setNav }: { setNav?: any }) {
 
       <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", justifyContent:"flex-end", paddingBottom:"clamp(70px,13vw,120px)", zIndex:5 }}>
         <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 20px", width:"100%" }}>
-          <Tag label={catLabel}/> 
-          <h1 style={{ fontFamily:"'Lora', serif", fontSize:"clamp(17px,2.8vw,27px)",
-            fontWeight:900, color:"#fff", lineHeight:1.42, maxWidth:800,
-            textShadow:"0 2px 12px rgba(0,0,0,.7)", margin:"10px 0 12px" }}>
+          <Tag label={CAT_LABELS[s.cat] || s.cat}/> 
+          <h1 style={{ fontFamily:"'Lora', serif", fontSize:"clamp(17px,2.8vw,27px)", fontWeight:900, color:"#fff", lineHeight:1.42, margin:"10px 0 12px" }}>
             {s.title}
           </h1>
-          <p style={{ color:"rgba(255,255,255,.78)", fontSize:"clamp(12px,1.4vw,14px)", maxWidth:700, lineHeight:1.8 }}>{s.excerpt}</p>
+          <p style={{ color:"rgba(255,255,255,.78)", fontSize:"clamp(12px,1.4vw,14px)", maxWidth:700, lineHeight:1.8 }}>
+            {s.excerpt}
+          </p>
         </div>
       </div>
 
       <div style={{ position:"absolute", bottom:18, left:0, right:80, display:"flex", justifyContent:"center", gap:6, zIndex:10 }}>
         {heroArts.map((_,i) => (
-          <button key={i} onClick={()=>setIdx(i)} style={{ width:i===idx?24:7, height:7,
-            borderRadius:4, border:"none", padding:0, cursor:"pointer",
-            background:i===idx?"#C8942B":"rgba(255,255,255,.38)", transition:"all .3s" }}/>
+          <button key={i} onClick={()=>setIdx(i)} style={{ width:i===idx?24:7, height:7, borderRadius:4, border:"none", padding:0, cursor:"pointer", background:i===idx?"#C8942B":"rgba(255,255,255,.38)", transition:"all .3s" }}/>
         ))}
       </div>
       
@@ -416,15 +423,12 @@ function Hero({ setNav }: { setNav?: any }) {
           setNav({ page: "article", article: s });
           window.scrollTo(0,0);
         }}
-        style={{ position:"absolute", bottom:16, right:20, zIndex:10,
-        background:"rgba(155,27,20,.82)", color:"#fff", border:"1px solid rgba(255,255,255,.2)",
-        borderRadius:4, padding:"5px 13px", fontSize:11, fontWeight:700, cursor:"pointer" }}>
+        style={{ position:"absolute", bottom:16, right:20, zIndex:10, background:"rgba(155,27,20,.82)", color:"#fff", border:"1px solid rgba(255,255,255,.2)", borderRadius:4, padding:"5px 13px", fontSize:11, fontWeight:700, cursor:"pointer" }}>
         Đọc bài →
       </button>
     </div>
   );
 }
-
 /* ═══════════════════════════════════════════
    SIDEBAR
 ═══════════════════════════════════════════ */
@@ -1551,9 +1555,12 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         <div style={{ display: "flex", gap: 6, fontSize: 12, color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
           <button onClick={() => setNav({ page: "home" })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>Trang chủ</button>
           <span>›</span>
+          
+          {/* 🔥 ĐÃ SỬA CHỖ NÀY ĐỂ ÁP DỤNG TỪ ĐIỂN TIẾNG VIỆT */}
           <button onClick={() => setNav({ page: "category", cat: a?.cat })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>
-            {typeof CATS !== 'undefined' ? CATS.find((c: any) => c.slug === a?.cat)?.label || a?.cat : a?.cat}
+            {typeof CAT_LABELS !== 'undefined' ? CAT_LABELS[a?.cat] || a?.cat : a?.cat}
           </button>
+          
           <span>›</span>
           <span style={{ color: "#555" }}>{a?.title}</span>
         </div>
