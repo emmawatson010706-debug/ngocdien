@@ -820,7 +820,7 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
     };
 
     const treeMap: any = {
-      "gioi-thieu": ["gioi-thieu"], // ĐÃ THÊM VÀO ĐÂY ĐỂ TRUY XUẤT
+      "gioi-thieu": ["gioi-thieu"],
       "tieng-lang": ["tieng-lang", "tho", "thơ", "tan-van", "tản văn", "kham-pha", "goc-nhin-thang", "podcast"],
       "nguoi-ngoc-dien": ["nguoi-ngoc-dien", "me-vnah", "liet-sy", "anh-hung", "dang-vien"],
       "di-tich": ["di-tich", "den", "đền", "gieng", "giếng"],
@@ -907,7 +907,6 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
 function Footer({ setNav }: { setNav?: any }) {
   const go = (page: any, extra: any = {}) => { setNav({ page, ...extra }); window.scrollTo(0,0); };
   
-  // ĐÃ THÊM MỤC GIỚI THIỆU VÀO DANH MỤC NHANH
   const ql = [["Trang chủ","home"],["Giới thiệu","cat","gioi-thieu"],["Tin tức","cat","tin-tuc"],["Lịch sử xóm","cat","lich-su"],
               ["Tiếng làng","cat","tieng-lang"],["Di tích","cat","di-tich"],
               ["Lễ hội","cat","le-hoi"],["Góp ý & Gửi bài","cat","gop-y"],["Quản trị","admin-login"]];
@@ -1099,7 +1098,6 @@ function AArts() {
   };
   const [form, setForm] = useState(initForm);
 
-  // ĐÃ BỔ SUNG MỤC GIỚI THIỆU VÀO ĐÂY ĐỂ VIẾT BÀI
   const ADMIN_OPTIONS = [
     { val: "gioi-thieu", lbl: "Giới thiệu" },
     { val: "tin-tuc", lbl: "Tin tức" }, { val: "thong-bao", lbl: "— Thông báo" }, { val: "su-kien", lbl: "— Sự kiện" },
@@ -1478,6 +1476,96 @@ function SearchPage({ setNav }: { setNav?: any }) {
           </button>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   ARTICLE PAGE (CHIA SẺ ĐA NĂNG & ÉP CỨNG LINK)
+═══════════════════════════════════════════ */
+function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
+  const shareUrl = `https://ngocdien.info.vn/bai-viet/${a?.slug || ''}`;
+  const defaultImg = "https://picsum.photos/seed/" + (a?.id || 1) + "nd/800/440";
+  const [fSize, setFSize] = useState(15);
+  
+  // 1. TỰ ĐỘNG DỌN RÁC: Xóa câu chữ nháp mặc định nếu lỡ lưu vào dữ liệu
+  const cleanContent = a?.content 
+    ? a.content.replace(/<p>Bắt đầu viết nội dung bài\.\.\.<\/p>/g, '').replace(/Bắt đầu viết nội dung bài\.\.\./g, '') 
+    : '';
+
+  const textContent = cleanContent ? cleanContent.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
+  const readTime = Math.max(1, Math.ceil(textContent.split(/\s+/).length / 200));
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: a?.title,
+          text: 'Mời bà con đọc bài viết trên Xóm Ngọc Điền:',
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.log("Lỗi chia sẻ:", error);
+      }
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      alert("Đã copy đường link bài viết!\nAnh hãy dán vào Zalo để gửi cho bà con nhé.");
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 16px" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "22px 0" }}>
+        
+        <div style={{ display: "flex", gap: 6, fontSize: 12, color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
+          <button onClick={() => setNav({ page: "home" })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>Trang chủ</button>
+          <span>›</span>
+          <button onClick={() => setNav({ page: "category", cat: a?.cat })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>
+            {typeof CATS !== 'undefined' ? CATS.find((c: any) => c.slug === a?.cat)?.label || a?.cat : a?.cat}
+          </button>
+          <span>›</span>
+          <span style={{ color: "#555" }}>{a?.title}</span>
+        </div>
+        
+        <h1 style={{ fontFamily: "'Lora', serif", fontSize: "clamp(20px,4vw,30px)", fontWeight: 900, lineHeight: 1.38, margin: "12px 0", color: "#111" }}>{a?.title}</h1>
+        
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EAE0D0", paddingBottom: 12, marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+          <p style={{ color: "#aaa", fontSize: 12.5, margin: 0 }}>
+            ✍️ {a?.author_name || 'Ban biên tập'}  ·  📅 {a?.date}  ·  <span style={{ color: "#0891B2", fontWeight: 700 }}>⏱️ Đọc {readTime} phút</span>
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#FFFBF5", padding: "4px 8px", borderRadius: 6, border: "1px solid #E8DDD0" }}>
+            <span style={{ fontSize: 10, color: "#888", fontWeight: 700, letterSpacing: "1px" }}>CỠ CHỮ:</span>
+            <button onClick={() => setFSize(s => Math.max(14, s - 2))} style={{ border: "1px solid #E5E7EB", background: "#fff", width: 26, height: 26, borderRadius: 4, cursor: "pointer", fontWeight: 900, color: "#555" }}>A-</button>
+            <span style={{ fontSize: 13, fontWeight: 700, width: 18, textAlign: "center", color: "#1C1C1C" }}>{fSize}</span>
+            <button onClick={() => setFSize(s => Math.min(26, s + 2))} style={{ border: "1px solid #E5E7EB", background: "#fff", width: 26, height: 26, borderRadius: 4, cursor: "pointer", fontWeight: 900, color: "#555" }}>A+</button>
+          </div>
+        </div>
+        
+        <img src={a?.img || defaultImg} alt={a?.title} style={{ width: "100%", borderRadius: 10, marginBottom: 20, display: "block", maxHeight: 450, objectFit: 'cover' }}/>
+        
+        {/* HIỂN THỊ MÔ TẢ NGẮN (SAPO) CỰC KỲ CHUYÊN NGHIỆP TỰA NHƯ BÁO CHÍ */}
+        {a?.excerpt && (
+          <div style={{ fontSize: fSize + 1, fontWeight: 700, fontStyle: "italic", color: "#4b5563", marginBottom: 24, borderLeft: "4px solid #B91C1C", lineHeight: 1.6, background: "#fdfbf7", padding: "14px 18px", borderRadius: "0 8px 8px 0" }}>
+            {a.excerpt}
+          </div>
+        )}
+        
+        {/* NỘI DUNG ĐÃ ĐƯỢC DỌN RÁC */}
+        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: cleanContent || "<p>Chưa có nội dung chi tiết.</p>" }} />
+        
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8", flexWrap: "wrap" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT NÀY:</span>
+          <button onClick={handleNativeShare} style={{ background: "#C8942B", color: "#fff", border: "none", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+            <span style={{fontSize: 16}}>➦</span> Chia sẻ qua Zalo/App
+          </button>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
+          <button onClick={() => { navigator.clipboard.writeText(shareUrl); alert("Đã copy link bài viết:\n" + shareUrl + "\n\nGiờ anh mở Zalo lên bấm Dán (Paste) là xong!"); }} style={{ background: "#4B5563", color: "#fff", border: "none", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
+            📋 Copy Link
+          </button>
+        </div>
+        
+        <button onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ background: "#B91C1C", color: "#fff", border: "none", borderRadius: 5, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", marginTop: 24, display: "inline-block" }}>← Quay lại Trang chủ</button>
+      </div>
     </div>
   );
 }
