@@ -1098,14 +1098,42 @@ function AArts() {
   };
   const [form, setForm] = useState(initForm);
 
+  // Danh sách chuyên mục chuẩn xác để lưu thẳng vào Supabase
   const ADMIN_OPTIONS = [
-    { val: "gioi-thieu", lbl: "Giới thiệu" },
-    { val: "tin-tuc", lbl: "Tin tức" }, { val: "thong-bao", lbl: "— Thông báo" }, { val: "su-kien", lbl: "— Sự kiện" },
-    { val: "nguoi-ngoc-dien", lbl: "Người Ngọc Điền" }, { val: "me-vnah", lbl: "— Mẹ VNAH" }, { val: "liet-sy", lbl: "— Liệt sỹ" }, { val: "anh-hung", lbl: "— Anh hùng" }, { val: "dang-vien", lbl: "— Đảng viên" },
-    { val: "tieng-lang", lbl: "Tiếng làng" }, { val: "tan-van", lbl: "— Tản văn" }, { val: "tho", lbl: "— Thơ" }, { val: "kham-pha", lbl: "— Khám phá" }, { val: "goc-nhin-thang", lbl: "— Góc nhìn" }, { val: "podcast", lbl: "— Podcast" },
-    { val: "di-tich", lbl: "Di tích" }, { val: "den", lbl: "— Đền Ngọc Điền" }, { val: "gieng", lbl: "— Giếng làng" },
-    { val: "le-hoi", lbl: "Lễ hội" }, { val: "le-hoi-den", lbl: "— Lễ hội Đền" }, { val: "le-hoi-xom", lbl: "— Lễ hội Xóm" }, { val: "le-hoi-gieng", lbl: "— Lễ hội Giếng" },
-    { val: "thu-vien", lbl: "Thư viện" }, { val: "huong-uoc", lbl: "— Hương ước" }, { val: "dang-bo", lbl: "— Đảng bộ" }
+    { val: "tin-tuc", lbl: "🚩 TIN TỨC (Mục lớn)" }, 
+    { val: "thong-bao", lbl: "— Thông báo" }, 
+    { val: "su-kien", lbl: "— Sự kiện" },
+
+    { val: "gioi-thieu", lbl: "ℹ️ GIỚI THIỆU (Mục lớn)" },
+    
+    { val: "nguoi-ngoc-dien", lbl: "👥 NGƯỜI NGỌC ĐIỀN (Mục lớn)" }, 
+    { val: "gioi-thieu-chung", lbl: "— Giới thiệu chung" },
+    { val: "me-vnah", lbl: "— Mẹ Việt Nam Anh hùng" }, 
+    { val: "liet-sy", lbl: "— Liệt sỹ" }, 
+    { val: "anh-hung", lbl: "— Anh hùng LĐ Cao Lục" }, 
+    { val: "dang-vien", lbl: "— Đảng viên đầu tiên" },
+
+    { val: "lich-su", lbl: "📜 LỊCH SỬ XÓM NGỌC ĐIỀN" },
+
+    { val: "tieng-lang", lbl: "✍️ TIẾNG LÀNG (Mục lớn)" }, 
+    { val: "tan-van", lbl: "— Tản văn" }, 
+    { val: "tho", lbl: "— Thơ" }, 
+    { val: "kham-pha", lbl: "— Khám phá" }, 
+    { val: "goc-nhin-thang", lbl: "— Góc nhìn thẳng" }, 
+    { val: "podcast", lbl: "— Podcast" },
+
+    { val: "di-tich", lbl: "🏛️ DI TÍCH (Mục lớn)" }, 
+    { val: "den", lbl: "— Đền Ngọc Điền" }, 
+    { val: "gieng", lbl: "— Giếng làng" },
+
+    { val: "le-hoi", lbl: "🎊 LỄ HỘI (Mục lớn)" }, 
+    { val: "le-hoi-den", lbl: "— Lễ hội Đền (15-17/3 âm)" }, 
+    { val: "le-hoi-xom", lbl: "— Lễ hội Xóm" }, 
+    { val: "le-hoi-gieng", lbl: "— Lễ hội Giếng đầu năm" },
+
+    { val: "thu-vien", lbl: "📚 THƯ VIỆN (Mục lớn)" }, 
+    { val: "huong-uoc", lbl: "— Hương ước" }, 
+    { val: "dang-bo", lbl: "— Đảng bộ" }
   ];
 
   const loadAdminArts = async () => {
