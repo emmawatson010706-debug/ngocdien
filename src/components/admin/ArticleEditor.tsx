@@ -30,9 +30,10 @@ const AudioPlayer = Node.create({
 // 🔥 ĐÃ BỔ SUNG MỤC "GIỚI THIỆU" SAU MỤC "TIN TỨC"
 const ALL_CATEGORIES = [
   { id: 'tin-tuc', name: '🚩 TIN TỨC (Mục lớn)', isParent: true },
-  { id: 'gioi-thieu', name: 'ℹ️ GIỚI THIỆU (Mục lớn)', isParent: true }, 
+ 
   { id: 'thong-bao', name: '—— Thông báo' },
   { id: 'su-kien', name: '—— Sự kiện' },
+  { id: 'gioi-thieu', name: 'ℹ️ GIỚI THIỆU (Mục lớn)', isParent: true },
 
   { id: 'nguoi-ngoc-dien', name: '👥 NGƯỜI NGỌC ĐIỀN (Mục lớn)', isParent: true },
   { id: 'nguoi-ngoc-dien-chung', name: '—— Giới thiệu chung' },
