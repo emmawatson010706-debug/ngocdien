@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase/client';
 ═══════════════════════════════════════════ */
 const CATS = [
   { slug:"gioi-thieu",      label:"Giới thiệu",            icon:"ℹ️" },
-  { slug:"tin-tuc",         label:"Tin tức",               icon:"📰" },
+  { slug:"loa-xom",         label:"Loa Xóm",               icon:"📢" },
   { slug:"nguoi-ngoc-dien", label:"Người Ngọc Điền",       icon:"👥" },
   { slug:"lich-su",         label:"Lịch sử Xóm Ngọc Điền",icon:"📜" },
   { slug:"tieng-lang",      label:"Tiếng làng",             icon:"✍️" },
@@ -18,7 +18,7 @@ const CATS = [
   { slug:"gop-y",           label:"Góp ý & Gửi bài",       icon:"✉️" },
 ];
 const SUBS = {
-  "tin-tuc":["Thông báo","Sự kiện"],
+  "loa-xom":["Thông báo","Sự kiện"],
   "nguoi-ngoc-dien":["Mẹ Việt Nam Anh hùng","Liệt sỹ","Anh hùng lao động Cao Lục","Đảng viên đầu tiên"],
   "tieng-lang":["Tản văn","Thơ","Khám phá","Góc nhìn thẳng","Podcast"],
   "di-tich":["Đền Ngọc Điền","Giếng làng"],
@@ -329,27 +329,21 @@ function Header({ setNav }: { setNav?: any }) {
 ═══════════════════════════════════════════ */
 function Ticker() {
   const latestNews = [...ARTS]
-    .filter(a => a.cat === "tin-tuc")
+    .filter(a => a.cat === "loa-xom" || a.cat === "tin-tuc" || a.cat === "thong-bao" || a.cat === "su-kien")
     .sort((a, b) => b.id - a.id)
     .slice(0, 5);
   
   const t = latestNews.length > 0 
     ? latestNews.map(a => `🔴 ${a.title}`).join("  ✦  ") + "  ✦  "
-    : "🔴 Đang cập nhật tin tức mới nhất...  ✦  ";
+    : "🔴 Đang cập nhật Loa Xóm mới nhất...  ✦  ";
 
   return (
     <div style={{ background: "#B91C1C", height: 34, display: "flex", overflow: "hidden" }}>
-      <div style={{ 
-        background: "#7F1D1D", padding: "0 14px", display: "flex", alignItems: "center", 
-        fontSize: 11, fontWeight: 700, color: "#fff", letterSpacing: "1px", 
-        flexShrink: 0, borderRight: "2px solid rgba(255,255,255,.15)" 
-      }}>
-        TIN MỚI
+      <div style={{ background: "#7F1D1D", padding: "0 14px", display: "flex", alignItems: "center", fontSize: 11, fontWeight: 700, color: "#fff", letterSpacing: "1px", flexShrink: 0, borderRight: "2px solid rgba(255,255,255,.15)" }}>
+        LOA XÓM
       </div>
       <div style={{ flex: 1, overflow: "hidden", display: "flex", alignItems: "center" }}>
-        <div className="nd-ticker" style={{ 
-          whiteSpace: "nowrap", fontSize: 12.5, color: "#fff", display: "flex", flexWrap: "nowrap" 
-        }}>
+        <div className="nd-ticker" style={{ whiteSpace: "nowrap", fontSize: 12.5, color: "#fff", display: "flex", flexWrap: "nowrap" }}>
           <span style={{ paddingRight: 40, flexShrink: 0 }}>{t}</span>
           <span style={{ paddingRight: 40, flexShrink: 0 }}>{t}</span>
         </div>
@@ -363,7 +357,7 @@ function Ticker() {
 ═══════════════════════════════════════════ */
 function Hero({ setNav }: { setNav?: any }) {
   const heroArts = [...ARTS]
-    .filter(a => a.cat !== "tin-tuc")
+    .filter(a => a.cat !== "loa-xom" && a.cat !== "tin-tuc" && a.cat !== "thong-bao" && a.cat !== "su-kien")
     .sort((a, b) => b.id - a.id)
     .slice(0, 5);
   
@@ -518,15 +512,15 @@ function Home({ setNav }: { setNav?: any }) {
     <div style={C}>
       <div className="nd-layout">
         <div>
-          {/* TIN TỨC */}
+          {/* LOA XÓM */}
           <section style={{ marginBottom:26 }}>
-            <SecHead icon="📰" title="TIN TỨC" onMore={() => go("tin-tuc")} />
-            {ARTS.filter(a=>a.cat==="tin-tuc").map(a=>(
+            <SecHead icon="📢" title="LOA XÓM" onMore={() => go("loa-xom")} />
+            {ARTS.filter(a => a.cat === "loa-xom" || a.cat === "tin-tuc" || a.cat === "thong-bao" || a.cat === "su-kien").slice(0, 4).map(a=>(
               <div key={a.id} className="nd-ali" onClick={() => goArt(a)} style={{ display:"flex", gap:10 }}>
                 <img src={a.img} alt="" style={{ width:78, height:54, objectFit:"cover", borderRadius:5, flexShrink:0 }}/>
                 <div>
                   <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:4 }}>
-                    <Tag label="Tin tức"/><span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
+                    <Tag label="Loa Xóm"/><span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
                   </div>
                   <p style={{ fontWeight:700, fontSize:13.5, lineHeight:1.5 }}>{a.title}</p>
                 </div>
@@ -821,12 +815,12 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
 
     const treeMap: any = {
       "gioi-thieu": ["gioi-thieu"],
+      "loa-xom": ["loa-xom", "tin-tuc", "thong-bao", "su-kien"],
       "tieng-lang": ["tieng-lang", "tho", "thơ", "tan-van", "tản văn", "kham-pha", "goc-nhin-thang", "podcast"],
       "nguoi-ngoc-dien": ["nguoi-ngoc-dien", "me-vnah", "liet-sy", "anh-hung", "dang-vien"],
       "di-tich": ["di-tich", "den", "đền", "gieng", "giếng"],
       "le-hoi": ["le-hoi", "le-hoi-den", "le-hoi-xom", "le-hoi-gieng"],
-      "thu-vien": ["thu-vien", "huong-uoc", "dang-bo"],
-      "tin-tuc": ["tin-tuc", "thong-bao", "su-kien"]
+      "thu-vien": ["thu-vien", "huong-uoc", "dang-bo"]
     };
 
     let searchIds = [];
@@ -907,7 +901,7 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
 function Footer({ setNav }: { setNav?: any }) {
   const go = (page: any, extra: any = {}) => { setNav({ page, ...extra }); window.scrollTo(0,0); };
   
-  const ql = [["Trang chủ","home"],["Giới thiệu","cat","gioi-thieu"],["Tin tức","cat","tin-tuc"],["Lịch sử xóm","cat","lich-su"],
+  const ql = [["Trang chủ","home"],["Giới thiệu","cat","gioi-thieu"],["Loa Xóm","cat","loa-xom"],["Lịch sử xóm","cat","lich-su"],
               ["Tiếng làng","cat","tieng-lang"],["Di tích","cat","di-tich"],
               ["Lễ hội","cat","le-hoi"],["Góp ý & Gửi bài","cat","gop-y"],["Quản trị","admin-login"]];
               
