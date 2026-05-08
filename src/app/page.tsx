@@ -14,7 +14,7 @@ const CATS = [
   { slug:"le-hoi",          label:"Lễ hội",                icon:"🎊" },
   { slug:"thu-vien",        label:"Thư viện",              icon:"📚" },
   { slug:"chuyen-doi-so",   label:"Chuyển đổi số",         icon:"💻" },
-  { slug:"gop-y",           label:"Góp ý & Gửi bài",      icon:"✉️" },
+  { slug:"gop-y",           label:"Góp ý & Gửi bài",       icon:"✉️" },
 ];
 const SUBS = {
   "tin-tuc":["Thông báo","Sự kiện"],
@@ -44,11 +44,11 @@ const SLIDES = [
     img:"https://picsum.photos/seed/nd_s5/1200/600" },
 ];
 const ARTS = [
-  { id:1,slug:"le-hoi-den-2025",   title:"Lễ hội Đền Ngọc Điền 2025",               cat:"le-hoi",        date:"25/04/2025", img:"https://picsum.photos/seed/a1nd/400/220", excerpt:"Lễ hội kéo dài 3 ngày với nhiều hoạt động văn hóa truyền thống đặc sắc." },
+  { id:1,slug:"le-hoi-den-2025",   title:"Lễ hội Đền Ngọc Điền 2025",                cat:"le-hoi",        date:"25/04/2025", img:"https://picsum.photos/seed/a1nd/400/220", excerpt:"Lễ hội kéo dài 3 ngày với nhiều hoạt động văn hóa truyền thống đặc sắc." },
   { id:2,slug:"ky-niem-30-4",      title:"Kỷ niệm 50 năm ngày Giải phóng miền Nam",cat:"tin-tuc",       date:"24/04/2025", img:"https://picsum.photos/seed/a2nd/400/220", excerpt:"Lễ dâng hương trang nghiêm tại Đài tưởng niệm liệt sỹ xóm." },
   { id:3,slug:"huong-uoc-1883",    title:"Hương ước 1883 – Tài sản văn hóa 140 năm",cat:"thu-vien",      date:"22/04/2025", img:"https://picsum.photos/seed/a3nd/400/220", excerpt:"Bản hương ước cổ nhất còn lưu giữ nguyên vẹn qua hơn 140 năm." },
   { id:4,slug:"gieng-lang",        title:"Giếng làng – Chứng nhân lịch sử",        cat:"di-tich",       date:"20/04/2025", img:"https://picsum.photos/seed/a4nd/400/220", excerpt:"Hơn 200 năm tuổi, giếng làng là không gian văn hóa gắn kết cộng đồng." },
-  { id:5,slug:"chieu-ve-xom-cu",   title:"Chiều về trên xóm cũ",                    cat:"tieng-lang",    date:"18/04/2025", img:"https://picsum.photos/seed/a5nd/400/220", excerpt:"Những ký ức tuổi thơ ùa về trong chiều tà trên con đường làng quen thuộc." },
+  { id:5,slug:"chieu-ve-xom-cu",   title:"Chiều về trên xóm cũ",                     cat:"tieng-lang",    date:"18/04/2025", img:"https://picsum.photos/seed/a5nd/400/220", excerpt:"Những ký ức tuổi thơ ùa về trong chiều tà trên con đường làng quen thuộc." },
   { id:6,slug:"thong-bao-hop",     title:"Thông báo lịch họp chi bộ tháng 5/2025", cat:"tin-tuc",       date:"17/04/2025", img:"https://picsum.photos/seed/a6nd/400/220", excerpt:"Mời toàn thể đảng viên tham dự họp chi bộ định kỳ tháng 5." },
 ];
 
@@ -399,7 +399,7 @@ function Hero({ setNav }: { setNav?: any }) {
       <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column",
         justifyContent:"flex-end", paddingBottom:"clamp(70px,13vw,120px)", zIndex:5 }}>
         <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 20px", width:"100%" }}>
-          <Tag label={catLabel}/>&nbsp;
+          <Tag label={catLabel}/> 
           <h1 style={{ fontFamily:"'Lora', serif", fontSize:"clamp(17px,2.8vw,27px)",
             fontWeight:900, color:"#fff", lineHeight:1.42, maxWidth:800,
             textShadow:"0 2px 12px rgba(0,0,0,.7)", margin:"10px 0 12px" }}>
@@ -734,14 +734,17 @@ function Home({ setNav }: { setNav?: any }) {
   </div>
 </section>
 
-      </div>
-    </div>
+        </div> {/* Đóng thẻ div chứa nội dung chính */}
+
+        {/* TRẢ LẠI CỘT SIDEBAR BÊN PHẢI BỊ XÓA MẤT */}
+        <div className="nd-sidebar">
+          <Sidebar setNav={setNav} />
+        </div>
+
+      </div> {/* Đóng thẻ nd-layout */}
+    </div> /* Đóng thẻ C */
   );
 }
-
-          
-
-          
 
 /* ═══════════════════════════════════════════
    GÓP Ý & GỬI BÀI PAGE
@@ -844,7 +847,7 @@ function GopYPage() {
 
           <p style={{ fontSize:12, color:"#aaa", lineHeight:1.7, marginBottom:20 }}>
             💡 Nếu ứng dụng không tự mở, bà con có thể sao chép nội dung trên rồi gửi trực tiếp tới:<br/>
-            📧 <strong>{EMAIL}</strong> &nbsp;|&nbsp; 💬 Zalo: <strong>{ZALO}</strong>
+            📧 <strong>{EMAIL}</strong>  |  💬 Zalo: <strong>{ZALO}</strong>
           </p>
 
           <button onClick={reset}
@@ -930,7 +933,7 @@ function GopYPage() {
         <div style={{ padding:"18px 20px", borderBottom:"1px solid #F3F4F6" }}>
           <div style={{ fontSize:11, fontWeight:700, color:"#888",
             letterSpacing:"1px", textTransform:"uppercase", marginBottom:10 }}>
-            Thông tin người gửi &nbsp;
+            Thông tin người gửi  
             <span style={{ color:"#bbb", fontWeight:400, textTransform:"none" }}>(không bắt buộc)</span>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
