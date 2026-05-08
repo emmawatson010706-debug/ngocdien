@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase/client';
    DỮ LIỆU
 ═══════════════════════════════════════════ */
 const CATS = [
+  { slug:"gioi-thieu",      label:"Giới thiệu",            icon:"ℹ️" },
   { slug:"tin-tuc",         label:"Tin tức",               icon:"📰" },
   { slug:"nguoi-ngoc-dien", label:"Người Ngọc Điền",       icon:"👥" },
   { slug:"lich-su",         label:"Lịch sử Xóm Ngọc Điền",icon:"📜" },
@@ -188,7 +189,7 @@ const BtnRed = ({ children, onClick, style={} }: { children?: any, onClick?: any
 );
 
 /* ═══════════════════════════════════════════
-   HEADER (MŨI TÊN TRẮNG & ĐÃ BỎ NÚT QUẢN TRỊ THỪA)
+   HEADER
 ═══════════════════════════════════════════ */
 function Header({ setNav }: { setNav?: any }) {
   const [open, setOpen] = useState(false);
@@ -246,7 +247,7 @@ function Header({ setNav }: { setNav?: any }) {
         <div style={{ background:"rgba(0,0,0,.18)", borderTop:"1px solid rgba(255,255,255,.08)", position:"relative" }}>
           <div style={{ maxWidth:1160, margin:"0 auto", position:"relative", display:"flex", alignItems:"center" }}>
             
-            {/* NÚT GẠT TRÁI (Đã đổi màu #fff) */}
+            {/* NÚT GẠT TRÁI */}
             <button onClick={() => handleScroll("left")} 
               style={{ background:"linear-gradient(to right, #80120d 50%, transparent)", border:"none", color:"#fff", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 15px 6px 10px", zIndex:10, height:"100%" }}>
               ⟨
@@ -264,7 +265,7 @@ function Header({ setNav }: { setNav?: any }) {
               ))}
             </nav>
 
-            {/* NÚT GẠT PHẢI (Đã đổi màu #fff) */}
+            {/* NÚT GẠT PHẢI */}
             <button onClick={() => handleScroll("right")} 
               style={{ background:"linear-gradient(to left, #80120d 50%, transparent)", border:"none", color:"#fff", fontSize:24, fontWeight:900, cursor:"pointer", padding:"6px 10px 6px 15px", zIndex:10, height:"100%" }}>
               ⟩
@@ -338,7 +339,6 @@ function Ticker() {
 
   return (
     <div style={{ background: "#B91C1C", height: 34, display: "flex", overflow: "hidden" }}>
-      {/* Ô chữ TIN MỚI - Ép cứng không cho co lại */}
       <div style={{ 
         background: "#7F1D1D", padding: "0 14px", display: "flex", alignItems: "center", 
         fontSize: 11, fontWeight: 700, color: "#fff", letterSpacing: "1px", 
@@ -346,15 +346,9 @@ function Ticker() {
       }}>
         TIN MỚI
       </div>
-
-      {/* Phần chữ chạy - Cấm tuyệt đối rớt dòng */}
       <div style={{ flex: 1, overflow: "hidden", display: "flex", alignItems: "center" }}>
         <div className="nd-ticker" style={{ 
-          whiteSpace: "nowrap", 
-          fontSize: 12.5, 
-          color: "#fff",
-          display: "flex",
-          flexWrap: "nowrap" 
+          whiteSpace: "nowrap", fontSize: 12.5, color: "#fff", display: "flex", flexWrap: "nowrap" 
         }}>
           <span style={{ paddingRight: 40, flexShrink: 0 }}>{t}</span>
           <span style={{ paddingRight: 40, flexShrink: 0 }}>{t}</span>
@@ -386,18 +380,15 @@ function Hero({ setNav }: { setNav?: any }) {
   const catLabel = CATS.find(c => c.slug === s.cat)?.label || s.cat;
 
   return (
-    <div style={{ position:"relative", height:"clamp(400px,58vw,540px)",
-      overflow:"hidden", background:"#111" }}>
+    <div style={{ position:"relative", height:"clamp(400px,58vw,540px)", overflow:"hidden", background:"#111" }}>
       {heroArts.map((sl,i) => (
         <div key={i} className={`nd-slide${i===idx?" on":""}`}>
           <img src={sl.img} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }}/>
         </div>
       ))}
-      <div style={{ position:"absolute", inset:0,
-        background:"linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.08) 80%)" }}/>
+      <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.08) 80%)" }}/>
 
-      <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column",
-        justifyContent:"flex-end", paddingBottom:"clamp(70px,13vw,120px)", zIndex:5 }}>
+      <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", justifyContent:"flex-end", paddingBottom:"clamp(70px,13vw,120px)", zIndex:5 }}>
         <div style={{ maxWidth:1160, margin:"0 auto", padding:"0 20px", width:"100%" }}>
           <Tag label={catLabel}/> 
           <h1 style={{ fontFamily:"'Lora', serif", fontSize:"clamp(17px,2.8vw,27px)",
@@ -405,13 +396,11 @@ function Hero({ setNav }: { setNav?: any }) {
             textShadow:"0 2px 12px rgba(0,0,0,.7)", margin:"10px 0 12px" }}>
             {s.title}
           </h1>
-          <p style={{ color:"rgba(255,255,255,.78)", fontSize:"clamp(12px,1.4vw,14px)",
-            maxWidth:700, lineHeight:1.8 }}>{s.excerpt}</p>
+          <p style={{ color:"rgba(255,255,255,.78)", fontSize:"clamp(12px,1.4vw,14px)", maxWidth:700, lineHeight:1.8 }}>{s.excerpt}</p>
         </div>
       </div>
 
-      <div style={{ position:"absolute", bottom:18, left:0, right:80,
-        display:"flex", justifyContent:"center", gap:6, zIndex:10 }}>
+      <div style={{ position:"absolute", bottom:18, left:0, right:80, display:"flex", justifyContent:"center", gap:6, zIndex:10 }}>
         {heroArts.map((_,i) => (
           <button key={i} onClick={()=>setIdx(i)} style={{ width:i===idx?24:7, height:7,
             borderRadius:4, border:"none", padding:0, cursor:"pointer",
@@ -432,6 +421,7 @@ function Hero({ setNav }: { setNav?: any }) {
     </div>
   );
 }
+
 /* ═══════════════════════════════════════════
    SIDEBAR
 ═══════════════════════════════════════════ */
@@ -440,11 +430,8 @@ function Sidebar({ setNav }: { setNav?: any }) {
 
   return (
     <>
-      {/* Thời tiết */}
-      <div style={{ background:"linear-gradient(135deg,#1D4ED8,#2563EB)",
-        borderRadius:10, padding:16, color:"#fff" }}>
-        <div style={{ fontSize:10, fontWeight:700, letterSpacing:"1.5px",
-          opacity:.7, marginBottom:12 }}>🌤 THỜI TIẾT HƯNG NGUYÊN</div>
+      <div style={{ background:"linear-gradient(135deg,#1D4ED8,#2563EB)", borderRadius:10, padding:16, color:"#fff" }}>
+        <div style={{ fontSize:10, fontWeight:700, letterSpacing:"1.5px", opacity:.7, marginBottom:12 }}>🌤 THỜI TIẾT HƯNG NGUYÊN</div>
         <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:12 }}>
           <span style={{ fontSize:46 }}>⛅</span>
           <div>
@@ -452,8 +439,7 @@ function Sidebar({ setNav }: { setNav?: any }) {
             <div style={{ fontSize:12.5, opacity:.8, marginTop:4 }}>Nhiều mây, mưa nhỏ</div>
           </div>
         </div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)",
-          gap:6, paddingTop:10, borderTop:"1px solid rgba(255,255,255,.2)", marginBottom:10 }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:6, paddingTop:10, borderTop:"1px solid rgba(255,255,255,.2)", marginBottom:10 }}>
           {[["Độ ẩm","82%"],["Gió","12 km/h"],["Tầm nhìn","10 km"]].map(([l,v])=>(
             <div key={l} style={{ textAlign:"center" }}>
               <div style={{ fontWeight:700, fontSize:13 }}>{v}</div>
@@ -463,8 +449,7 @@ function Sidebar({ setNav }: { setNav?: any }) {
         </div>
         <div style={{ display:"flex", gap:5 }}>
           {[["T2","29°"],["T3","31°"],["T4","27°"],["T5","25°"],["T6","28°"]].map(([d,t],i)=>(
-            <div key={i} style={{ flex:1, textAlign:"center", background:"rgba(255,255,255,.12)",
-              borderRadius:5, padding:"5px 0" }}>
+            <div key={i} style={{ flex:1, textAlign:"center", background:"rgba(255,255,255,.12)", borderRadius:5, padding:"5px 0" }}>
               <div style={{ fontSize:9.5, opacity:.65 }}>{d}</div>
               <div style={{ fontWeight:700, fontSize:12 }}>{t}</div>
             </div>
@@ -472,52 +457,37 @@ function Sidebar({ setNav }: { setNav?: any }) {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════
-    TRẠM PHÁT THANH PODCAST
-═══════════════════════════════════════════ */}
-<TramPhatThanh ARTS={typeof ARTS !== 'undefined' ? ARTS : []} setNav={setNav} />
+      <TramPhatThanh ARTS={typeof ARTS !== 'undefined' ? ARTS : []} setNav={setNav} />
 
-      {/* ═══════════════════════════════════════════
-    CỘNG ĐỒNG NGỌC ĐIỀN (KHỐI CHUẨN ĐẸP CÓ LINK THẬT)
-═══════════════════════════════════════════ */}
-<div style={{ marginTop: 24, marginBottom: 24 }}>
-  <div style={{ display: "flex", alignItems: "center", gap: 8, borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
-    <span style={{ fontSize: 18 }}>🤝</span>
-    <h2 style={{ fontFamily: "'Lora', serif", fontSize: 14, fontWeight: 900, color: "#111", margin: 0 }}>CỘNG ĐỒNG NGỌC ĐIỀN</h2>
-  </div>
+      <div style={{ marginTop: 24, marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, borderBottom: "2px solid #0056b3", paddingBottom: 10, marginBottom: 16 }}>
+          <span style={{ fontSize: 18 }}>🤝</span>
+          <h2 style={{ fontFamily: "'Lora', serif", fontSize: 14, fontWeight: 900, color: "#111", margin: 0 }}>CỘNG ĐỒNG NGỌC ĐIỀN</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+          <a href="https://zalo.me/g/i8vuebonziplqy2c06ux" target="_blank" rel="noopener noreferrer" style={{ background: "#0068FF", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(0,104,255,0.2)" }}>
+            <div style={{ width: 36, height: 36, background: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 12 }}>💬</div>
+            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Nhóm Zalo</div>
+            <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Cộng đồng<br/>Ngọc Điền</div>
+            <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Bấm để tham gia →</div>
+          </a>
+          <a href="https://www.facebook.com/share/1BFnoXVtDB/" target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(24,119,242,0.2)" }}>
+            <div style={{ fontSize: 32, marginBottom: 14, lineHeight: 1 }}>📘</div>
+            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Facebook</div>
+            <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Trang Xóm<br/>Ngọc Điền</div>
+            <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Bấm để theo dõi →</div>
+          </a>
+          <a href="https://maps.app.goo.gl/gnWBNeAbnu7XK8N67" target="_blank" rel="noopener noreferrer" style={{ background: "#F05252", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(240,82,82,0.2)" }}>
+            <div style={{ fontSize: 32, marginBottom: 14, lineHeight: 1, opacity: 0.9 }}>📍</div>
+            <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Bản đồ</div>
+            <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Xóm Ngọc<br/>Điền</div>
+            <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Xem Google Maps →</div>
+          </a>
+        </div>
+      </div>
 
-  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
-    {/* Nút Zalo */}
-    <a href="https://zalo.me/g/i8vuebonziplqy2c06ux" target="_blank" rel="noopener noreferrer" style={{ background: "#0068FF", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(0,104,255,0.2)" }}>
-      <div style={{ width: 36, height: 36, background: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 12 }}>💬</div>
-      <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Nhóm Zalo</div>
-      <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Cộng đồng<br/>Ngọc Điền</div>
-      <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Bấm để tham gia →</div>
-    </a>
-
-    {/* Nút Facebook */}
-    <a href="https://www.facebook.com/share/1BFnoXVtDB/" target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(24,119,242,0.2)" }}>
-      <div style={{ fontSize: 32, marginBottom: 14, lineHeight: 1 }}>📘</div>
-      <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Facebook</div>
-      <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Trang Xóm<br/>Ngọc Điền</div>
-      <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Bấm để theo dõi →</div>
-    </a>
-
-    {/* Nút Bản đồ */}
-    <a href="https://maps.app.goo.gl/gnWBNeAbnu7XK8N67" target="_blank" rel="noopener noreferrer" style={{ background: "#F05252", borderRadius: 10, padding: "16px 6px", textDecoration: "none", color: "#fff", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", boxShadow: "0 4px 10px rgba(240,82,82,0.2)" }}>
-      <div style={{ fontSize: 32, marginBottom: 14, lineHeight: 1, opacity: 0.9 }}>📍</div>
-      <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>Bản đồ</div>
-      <div style={{ fontSize: 11, opacity: 0.9, lineHeight: 1.4 }}>Xóm Ngọc<br/>Điền</div>
-      <div style={{ fontSize: 9.5, marginTop: 10, fontWeight: 700, opacity: 0.8, textTransform: "uppercase" }}>Xem Google Maps →</div>
-    </a>
-  </div>
-</div>
-
-      {/* Góp ý */}
-      <div style={{ background:"linear-gradient(135deg,#FEF3C7,#FFFBF0)",
-        border:"1px solid #FCD34D", borderRadius:10, padding:14 }}>
-        <h3 style={{ fontFamily:"'Lora', serif", fontSize:15, fontWeight:700,
-          color:"#92400E", marginBottom:8 }}>✉️ GÓP Ý & GỬI BÀI</h3>
+      <div style={{ background:"linear-gradient(135deg,#FEF3C7,#FFFBF0)", border:"1px solid #FCD34D", borderRadius:10, padding:14 }}>
+        <h3 style={{ fontFamily:"'Lora', serif", fontSize:15, fontWeight:700, color:"#92400E", marginBottom:8 }}>✉️ GÓP Ý & GỬI BÀI</h3>
         <p style={{ fontSize:12.5, color:"#666", lineHeight:1.7, marginBottom:10 }}>
           Bà con gửi bài viết, góp ý, phản ánh hoặc kiến nghị về xóm tại đây.
         </p>
@@ -526,12 +496,8 @@ function Sidebar({ setNav }: { setNav?: any }) {
           ["💡 Góp ý – Kiến nghị","#0891B2"],
           ["📣 Phản ánh","#DC2626"]
         ].map(([l,c])=>(
-          <button key={l}
-            onClick={() => setNav({ page:"category", cat:"gop-y" })}
-            style={{ display:"block", width:"100%", background:"#fff",
-              border:`1px solid ${c}22`, color:c, padding:"8px 12px", borderRadius:5,
-              cursor:"pointer", fontSize:12.5, fontWeight:700,
-              textAlign:"left", marginBottom:7 }}>
+          <button key={l} onClick={() => setNav({ page:"category", cat:"gop-y" })}
+            style={{ display:"block", width:"100%", background:"#fff", border:`1px solid ${c}22`, color:c, padding:"8px 12px", borderRadius:5, cursor:"pointer", fontSize:12.5, fontWeight:700, textAlign:"left", marginBottom:7 }}>
             {l}
           </button>
         ))}
@@ -552,15 +518,12 @@ function Home({ setNav }: { setNav?: any }) {
     <div style={C}>
       <div className="nd-layout">
         <div>
-
           {/* TIN TỨC */}
           <section style={{ marginBottom:26 }}>
             <SecHead icon="📰" title="TIN TỨC" onMore={() => go("tin-tuc")} />
             {ARTS.filter(a=>a.cat==="tin-tuc").map(a=>(
-              <div key={a.id} className="nd-ali" onClick={() => goArt(a)}
-                style={{ display:"flex", gap:10 }}>
-                <img src={a.img} alt="" style={{ width:78, height:54, objectFit:"cover",
-                  borderRadius:5, flexShrink:0 }}/>
+              <div key={a.id} className="nd-ali" onClick={() => goArt(a)} style={{ display:"flex", gap:10 }}>
+                <img src={a.img} alt="" style={{ width:78, height:54, objectFit:"cover", borderRadius:5, flexShrink:0 }}/>
                 <div>
                   <div style={{ display:"flex", gap:6, alignItems:"center", marginBottom:4 }}>
                     <Tag label="Tin tức"/><span style={{ fontSize:11, color:"#aaa" }}>{a.date}</span>
@@ -573,65 +536,45 @@ function Home({ setNav }: { setNav?: any }) {
 
           {/* NGƯỜI NGỌC ĐIỀN */}
           <section style={{ marginBottom:26 }}>
-            <SecHead icon="👥" title="NGƯỜI NGỌC ĐIỀN" color="#7C3AED"
-              onMore={() => go("nguoi-ngoc-dien")}/>
+            <SecHead icon="👥" title="NGƯỜI NGỌC ĐIỀN" color="#7C3AED" onMore={() => go("nguoi-ngoc-dien")}/>
             <div className="nd-g2">
-              <div onClick={() => go("nguoi-ngoc-dien")} style={{ background:"linear-gradient(135deg,#FEF2F2,#FFF7ED)",
-                border:"1px solid #FECACA", borderRadius:8, padding:14, cursor:"pointer" }}>
-                <div style={{ fontSize:10, color:"#B91C1C", fontWeight:700,
-                  letterSpacing:".8px", marginBottom:6 }}>🌺 MẸ VIỆT NAM ANH HÙNG</div>
-                <div style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:700 }}>
-                  4 bà mẹ anh hùng
-                </div>
-                <p style={{ fontSize:12, color:"#666", marginTop:5, lineHeight:1.6 }}>
-                  Những người lặng thầm hy sinh vì độc lập Tổ quốc.
-                </p>
-                <div style={{ color:"#B91C1C", fontSize:12, fontWeight:700, marginTop:8 }}>
-                  Xem chi tiết →
-                </div>
+              <div onClick={() => go("nguoi-ngoc-dien")} style={{ background:"linear-gradient(135deg,#FEF2F2,#FFF7ED)", border:"1px solid #FECACA", borderRadius:8, padding:14, cursor:"pointer" }}>
+                <div style={{ fontSize:10, color:"#B91C1C", fontWeight:700, letterSpacing:".8px", marginBottom:6 }}>🌺 MẸ VIỆT NAM ANH HÙNG</div>
+                <div style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:700 }}>4 bà mẹ anh hùng</div>
+                <p style={{ fontSize:12, color:"#666", marginTop:5, lineHeight:1.6 }}>Những người lặng thầm hy sinh vì độc lập Tổ quốc.</p>
+                <div style={{ color:"#B91C1C", fontSize:12, fontWeight:700, marginTop:8 }}>Xem chi tiết →</div>
               </div>
-              <div onClick={() => go("nguoi-ngoc-dien")} style={{ background:"linear-gradient(135deg,#1C1C1C,#2d2d2d)",
-                borderRadius:8, padding:14, cursor:"pointer" }}>
+              <div onClick={() => go("nguoi-ngoc-dien")} style={{ background:"linear-gradient(135deg,#1C1C1C,#2d2d2d)", borderRadius:8, padding:14, cursor:"pointer" }}>
                 <div style={{ fontSize:46, fontWeight:900, color:"#C8942B", lineHeight:1 }}>42</div>
                 <div style={{ fontSize:9, color:"#aaa", letterSpacing:"2px", marginTop:2 }}>LIỆT SỸ</div>
-                <p style={{ fontFamily:"'Lora', serif", fontSize:14, fontWeight:700,
-                  color:"#fff", marginTop:6 }}>Danh sách Liệt sỹ Xóm Ngọc Điền</p>
-                <div style={{ color:"#C8942B", fontSize:12, fontWeight:700, marginTop:8 }}>
-                  Xem danh sách →
-                </div>
+                <p style={{ fontFamily:"'Lora', serif", fontSize:14, fontWeight:700, color:"#fff", marginTop:6 }}>Danh sách Liệt sỹ Xóm Ngọc Điền</p>
+                <div style={{ color:"#C8942B", fontSize:12, fontWeight:700, marginTop:8 }}>Xem danh sách →</div>
               </div>
             </div>
           </section>
 
           {/* LỊCH SỬ */}
           <section style={{ marginBottom:26 }}>
-            <SecHead icon="📜" title="LỊCH SỬ XÓM NGỌC ĐIỀN" color="#92400E"
-              onMore={() => go("lich-su")}/>
+            <SecHead icon="📜" title="LỊCH SỬ XÓM NGỌC ĐIỀN" color="#92400E" onMore={() => go("lich-su")}/>
             <div className="nd-ls">
               <div style={{ padding:18, background:"linear-gradient(135deg,#FEF7E8,#FFFBF5)" }}>
-                <h3 style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:700,
-                  lineHeight:1.45, borderLeft:"4px solid #B45309",
-                  paddingLeft:10, marginBottom:10 }}>
+                <h3 style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:700, lineHeight:1.45, borderLeft:"4px solid #B45309", paddingLeft:10, marginBottom:10 }}>
                   Ngọc Điền – Vùng đất địa linh nhân kiệt bên dòng sông Lam
                 </h3>
                 <p style={{ fontSize:12.5, color:"#555", lineHeight:1.85, textAlign:"justify" }}>
                   Xóm Ngọc Điền có lịch sử hơn 300 năm hình thành và phát triển, gắn liền với những biến cố lịch sử trọng đại của đất nước...
                 </p>
-                <BtnRed onClick={() => go("lich-su")} style={{ marginTop:12, fontSize:12 }}>
-                  Đọc lịch sử đầy đủ →
-                </BtnRed>
+                <BtnRed onClick={() => go("lich-su")} style={{ marginTop:12, fontSize:12 }}>Đọc lịch sử đầy đủ →</BtnRed>
               </div>
               <div className="nd-ls-img">
-                <img src="https://picsum.photos/seed/lsnd/500/280" alt=""
-                  style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
+                <img src="https://picsum.photos/seed/lsnd/500/280" alt="" style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}/>
               </div>
             </div>
           </section>
 
           {/* TIẾNG LÀNG */}
           <section style={{ marginBottom:26 }}>
-            <SecHead icon="✍️" title="TIẾNG LÀNG" color="#0891B2"
-              onMore={() => go("tieng-lang")}/>
+            <SecHead icon="✍️" title="TIẾNG LÀNG" color="#0891B2" onMore={() => go("tieng-lang")}/>
             <div className="nd-g2">
               {ARTS.filter(a=>a.cat==="tieng-lang").slice(0,2).map(a=>(
                 <ACard key={a.id} a={a} onClick={goArt}/>
@@ -650,15 +593,10 @@ function Home({ setNav }: { setNav?: any }) {
                         {n:"Lễ hội Giếng đầu năm",img:"https://picsum.photos/seed/lh2/200/120"}]}
               ].map(col=>(
                 <div key={col.slug}>
-                  <SecHead icon={col.icon} title={col.label} color={col.color}
-                    onMore={() => go(col.slug)}/>
+                  <SecHead icon={col.icon} title={col.label} color={col.color} onMore={() => go(col.slug)}/>
                   {col.items.map((it,i)=>(
-                    <div key={i} onClick={() => go(col.slug)}
-                      style={{ display:"flex", gap:10, marginBottom:10, cursor:"pointer" }}
-                      onMouseEnter={e=>e.currentTarget.style.opacity=".8"}
-                      onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
-                      <img src={it.img} alt="" style={{ width:82, height:58,
-                        objectFit:"cover", borderRadius:5, flexShrink:0 }}/>
+                    <div key={i} onClick={() => go(col.slug)} style={{ display:"flex", gap:10, marginBottom:10, cursor:"pointer" }} onMouseEnter={e=>e.currentTarget.style.opacity=".8"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
+                      <img src={it.img} alt="" style={{ width:82, height:58, objectFit:"cover", borderRadius:5, flexShrink:0 }}/>
                       <p style={{ fontWeight:700, fontSize:13, lineHeight:1.4 }}>{it.n}</p>
                     </div>
                   ))}
@@ -667,76 +605,55 @@ function Home({ setNav }: { setNav?: any }) {
             </div>
           </section>
 
-          {/* ═══════════════════════════════════════════
-    CHUYỂN ĐỔI SỐ (SIZE NHỎ GỌN CHUẨN FORM)
-═══════════════════════════════════════════ */}
-<div style={{ marginTop: 20, marginBottom: 30 }}>
-  {/* Thanh Tiêu Đề Chuẩn Form - Ép size nhỏ lại */}
-  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #0056b3", paddingBottom: 8, marginBottom: 14 }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <div style={{ width: 28, height: 28, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>
-        💻
-      </div>
-      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>
-        CHUYỂN ĐỔI SỐ
-      </h2>
-    </div>
-  </div>
+          {/* CHUYỂN ĐỔI SỐ */}
+          <div style={{ marginTop: 20, marginBottom: 30 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid #0056b3", paddingBottom: 8, marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 28, height: 28, background: "#0056b3", color: "#fff", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>💻</div>
+                <h2 style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 700, margin: 0, color: "#111", textTransform: "uppercase" }}>CHUYỂN ĐỔI SỐ</h2>
+              </div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <a href="https://dichvucong.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>🏛️</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>Dịch vụ công</div>
+              </a>
+              <a href="https://vneid.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>🪪</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>VNeID</div>
+              </a>
+              <a href="https://nghean.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>🌐</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#6d28d9", lineHeight: 1.3 }}>Cổng TTĐT<br/>tỉnh Nghệ An</div>
+              </a>
+              <a href="https://hungnguyen.nghean.gov.vn/" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
+                <div style={{ fontSize: 20, marginBottom: 4 }}>🏛️</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#b45309", lineHeight: 1.3 }}>Cổng TTĐT<br/>xã Hưng Nguyên</div>
+              </a>
+            </div>
+          </div>
 
-  {/* Khối 4 nút thu nhỏ tột độ */}
-  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-    {/* Ô 1: Dịch vụ công */}
-    <a href="https://dichvucong.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 20, marginBottom: 4 }}>🏛️</div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>Dịch vụ công</div>
-    </a>
-
-    {/* Ô 2: VNeID */}
-    <a href="https://vneid.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 20, marginBottom: 4 }}>🪪</div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#0056b3", lineHeight: 1.3 }}>VNeID</div>
-    </a>
-
-    {/* Ô 3: Cổng tỉnh */}
-    <a href="https://nghean.gov.vn" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 20, marginBottom: 4 }}>🌐</div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#6d28d9", lineHeight: 1.3 }}>Cổng TTĐT<br/>tỉnh Nghệ An</div>
-    </a>
-
-    {/* Ô 4: Cổng xã */}
-    <a href="https://hungnguyen.nghean.gov.vn/" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, padding: "10px 4px", textAlign: "center", textDecoration: "none" }}>
-      <div style={{ fontSize: 20, marginBottom: 4 }}>🏛️</div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#b45309", lineHeight: 1.3 }}>Cổng TTĐT<br/>xã Hưng Nguyên</div>
-    </a>
-  </div>
-</div>
-
-{/* THƯ VIỆN */}
-<section style={{ marginBottom:26 }}>
-  <SecHead icon="📚" title="THƯ VIỆN" color="#7C3AED" onMore={() => go("thu-vien")}/>
-  <div onClick={() => go("thu-vien")}
-    style={{ display:"flex", borderRadius:10, overflow:"hidden", border:"1px solid #F3DDB5", cursor:"pointer" }}
-    onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)"}
-    onMouseLeave={e=>e.currentTarget.style.boxShadow=""}>
-    <div style={{ background:"#92400E", color:"#fff", padding:"20px 16px",
-      display:"flex", flexDirection:"column", alignItems:"center",
-      justifyContent:"center", gap:4, minWidth:82, flexShrink:0 }}>
-      <div style={{ fontSize:32 }}>📜</div>
-      <div style={{ fontSize:18, fontWeight:900 }}>1883</div>
-      <div style={{ fontSize:8.5, letterSpacing:"1px", opacity:.75 }}>HƯƠNG ƯỚC</div>
-    </div>
-    <div style={{ padding:"16px 20px", flex:1, background:"linear-gradient(135deg,#FEF7E4,#FFFBF2)" }}>
-      <h3 style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:900, color:"#92400E", marginBottom:8 }}>Hương ước Xóm Ngọc Điền năm 1883</h3>
-      <p style={{ fontSize:13, color:"#555", lineHeight:1.75 }}>
-        Bản hương ước lập từ năm 1883, lưu giữ nguyên vẹn qua 140 năm — tài sản văn hóa vô giá phản ánh luật tục và đạo lý của cha ông.
-      </p>
-    </div>
-  </div>
-</section>
+          {/* THƯ VIỆN */}
+          <section style={{ marginBottom:26 }}>
+            <SecHead icon="📚" title="THƯ VIỆN" color="#7C3AED" onMore={() => go("thu-vien")}/>
+            <div onClick={() => go("thu-vien")} style={{ display:"flex", borderRadius:10, overflow:"hidden", border:"1px solid #F3DDB5", cursor:"pointer" }} onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)"} onMouseLeave={e=>e.currentTarget.style.boxShadow=""}>
+              <div style={{ background:"#92400E", color:"#fff", padding:"20px 16px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:4, minWidth:82, flexShrink:0 }}>
+                <div style={{ fontSize:32 }}>📜</div>
+                <div style={{ fontSize:18, fontWeight:900 }}>1883</div>
+                <div style={{ fontSize:8.5, letterSpacing:"1px", opacity:.75 }}>HƯƠNG ƯỚC</div>
+              </div>
+              <div style={{ padding:"16px 20px", flex:1, background:"linear-gradient(135deg,#FEF7E4,#FFFBF2)" }}>
+                <h3 style={{ fontFamily:"'Lora', serif", fontSize:16, fontWeight:900, color:"#92400E", marginBottom:8 }}>Hương ước Xóm Ngọc Điền năm 1883</h3>
+                <p style={{ fontSize:13, color:"#555", lineHeight:1.75 }}>
+                  Bản hương ước lập từ năm 1883, lưu giữ nguyên vẹn qua 140 năm — tài sản văn hóa vô giá phản ánh luật tục và đạo lý của cha ông.
+                </p>
+              </div>
+            </div>
+          </section>
 
         </div> {/* Đóng thẻ div chứa nội dung chính */}
 
-        {/* TRẢ LẠI CỘT SIDEBAR BÊN PHẢI BỊ XÓA MẤT */}
+        {/* SIDEBAR BÊN PHẢI */}
         <div className="nd-sidebar">
           <Sidebar setNav={setNav} />
         </div>
@@ -769,74 +686,40 @@ function GopYPage() {
   ];
   const cur = TYPES.find(t => t.id === type);
 
-  // Tạo nội dung sẵn để nhúng vào mailto href
   const mailBody = `Loại: ${cur?.label || 'Góp ý'}%0AHọ tên: ${encodeURIComponent(name || "(không điền)")}%0AĐiện thoại: ${encodeURIComponent(phone || "(không điền)")}%0A%0ANội dung:%0A${encodeURIComponent(content)}`;
   const mailSubject = encodeURIComponent(`[Ngọc Điền] ${subject || cur?.label || 'Góp ý'}`);
   const mailHref = `mailto:${EMAIL}?subject=${mailSubject}&body=${mailBody}`;
   const zaloHref = `https://zalo.me/${ZALO}`;
 
   const handleSend = () => {
-    if (!content.trim()) {
-      setErr("Vui lòng nhập nội dung trước khi gửi.");
-      return;
-    }
-    setErr("");
-    setDone(true);   // chỉ đổi state, không gọi window.open
+    if (!content.trim()) { setErr("Vui lòng nhập nội dung trước khi gửi."); return; }
+    setErr(""); setDone(true);
   };
 
-  const reset = () => {
-    setDone(false); setErr("");
-    setName(""); setPhone(""); setSubject(""); setContent(""); setType("gop_y");
-  };
+  const reset = () => { setDone(false); setErr(""); setName(""); setPhone(""); setSubject(""); setContent(""); setType("gop_y"); };
 
-  /* ── MÀN HÌNH THÀNH CÔNG ── */
   if (done) return (
     <div style={{ maxWidth:560, margin:"40px auto", padding:"0 16px 60px" }}>
-      <div style={{ background:"#fff", borderRadius:16,
-        boxShadow:"0 4px 24px rgba(0,0,0,.08)", overflow:"hidden", textAlign:"center" }}>
-
+      <div style={{ background:"#fff", borderRadius:16, boxShadow:"0 4px 24px rgba(0,0,0,.08)", overflow:"hidden", textAlign:"center" }}>
         <div style={{ background:"linear-gradient(135deg,#16A34A,#22C55E)", padding:"32px 20px" }}>
           <div style={{ fontSize:60 }}>✅</div>
-          <h2 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900,
-            color:"#fff", marginTop:8 }}>Thông tin đã sẵn sàng!</h2>
-          <p style={{ color:"rgba(255,255,255,.85)", fontSize:13.5, marginTop:6 }}>
-            Bây giờ bà con chọn cách gửi bên dưới
-          </p>
+          <h2 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900, color:"#fff", marginTop:8 }}>Thông tin đã sẵn sàng!</h2>
+          <p style={{ color:"rgba(255,255,255,.85)", fontSize:13.5, marginTop:6 }}>Bây giờ bà con chọn cách gửi bên dưới</p>
         </div>
-
         <div style={{ padding:"28px 24px" }}>
           <p style={{ fontSize:14, color:"#374151", lineHeight:1.8, marginBottom:20 }}>
             Cảm ơn <strong>{name || "bà con"}</strong> đã soạn <strong>{cur?.label || "góp ý"}</strong>.<br/>
             Vui lòng bấm một trong hai nút bên dưới để gửi tới Ban quản trị:
           </p>
-
-          {/* Nút gửi Email – thẻ <a> thuần */}
-          <a href={mailHref}
-            style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10,
-              background:"#1C1C1C", color:"#fff", borderRadius:10, padding:"14px 20px",
-              textDecoration:"none", fontSize:15, fontWeight:700, marginBottom:12 }}>
-            <span style={{ fontSize:22 }}>📧</span>
-            Gửi qua Email
-            <span style={{ fontSize:11, opacity:.7, fontWeight:400 }}>({EMAIL})</span>
+          <a href={mailHref} style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"#1C1C1C", color:"#fff", borderRadius:10, padding:"14px 20px", textDecoration:"none", fontSize:15, fontWeight:700, marginBottom:12 }}>
+            <span style={{ fontSize:22 }}>📧</span> Gửi qua Email <span style={{ fontSize:11, opacity:.7, fontWeight:400 }}>({EMAIL})</span>
           </a>
-
-          {/* Nút mở Zalo – thẻ <a> thuần */}
-          <a href={zaloHref} target="_blank" rel="noopener"
-            style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10,
-              background:"#0057B8", color:"#fff", borderRadius:10, padding:"14px 20px",
-              textDecoration:"none", fontSize:15, fontWeight:700, marginBottom:20 }}>
-            <span style={{ fontSize:22 }}>💬</span>
-            Nhắn Zalo cho Admin
-            <span style={{ fontSize:11, opacity:.7, fontWeight:400 }}>({ZALO})</span>
+          <a href={zaloHref} target="_blank" rel="noopener noreferrer" style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10, background:"#0057B8", color:"#fff", borderRadius:10, padding:"14px 20px", textDecoration:"none", fontSize:15, fontWeight:700, marginBottom:20 }}>
+            <span style={{ fontSize:22 }}>💬</span> Nhắn Zalo cho Admin <span style={{ fontSize:11, opacity:.7, fontWeight:400 }}>({ZALO})</span>
           </a>
-
-          {/* Nội dung tóm tắt để bà con copy thủ công nếu cần */}
-          <div style={{ background:"#F9FAFB", border:"1px solid #E5E7EB",
-            borderRadius:8, padding:"14px 16px", textAlign:"left", marginBottom:20 }}>
-            <div style={{ fontSize:11, fontWeight:700, color:"#888", letterSpacing:"1px",
-              textTransform:"uppercase", marginBottom:8 }}>Nội dung bà con vừa soạn:</div>
-            <div style={{ fontSize:13, color:"#374151", lineHeight:1.75, whiteSpace:"pre-wrap",
-              wordBreak:"break-word" }}>
+          <div style={{ background:"#F9FAFB", border:"1px solid #E5E7EB", borderRadius:8, padding:"14px 16px", textAlign:"left", marginBottom:20 }}>
+            <div style={{ fontSize:11, fontWeight:700, color:"#888", letterSpacing:"1px", textTransform:"uppercase", marginBottom:8 }}>Nội dung bà con vừa soạn:</div>
+            <div style={{ fontSize:13, color:"#374151", lineHeight:1.75, whiteSpace:"pre-wrap", wordBreak:"break-word" }}>
               <strong>Loại:</strong> {cur?.label || "Góp ý"}{"\n"}
               {name && <><strong>Họ tên:</strong> {name}{"\n"}</>}
               {phone && <><strong>SĐT:</strong> {phone}{"\n"}</>}
@@ -844,15 +727,11 @@ function GopYPage() {
               <strong>Nội dung:</strong> {content}
             </div>
           </div>
-
           <p style={{ fontSize:12, color:"#aaa", lineHeight:1.7, marginBottom:20 }}>
             💡 Nếu ứng dụng không tự mở, bà con có thể sao chép nội dung trên rồi gửi trực tiếp tới:<br/>
             📧 <strong>{EMAIL}</strong>  |  💬 Zalo: <strong>{ZALO}</strong>
           </p>
-
-          <button onClick={reset}
-            style={{ background:"#B91C1C", color:"#fff", border:"none", borderRadius:8,
-              padding:"10px 28px", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+          <button onClick={reset} style={{ background:"#B91C1C", color:"#fff", border:"none", borderRadius:8, padding:"10px 28px", fontSize:14, fontWeight:700, cursor:"pointer" }}>
             ← Soạn nội dung khác
           </button>
         </div>
@@ -860,134 +739,54 @@ function GopYPage() {
     </div>
   );
 
-  /* ── FORM ── */
-  const INP = { width:"100%", border:"1px solid #E5E7EB", borderRadius:7,
-    padding:"9px 12px", fontSize:13, outline:"none",
-    boxSizing:"border-box", background:"#fff" };
+  const INP = { width:"100%", border:"1px solid #E5E7EB", borderRadius:7, padding:"9px 12px", fontSize:13, outline:"none", boxSizing:"border-box", background:"#fff" };
 
   return (
     <div style={{ maxWidth:640, margin:"0 auto", padding:"24px 16px 60px" }}>
-
-      {/* Banner */}
-      <div style={{ background:"linear-gradient(135deg,#9B1B14,#B91C1C)", color:"#fff",
-        borderRadius:12, padding:"20px 22px", marginBottom:22,
-        display:"flex", alignItems:"center", gap:14 }}>
+      <div style={{ background:"linear-gradient(135deg,#9B1B14,#B91C1C)", color:"#fff", borderRadius:12, padding:"20px 22px", marginBottom:22, display:"flex", alignItems:"center", gap:14 }}>
         <span style={{ fontSize:34 }}>✉️</span>
         <div>
-          <h1 style={{ fontFamily:"'Lora', serif", fontSize:21, fontWeight:900 }}>
-            Góp ý & Gửi bài
-          </h1>
-          <p style={{ opacity:.75, fontSize:12.5, marginTop:3 }}>
-            Gửi bài viết, góp ý, phản ánh tới Ban quản trị Xóm Ngọc Điền
-          </p>
+          <h1 style={{ fontFamily:"'Lora', serif", fontSize:21, fontWeight:900 }}>Góp ý & Gửi bài</h1>
+          <p style={{ opacity:.75, fontSize:12.5, marginTop:3 }}>Gửi bài viết, góp ý, phản ánh tới Ban quản trị Xóm Ngọc Điền</p>
         </div>
       </div>
-
-      {/* Liên hệ nhanh */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:20 }}>
-        <a href={`tel:${ZALO}`}
-          style={{ background:"#0057B8", color:"#fff", borderRadius:10,
-            padding:"13px 14px", textDecoration:"none",
-            display:"flex", alignItems:"center", gap:10 }}>
+        <a href={`tel:${ZALO}`} style={{ background:"#0057B8", color:"#fff", borderRadius:10, padding:"13px 14px", textDecoration:"none", display:"flex", alignItems:"center", gap:10 }}>
           <span style={{ fontSize:26 }}>💬</span>
-          <div>
-            <div style={{ fontSize:9.5, opacity:.7, letterSpacing:"1px" }}>ZALO / GỌI ĐIỆN</div>
-            <div style={{ fontWeight:900, fontSize:15, marginTop:1 }}>{ZALO}</div>
-          </div>
+          <div><div style={{ fontSize:9.5, opacity:.7, letterSpacing:"1px" }}>ZALO / GỌI ĐIỆN</div><div style={{ fontWeight:900, fontSize:15, marginTop:1 }}>{ZALO}</div></div>
         </a>
-        <a href={`mailto:${EMAIL}`}
-          style={{ background:"#1C1C1C", color:"#fff", borderRadius:10,
-            padding:"13px 14px", textDecoration:"none",
-            display:"flex", alignItems:"center", gap:10 }}>
+        <a href={`mailto:${EMAIL}`} style={{ background:"#1C1C1C", color:"#fff", borderRadius:10, padding:"13px 14px", textDecoration:"none", display:"flex", alignItems:"center", gap:10 }}>
           <span style={{ fontSize:26 }}>📧</span>
-          <div>
-            <div style={{ fontSize:9.5, opacity:.7, letterSpacing:"1px" }}>EMAIL</div>
-            <div style={{ fontWeight:700, fontSize:12, marginTop:1, wordBreak:"break-all" }}>{EMAIL}</div>
-          </div>
+          <div><div style={{ fontSize:9.5, opacity:.7, letterSpacing:"1px" }}>EMAIL</div><div style={{ fontWeight:700, fontSize:12, marginTop:1, wordBreak:"break-all" }}>{EMAIL}</div></div>
         </a>
       </div>
-
-      {/* Form card */}
-      <div style={{ background:"#fff", borderRadius:12,
-        boxShadow:"0 2px 16px rgba(0,0,0,.07)" }}>
-
-        {/* Loại yêu cầu */}
+      <div style={{ background:"#fff", borderRadius:12, boxShadow:"0 2px 16px rgba(0,0,0,.07)" }}>
         <div style={{ padding:"18px 20px", borderBottom:"1px solid #F3F4F6" }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#888",
-            letterSpacing:"1px", textTransform:"uppercase", marginBottom:10 }}>Loại yêu cầu</div>
+          <div style={{ fontSize:11, fontWeight:700, color:"#888", letterSpacing:"1px", textTransform:"uppercase", marginBottom:10 }}>Loại yêu cầu</div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
             {TYPES.map(t => (
-              <button key={t.id} onClick={() => setType(t.id)}
-                style={{ padding:"9px 10px", borderRadius:8, border:"2px solid",
-                  borderColor: type===t.id ? t.color : "#E5E7EB",
-                  background:  type===t.id ? t.color+"18" : "#FAFAFA",
-                  color:       type===t.id ? t.color : "#555",
-                  fontWeight:700, fontSize:12.5, cursor:"pointer", textAlign:"left" }}>
+              <button key={t.id} onClick={() => setType(t.id)} style={{ padding:"9px 10px", borderRadius:8, border:"2px solid", borderColor: type===t.id ? t.color : "#E5E7EB", background:  type===t.id ? t.color+"18" : "#FAFAFA", color: type===t.id ? t.color : "#555", fontWeight:700, fontSize:12.5, cursor:"pointer", textAlign:"left" }}>
                 {t.label}
               </button>
             ))}
           </div>
         </div>
-
-        {/* Người gửi */}
         <div style={{ padding:"18px 20px", borderBottom:"1px solid #F3F4F6" }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#888",
-            letterSpacing:"1px", textTransform:"uppercase", marginBottom:10 }}>
-            Thông tin người gửi  
-            <span style={{ color:"#bbb", fontWeight:400, textTransform:"none" }}>(không bắt buộc)</span>
-          </div>
+          <div style={{ fontSize:11, fontWeight:700, color:"#888", letterSpacing:"1px", textTransform:"uppercase", marginBottom:10 }}>Thông tin người gửi <span style={{ color:"#bbb", fontWeight:400, textTransform:"none" }}>(không bắt buộc)</span></div>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-            <div>
-              <label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Họ và tên</label>
-              <input value={name} onChange={e=>setName(e.target.value)}
-                placeholder="Nguyễn Văn A" style={INP as any}/>
-            </div>
-            <div>
-              <label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Số điện thoại</label>
-              <input value={phone} onChange={e=>setPhone(e.target.value)}
-                placeholder="0912 345 678" type="tel" style={INP as any}/>
-            </div>
+            <div><label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Họ và tên</label><input value={name} onChange={e=>setName(e.target.value)} placeholder="Nguyễn Văn A" style={INP as any}/></div>
+            <div><label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Số điện thoại</label><input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="0912 345 678" type="tel" style={INP as any}/></div>
           </div>
         </div>
-
-        {/* Nội dung */}
         <div style={{ padding:"18px 20px" }}>
-          <div style={{ marginBottom:12 }}>
-            <label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Tiêu đề</label>
-            <input value={subject} onChange={e=>setSubject(e.target.value)}
-              placeholder={type==="gui_bai" ? "Tên bài viết..." : "Tiêu đề ngắn gọn..."}
-              style={INP as any}/>
-          </div>
+          <div style={{ marginBottom:12 }}><label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Tiêu đề</label><input value={subject} onChange={e=>setSubject(e.target.value)} placeholder={type==="gui_bai" ? "Tên bài viết..." : "Tiêu đề ngắn gọn..."} style={INP as any}/></div>
           <div>
-            <label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>
-              Nội dung <span style={{ color:"#B91C1C" }}>*</span>
-            </label>
-            <textarea value={content}
-              onChange={e=>{ setContent(e.target.value); setErr(""); }}
-              rows={6}
-              placeholder={type==="gui_bai"
-                ? "Dán nội dung bài viết vào đây, hoặc mô tả ngắn để ban biên tập liên hệ..."
-                : "Trình bày chi tiết góp ý, phản ánh hoặc kiến nghị của bà con..."}
-              style={{ ...INP, resize:"vertical", lineHeight:1.7,
-                border:`1px solid ${err?"#B91C1C":"#E5E7EB"}` } as any}/>
+            <label style={{ display:"block", fontSize:12, color:"#666", marginBottom:4 }}>Nội dung <span style={{ color:"#B91C1C" }}>*</span></label>
+            <textarea value={content} onChange={e=>{ setContent(e.target.value); setErr(""); }} rows={6} placeholder={type==="gui_bai" ? "Dán nội dung bài viết vào đây, hoặc mô tả ngắn để ban biên tập liên hệ..." : "Trình bày chi tiết góp ý, phản ánh hoặc kiến nghị của bà con..."} style={{ ...INP, resize:"vertical", lineHeight:1.7, border:`1px solid ${err?"#B91C1C":"#E5E7EB"}` } as any}/>
           </div>
-
-          {err && (
-            <div style={{ background:"#FEE2E2", border:"1px solid #FECACA",
-              borderRadius:7, padding:"8px 14px", marginTop:10,
-              color:"#B91C1C", fontSize:13 }}>⚠️ {err}</div>
-          )}
-
-          {/* NÚT GỬI – onClick chỉ gọi setState */}
-          <button onClick={handleSend}
-            style={{ width:"100%", marginTop:18, background:"#B91C1C", color:"#fff",
-              border:"none", borderRadius:8, padding:"13px", fontSize:15,
-              fontWeight:700, cursor:"pointer", letterSpacing:".3px" }}>
-            Tiếp tục gửi →
-          </button>
-          <p style={{ fontSize:11.5, color:"#aaa", textAlign:"center", marginTop:8 }}>
-            Bước tiếp theo sẽ cho phép bà con chọn gửi qua Email hoặc Zalo
-          </p>
+          {err && <div style={{ background:"#FEE2E2", border:"1px solid #FECACA", borderRadius:7, padding:"8px 14px", marginTop:10, color:"#B91C1C", fontSize:13 }}>⚠️ {err}</div>}
+          <button onClick={handleSend} style={{ width:"100%", marginTop:18, background:"#B91C1C", color:"#fff", border:"none", borderRadius:8, padding:"13px", fontSize:15, fontWeight:700, cursor:"pointer", letterSpacing:".3px" }}>Tiếp tục gửi →</button>
+          <p style={{ fontSize:11.5, color:"#aaa", textAlign:"center", marginTop:8 }}>Bước tiếp theo sẽ cho phép bà con chọn gửi qua Email hoặc Zalo</p>
         </div>
       </div>
     </div>
@@ -995,7 +794,7 @@ function GopYPage() {
 }
 
 /* ═══════════════════════════════════════════
-   CATPAGE (ĐÃ SỬA LỖI CRASH TRANG GÓP Ý)
+   CATPAGE 
 ═══════════════════════════════════════════ */
 function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
   const [arts, setArts] = useState<any[]>([]);
@@ -1004,9 +803,8 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
   const [hasMore, setHasMore] = useState(false);
   const limit = 6;
 
-  // ĐÃ DỜI LỆNH NÀY XUỐNG DƯỚI CÙNG ĐỂ KHÔNG BỊ LỖI HOOK
   useEffect(() => {
-    if (cat === "gop-y") return; // Bấm góp ý thì bỏ qua việc tải bài viết
+    if (cat === "gop-y") return; 
     setArts([]); setPage(0); setHasMore(false);
     fetchCat(0);
   }, [cat, sub]);
@@ -1015,26 +813,14 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
     setLoading(true);
 
     const slugMap: any = {
-      "Thơ": ["tho", "thơ"],
-      "Tản văn": ["tan-van", "tản văn"],
-      "Khám phá": ["kham-pha"],
-      "Góc nhìn thẳng": ["goc-nhin-thang"],
-      "Podcast": ["podcast"],
-      "Mẹ Việt Nam Anh hùng": ["me-vnah"],
-      "Liệt sỹ": ["liet-sy"],
-      "Anh hùng lao động Cao Lục": ["anh-hung"],
-      "Đảng viên đầu tiên": ["dang-vien"],
-      "Đền Ngọc Điền": ["den", "đền"],
-      "Giếng làng": ["gieng", "giếng"],
-      "Lễ hội đền": ["le-hoi-den"],
-      "Lễ hội xóm": ["le-hoi-xom"],
-      "Lễ hội giếng": ["le-hoi-gieng"],
-      "Hương ước 1883": ["huong-uoc"],
-      "Thông báo": ["thong-bao"],
-      "Sự kiện": ["su-kien"]
+      "Thơ": ["tho", "thơ"], "Tản văn": ["tan-van", "tản văn"], "Khám phá": ["kham-pha"], "Góc nhìn thẳng": ["goc-nhin-thang"], "Podcast": ["podcast"],
+      "Mẹ Việt Nam Anh hùng": ["me-vnah"], "Liệt sỹ": ["liet-sy"], "Anh hùng lao động Cao Lục": ["anh-hung"], "Đảng viên đầu tiên": ["dang-vien"],
+      "Đền Ngọc Điền": ["den", "đền"], "Giếng làng": ["gieng", "giếng"], "Lễ hội đền": ["le-hoi-den"], "Lễ hội xóm": ["le-hoi-xom"], "Lễ hội giếng": ["le-hoi-gieng"],
+      "Hương ước 1883": ["huong-uoc"], "Thông báo": ["thong-bao"], "Sự kiện": ["su-kien"]
     };
 
     const treeMap: any = {
+      "gioi-thieu": ["gioi-thieu"], // ĐÃ THÊM VÀO ĐÂY ĐỂ TRUY XUẤT
       "tieng-lang": ["tieng-lang", "tho", "thơ", "tan-van", "tản văn", "kham-pha", "goc-nhin-thang", "podcast"],
       "nguoi-ngoc-dien": ["nguoi-ngoc-dien", "me-vnah", "liet-sy", "anh-hung", "dang-vien"],
       "di-tich": ["di-tich", "den", "đền", "gieng", "giếng"],
@@ -1044,18 +830,10 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
     };
 
     let searchIds = [];
-    if (sub) {
-      searchIds = slugMap[sub] || [sub];
-    } else {
-      searchIds = treeMap[cat] || [cat];
-    }
+    if (sub) { searchIds = slugMap[sub] || [sub]; } 
+    else { searchIds = treeMap[cat] || [cat]; }
 
-    const { data } = await supabase
-      .from('articles')
-      .select('*')
-      .in('cat', searchIds)
-      .order('id', { ascending: false })
-      .range(pageNum * limit, (pageNum + 1) * limit - 1);
+    const { data } = await supabase.from('articles').select('*').in('cat', searchIds).order('id', { ascending: false }).range(pageNum * limit, (pageNum + 1) * limit - 1);
       
     if (data) {
       setArts(prev => pageNum === 0 ? data : [...prev, ...data]);
@@ -1065,7 +843,6 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
     setLoading(false);
   };
 
-  // ✅ ĐẶT LỆNH GỌI TRANG GÓP Ý Ở ĐÂY LÀ CHUẨN XÁC 100% KHÔNG BAO GIỜ LỖI
   if (cat === "gop-y") return <GopYPage />;
 
   const info = CATS.find(c => c.slug === cat) || { label: cat, icon: "📄" };
@@ -1123,69 +900,49 @@ function CatPage({ cat, sub, setNav }: { cat?: any, sub?: any, setNav?: any }) {
     </div>
   );
 }
+
 /* ═══════════════════════════════════════════
    FOOTER
 ═══════════════════════════════════════════ */
 function Footer({ setNav }: { setNav?: any }) {
   const go = (page: any, extra: any = {}) => { setNav({ page, ...extra }); window.scrollTo(0,0); };
-  const ql = [["Trang chủ","home"],["Tin tức","cat","tin-tuc"],["Lịch sử xóm","cat","lich-su"],
+  
+  // ĐÃ THÊM MỤC GIỚI THIỆU VÀO DANH MỤC NHANH
+  const ql = [["Trang chủ","home"],["Giới thiệu","cat","gioi-thieu"],["Tin tức","cat","tin-tuc"],["Lịch sử xóm","cat","lich-su"],
               ["Tiếng làng","cat","tieng-lang"],["Di tích","cat","di-tich"],
               ["Lễ hội","cat","le-hoi"],["Góp ý & Gửi bài","cat","gop-y"],["Quản trị","admin-login"]];
+              
   return (
     <footer style={{ background:"#181818", color:"#fff", marginTop:40 }}>
       <div style={{ height:4, background:"#B91C1C" }}/>
       <div style={{ height:2, background:"#C8942B" }}/>
       <div style={{ maxWidth:1160, margin:"0 auto", padding:"30px 16px 0" }}>
-        <div style={{ display:"flex", gap:40, flexWrap:"wrap",
-          paddingBottom:24, borderBottom:"1px solid #262626" }}>
+        <div style={{ display:"flex", gap:40, flexWrap:"wrap", paddingBottom:24, borderBottom:"1px solid #262626" }}>
           <div style={{ minWidth:220, maxWidth:280 }}>
-            {/* LOGO CHÍNH THỨC Ở CHÂN TRANG (ĐÃ THU NHỎ) */}
-          <div style={{ background: "#fff", padding: "4px 10px", borderRadius: "6px", display: "inline-block", marginBottom: "12px" }}>
-            <img 
-              src="/logo.png" 
-              alt="Xóm Ngọc Điền" 
-              style={{ height: "32px", width: "auto", display: "block", objectFit: "contain" }} 
-            />
-          </div>
+            <div style={{ background: "#fff", padding: "4px 10px", borderRadius: "6px", display: "inline-block", marginBottom: "12px" }}>
+              <img src="/logo.png" alt="Xóm Ngọc Điền" style={{ height: "32px", width: "auto", display: "block", objectFit: "contain" }} />
+            </div>
             <p style={{ color:"#9CA3AF", fontSize:12.5, lineHeight:1.8, marginTop:12 }}>
               Cổng thông tin điện tử Xóm Ngọc Điền, Hưng Nguyên, Nghệ An.
             </p>
             <div style={{ marginTop:14, display:"flex", flexDirection:"column", gap:6 }}>
-              <a href="mailto:tinnhanhonline247@gmail.com" style={{ color:"#B0B7C3",
-                fontSize:13, textDecoration:"none", display:"flex", gap:7 }}>
-                <span style={{ color:"#C8942B" }}>📧</span> tinnhanhonline247@gmail.com
-              </a>
-              <a href="tel:0914587575" style={{ color:"#B0B7C3",
-                fontSize:13, textDecoration:"none", display:"flex", gap:7 }}>
-                <span style={{ color:"#C8942B" }}>📞</span> 0914 58 75 75
-              </a>
+              <a href="mailto:tinnhanhonline247@gmail.com" style={{ color:"#B0B7C3", fontSize:13, textDecoration:"none", display:"flex", gap:7 }}><span style={{ color:"#C8942B" }}>📧</span> tinnhanhonline247@gmail.com</a>
+              <a href="tel:0914587575" style={{ color:"#B0B7C3", fontSize:13, textDecoration:"none", display:"flex", gap:7 }}><span style={{ color:"#C8942B" }}>📞</span> 0914 58 75 75</a>
             </div>
           </div>
           <div style={{ flex:1, minWidth:220 }}>
-            <div style={{ color:"#C8942B", fontSize:10, fontWeight:700, letterSpacing:"2px",
-              textTransform:"uppercase", borderBottom:"1px solid #2e2e2e",
-              paddingBottom:8, marginBottom:12 }}>DANH MỤC NHANH</div>
+            <div style={{ color:"#C8942B", fontSize:10, fontWeight:700, letterSpacing:"2px", textTransform:"uppercase", borderBottom:"1px solid #2e2e2e", paddingBottom:8, marginBottom:12 }}>DANH MỤC NHANH</div>
             <div style={{ display:"flex", flexWrap:"wrap", gap:"2px 0" }}>
               {ql.map(([label,type,cat])=>(
-                <button key={label} onClick={()=>{
-                  if (type==="cat") go("category",{cat});
-                  else go(type);
-                }} style={{ background:"none", border:"none", color:"#9CA3AF",
-                  fontSize:12.5, cursor:"pointer", whiteSpace:"nowrap",
-                  padding:"3px 14px 3px 0", display:"flex", gap:5, alignItems:"center" }}
-                  onMouseEnter={e=>e.currentTarget.style.color="#C8942B"}
-                  onMouseLeave={e=>e.currentTarget.style.color="#9CA3AF"}>
+                <button key={label} onClick={()=>{ if (type==="cat") go("category",{cat}); else go(type); }} style={{ background:"none", border:"none", color:"#9CA3AF", fontSize:12.5, cursor:"pointer", whiteSpace:"nowrap", padding:"3px 14px 3px 0", display:"flex", gap:5, alignItems:"center" }} onMouseEnter={e=>e.currentTarget.style.color="#C8942B"} onMouseLeave={e=>e.currentTarget.style.color="#9CA3AF"}>
                   <span style={{ color:"#444", fontSize:10 }}>›</span>{label}
                 </button>
               ))}
             </div>
           </div>
         </div>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center",
-          flexWrap:"wrap", gap:8, padding:"13px 0" }}>
-          <span style={{ fontSize:11.5, color:"#4B5563" }}>
-            © 2025 Xóm Ngọc Điền, Hưng Nguyên, Nghệ An · Bảo lưu mọi quyền
-          </span>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8, padding:"13px 0" }}>
+          <span style={{ fontSize:11.5, color:"#4B5563" }}>© 2025 Xóm Ngọc Điền, Hưng Nguyên, Nghệ An · Bảo lưu mọi quyền</span>
           <span style={{ fontSize:11.5, color:"#C8942B", fontWeight:700 }}>⚡ Phát triển bởi Thái Lão</span>
         </div>
       </div>
@@ -1194,7 +951,7 @@ function Footer({ setNav }: { setNav?: any }) {
 }
 
 /* ═══════════════════════════════════════════
-   ADMIN LOGIN  ← KHÔNG CÓ SYNTAX ERROR
+   ADMIN LOGIN
 ═══════════════════════════════════════════ */
 function AdminLogin({ setNav }: { setNav?: any }) {
   const [pw, setPw]   = useState("");
@@ -1204,99 +961,32 @@ function AdminLogin({ setNav }: { setNav?: any }) {
   const doLogin = () => {
     if (busy) return;
     if (!pw.trim()) { setErr("Vui lòng nhập mật khẩu"); return; }
-    setBusy(true);
-    setErr("");
-    // So sánh mật khẩu trực tiếp, không dùng setTimeout để tránh sandbox chặn
-    if (pw === "NgocDien@2025") {
-      setNav({ page:"admin" });
-    } else {
-      setErr("❌ Sai mật khẩu. Hãy thử lại.");
-      setBusy(false);
-    }
+    setBusy(true); setErr("");
+    if (pw === "NgocDien@2025") { setNav({ page:"admin" }); } 
+    else { setErr("❌ Sai mật khẩu. Hãy thử lại."); setBusy(false); }
   };
 
   return (
-    <div style={{ minHeight:"100vh",
-      background:"linear-gradient(135deg,#9B1B14,#B91C1C)",
-      display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
-      <div style={{ background:"#fff", borderRadius:16, width:"100%", maxWidth:380,
-        boxShadow:"0 20px 60px rgba(0,0,0,.35)", overflow:"hidden" }}>
-
-        {/* Header */}
+    <div style={{ minHeight:"100vh", background:"linear-gradient(135deg,#9B1B14,#B91C1C)", display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+      <div style={{ background:"#fff", borderRadius:16, width:"100%", maxWidth:380, boxShadow:"0 20px 60px rgba(0,0,0,.35)", overflow:"hidden" }}>
         <div style={{ background:"#1C1C1C", padding:"22px", textAlign:"center" }}>
-          <div style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900,
-            color:"#fff", letterSpacing:"3px" }}>NGỌC ĐIỀN</div>
-          <div style={{ color:"#C8942B", fontSize:10, letterSpacing:"3px",
-            marginTop:5, fontStyle:"italic" }}>QUẢN TRỊ HỆ THỐNG</div>
+          <div style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900, color:"#fff", letterSpacing:"3px" }}>NGỌC ĐIỀN</div>
+          <div style={{ color:"#C8942B", fontSize:10, letterSpacing:"3px", marginTop:5, fontStyle:"italic" }}>QUẢN TRỊ HỆ THỐNG</div>
         </div>
-
-        {/* Body – KHÔNG dùng <form> */}
         <div style={{ padding:"28px" }}>
-          <h2 style={{ fontFamily:"'Lora', serif", fontSize:20,
-            textAlign:"center", marginBottom:22 }}>Đăng nhập</h2>
-
-          {/* Email – readonly */}
+          <h2 style={{ fontFamily:"'Lora', serif", fontSize:20, textAlign:"center", marginBottom:22 }}>Đăng nhập</h2>
           <div style={{ marginBottom:14 }}>
-            <label style={{ display:"block", fontSize:11, fontWeight:700, color:"#888",
-              letterSpacing:"1px", textTransform:"uppercase", marginBottom:5 }}>Email</label>
-            <input
-              readOnly
-              value="admin@ngocdien.info.vn"
-              style={{ width:"100%", border:"1px solid #E5E7EB", borderRadius:7,
-                padding:"9px 12px", fontSize:13, background:"#F9FAFB",
-                color:"#666", boxSizing:"border-box" }}
-            />
+            <label style={{ display:"block", fontSize:11, fontWeight:700, color:"#888", letterSpacing:"1px", textTransform:"uppercase", marginBottom:5 }}>Email</label>
+            <input readOnly value="admin@ngocdien.info.vn" style={{ width:"100%", border:"1px solid #E5E7EB", borderRadius:7, padding:"9px 12px", fontSize:13, background:"#F9FAFB", color:"#666", boxSizing:"border-box" }} />
           </div>
-
-          {/* Password */}
           <div style={{ marginBottom:18 }}>
-            <label style={{ display:"block", fontSize:11, fontWeight:700, color:"#888",
-              letterSpacing:"1px", textTransform:"uppercase", marginBottom:5 }}>Mật khẩu</label>
-            <input
-              type="password"
-              value={pw}
-              autoFocus
-              placeholder="Nhập mật khẩu..."
-              onChange={e => { setPw(e.target.value); setErr(""); }}
-              onKeyDown={e => { if (e.key === "Enter") doLogin(); }}
-              style={{ width:"100%",
-                border:`2px solid ${err ? "#B91C1C" : "#E5E7EB"}`,
-                borderRadius:7, padding:"9px 12px", fontSize:13, outline:"none",
-                boxSizing:"border-box", transition:"border-color .2s" }}
-            />
+            <label style={{ display:"block", fontSize:11, fontWeight:700, color:"#888", letterSpacing:"1px", textTransform:"uppercase", marginBottom:5 }}>Mật khẩu</label>
+            <input type="password" value={pw} autoFocus placeholder="Nhập mật khẩu..." onChange={e => { setPw(e.target.value); setErr(""); }} onKeyDown={e => { if (e.key === "Enter") doLogin(); }} style={{ width:"100%", border:`2px solid ${err ? "#B91C1C" : "#E5E7EB"}`, borderRadius:7, padding:"9px 12px", fontSize:13, outline:"none", boxSizing:"border-box", transition:"border-color .2s" }} />
           </div>
-
-          {/* Error */}
-          {err && (
-            <div style={{ background:"#FEE2E2", border:"1px solid #FECACA",
-              borderRadius:7, padding:"9px 14px", marginBottom:14,
-              color:"#B91C1C", fontSize:13, textAlign:"center" }}>
-              {err}
-            </div>
-          )}
-
-          {/* Login button – onClick trực tiếp, không qua form submit */}
-          <button
-            onClick={doLogin}
-            style={{ width:"100%", background:"#B91C1C", color:"#fff",
-              border:"none", padding:"12px", fontSize:15, fontWeight:700,
-              borderRadius:8, cursor:"pointer", letterSpacing:".3px" }}>
-            Đăng nhập →
-          </button>
-
-          {/* Hint */}
-          <div style={{ background:"#F9FAFB", border:"1px solid #E5E7EB",
-            borderRadius:7, padding:"10px 14px", marginTop:14, fontSize:12, color:"#888" }}>
-            🔑 Mật khẩu: <strong style={{ color:"#1C1C1C" }}>NgocDien@2025</strong>
-          </div>
-
-          <button
-            onClick={() => setNav({ page:"home" })}
-            style={{ display:"block", width:"100%", marginTop:12,
-              background:"none", border:"none", color:"#aaa",
-              cursor:"pointer", fontSize:12.5, padding:"6px" }}>
-            ← Về trang chủ
-          </button>
+          {err && <div style={{ background:"#FEE2E2", border:"1px solid #FECACA", borderRadius:7, padding:"9px 14px", marginBottom:14, color:"#B91C1C", fontSize:13, textAlign:"center" }}>{err}</div>}
+          <button onClick={doLogin} style={{ width:"100%", background:"#B91C1C", color:"#fff", border:"none", padding:"12px", fontSize:15, fontWeight:700, borderRadius:8, cursor:"pointer", letterSpacing:".3px" }}>Đăng nhập →</button>
+          <div style={{ background:"#F9FAFB", border:"1px solid #E5E7EB", borderRadius:7, padding:"10px 14px", marginTop:14, fontSize:12, color:"#888" }}>🔑 Mật khẩu: <strong style={{ color:"#1C1C1C" }}>NgocDien@2025</strong></div>
+          <button onClick={() => setNav({ page:"home" })} style={{ display:"block", width:"100%", marginTop:12, background:"none", border:"none", color:"#aaa", cursor:"pointer", fontSize:12.5, padding:"6px" }}>← Về trang chủ</button>
         </div>
       </div>
     </div>
@@ -1314,10 +1004,8 @@ const ATABS = [
   {id:"feedback", label:"Góp ý",      icon:"✉️"},
   {id:"settings", label:"Cài đặt",    icon:"⚙️"},
 ];
-const FI = { display:"block",width:"100%",border:"1px solid #E5E7EB",borderRadius:7,
-  padding:"9px 12px",fontSize:13,outline:"none",background:"#fff",boxSizing:"border-box" };
-const FL = { display:"block",fontSize:11,fontWeight:700,color:"#6B7280",
-  letterSpacing:"1px",textTransform:"uppercase",marginBottom:5 };
+const FI = { display:"block",width:"100%",border:"1px solid #E5E7EB",borderRadius:7, padding:"9px 12px",fontSize:13,outline:"none",background:"#fff",boxSizing:"border-box" };
+const FL = { display:"block",fontSize:11,fontWeight:700,color:"#6B7280", letterSpacing:"1px",textTransform:"uppercase",marginBottom:5 };
 
 function AdminPanel({ setNav }: { setNav?: any }) {
   const [tab,  setTab]  = useState("dash");
@@ -1325,50 +1013,28 @@ function AdminPanel({ setNav }: { setNav?: any }) {
 
   return (
     <div style={{ minHeight:"100vh", background:"#F3F4F6", display:"flex" }}>
-      {mOpen && <div onClick={()=>setMOpen(false)} style={{ position:"fixed",inset:0,
-        background:"rgba(0,0,0,.5)",zIndex:40 }}/>}
+      {mOpen && <div onClick={()=>setMOpen(false)} style={{ position:"fixed",inset:0, background:"rgba(0,0,0,.5)",zIndex:40 }}/>}
       <aside className={`nd-asb${mOpen?" open":""}`}>
         <div style={{ padding:"16px 14px", borderBottom:"1px solid #2a2a2a" }}>
-          <div style={{ fontFamily:"'Lora', serif",fontSize:16,fontWeight:900,letterSpacing:"2px" }}>
-            NGỌC ĐIỀN
-          </div>
+          <div style={{ fontFamily:"'Lora', serif",fontSize:16,fontWeight:900,letterSpacing:"2px" }}>NGỌC ĐIỀN</div>
           <div style={{ color:"#C8942B",fontSize:9,letterSpacing:"2px",marginTop:3 }}>QUẢN TRỊ</div>
         </div>
         <nav style={{ flex:1, paddingTop:6 }}>
           {ATABS.map(t=>(
-            <button key={t.id} onClick={()=>{ setTab(t.id); setMOpen(false); }}
-              style={{ width:"100%",textAlign:"left",padding:"10px 14px",
-                background:tab===t.id?"#B91C1C":"none",border:"none",
-                color:tab===t.id?"#fff":"#C9CDD6",
-                fontSize:13,fontWeight:600,cursor:"pointer",
-                display:"flex",alignItems:"center",gap:9 }}>
+            <button key={t.id} onClick={()=>{ setTab(t.id); setMOpen(false); }} style={{ width:"100%",textAlign:"left",padding:"10px 14px", background:tab===t.id?"#B91C1C":"none",border:"none", color:tab===t.id?"#fff":"#C9CDD6", fontSize:13,fontWeight:600,cursor:"pointer", display:"flex",alignItems:"center",gap:9 }}>
               {t.icon} {t.label}
             </button>
           ))}
         </nav>
         <div style={{ padding:"12px 14px",borderTop:"1px solid #2a2a2a" }}>
-          <button onClick={()=>setNav({ page:"home" })}
-            style={{ width:"100%",background:"rgba(255,255,255,.07)",border:"none",
-              color:"#ccc",padding:"7px",borderRadius:6,cursor:"pointer",fontSize:12 }}>
-            🚪 Đăng xuất
-          </button>
+          <button onClick={()=>setNav({ page:"home" })} style={{ width:"100%",background:"rgba(255,255,255,.07)",border:"none", color:"#ccc",padding:"7px",borderRadius:6,cursor:"pointer",fontSize:12 }}>🚪 Đăng xuất</button>
         </div>
       </aside>
-
       <div className="nd-amain">
-        <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB",
-          padding:"12px 24px",display:"flex",alignItems:"center",
-          position:"sticky",top:0,zIndex:30 }}>
-          <button onClick={()=>setMOpen(true)} style={{ background:"none",border:"none",
-            fontSize:20,cursor:"pointer",marginRight:12 }}>☰</button>
-          <h2 style={{ fontFamily:"'Lora', serif",fontSize:17,fontWeight:700,flex:1 }}>
-            {ATABS.find(t=>t.id===tab)?.icon} {ATABS.find(t=>t.id===tab)?.label}
-          </h2>
-          <button onClick={()=>{ setNav({ page:"home" }); window.scrollTo(0,0); }}
-            style={{ background:"none",border:"none",color:"#B91C1C",
-              fontSize:12.5,fontWeight:700,cursor:"pointer" }}>
-            ← Xem website
-          </button>
+        <div style={{ background:"#fff",borderBottom:"1px solid #E5E7EB", padding:"12px 24px",display:"flex",alignItems:"center", position:"sticky",top:0,zIndex:30 }}>
+          <button onClick={()=>setMOpen(true)} style={{ background:"none",border:"none", fontSize:20,cursor:"pointer",marginRight:12 }}>☰</button>
+          <h2 style={{ fontFamily:"'Lora', serif",fontSize:17,fontWeight:700,flex:1 }}>{ATABS.find(t=>t.id===tab)?.icon} {ATABS.find(t=>t.id===tab)?.label}</h2>
+          <button onClick={()=>{ setNav({ page:"home" }); window.scrollTo(0,0); }} style={{ background:"none",border:"none",color:"#B91C1C", fontSize:12.5,fontWeight:700,cursor:"pointer" }}>← Xem website</button>
         </div>
         <div style={{ flex:1,padding:"22px 24px",overflowY:"auto" }}>
           {tab==="dash"     && <ADash setTab={setTab}/>}
@@ -1392,13 +1058,9 @@ function ADash({ setTab }: { setTab?: any }) {
   ];
   return (
     <div>
-      <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",
-        gap:12,marginBottom:22 }}>
+      <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))", gap:12,marginBottom:22 }}>
         {cards.map(c=>(
-          <button key={c.t} onClick={()=>setTab(c.t)}
-            style={{ background:"#fff",border:"none",borderTop:`4px solid ${c.c}`,
-              borderRadius:10,padding:"16px",textAlign:"left",cursor:"pointer",
-              boxShadow:"0 1px 4px rgba(0,0,0,.07)" }}>
+          <button key={c.t} onClick={()=>setTab(c.t)} style={{ background:"#fff",border:"none",borderTop:`4px solid ${c.c}`, borderRadius:10,padding:"16px",textAlign:"left",cursor:"pointer", boxShadow:"0 1px 4px rgba(0,0,0,.07)" }}>
             <div style={{ fontSize:26,marginBottom:6 }}>{c.icon}</div>
             <div style={{ fontSize:30,fontWeight:900,color:c.c,lineHeight:1 }}>{c.val}</div>
             <div style={{ fontSize:11,color:"#9CA3AF",marginTop:2 }}>{c.sub}</div>
@@ -1406,11 +1068,8 @@ function ADash({ setTab }: { setTab?: any }) {
           </button>
         ))}
       </div>
-      <div style={{ background:"#fff",borderRadius:10,padding:"18px 20px",
-        boxShadow:"0 1px 4px rgba(0,0,0,.07)" }}>
-        <h3 style={{ fontFamily:"'Lora', serif",fontSize:16,fontWeight:700,marginBottom:12 }}>
-          📋 Hướng dẫn nhanh
-        </h3>
+      <div style={{ background:"#fff",borderRadius:10,padding:"18px 20px", boxShadow:"0 1px 4px rgba(0,0,0,.07)" }}>
+        <h3 style={{ fontFamily:"'Lora', serif",fontSize:16,fontWeight:700,marginBottom:12 }}>📋 Hướng dẫn nhanh</h3>
         {["📝 Bài viết → Tạo mới → điền nội dung → Đăng ngay",
           "⭐ Tick Nổi bật để bài hiện ở Carousel trang chủ (tối đa 5)",
           "👥 Người ND → Thêm Mẹ VNAH, Liệt sỹ, Anh hùng lao động",
@@ -1418,8 +1077,7 @@ function ADash({ setTab }: { setTab?: any }) {
           "✉️ Góp ý: Xem phản hồi từ người dân, đánh dấu đã xử lý",
           "⚙️ Cài đặt: sửa thông tin liên hệ, link Zalo, Facebook"
         ].map((t,i)=>(
-          <div key={i} style={{ fontSize:13,color:"#6B7280",lineHeight:1.7,
-            padding:"5px 0",borderBottom:"1px solid #F9FAFB" }}>{t}</div>
+          <div key={i} style={{ fontSize:13,color:"#6B7280",lineHeight:1.7, padding:"5px 0",borderBottom:"1px solid #F9FAFB" }}>{t}</div>
         ))}
       </div>
     </div>
@@ -1441,8 +1099,9 @@ function AArts() {
   };
   const [form, setForm] = useState(initForm);
 
-  // Danh sách chuyên mục chuẩn xác để lưu thẳng vào Supabase
+  // ĐÃ BỔ SUNG MỤC GIỚI THIỆU VÀO ĐÂY ĐỂ VIẾT BÀI
   const ADMIN_OPTIONS = [
+    { val: "gioi-thieu", lbl: "Giới thiệu" },
     { val: "tin-tuc", lbl: "Tin tức" }, { val: "thong-bao", lbl: "— Thông báo" }, { val: "su-kien", lbl: "— Sự kiện" },
     { val: "nguoi-ngoc-dien", lbl: "Người Ngọc Điền" }, { val: "me-vnah", lbl: "— Mẹ VNAH" }, { val: "liet-sy", lbl: "— Liệt sỹ" }, { val: "anh-hung", lbl: "— Anh hùng" }, { val: "dang-vien", lbl: "— Đảng viên" },
     { val: "tieng-lang", lbl: "Tiếng làng" }, { val: "tan-van", lbl: "— Tản văn" }, { val: "tho", lbl: "— Thơ" }, { val: "kham-pha", lbl: "— Khám phá" }, { val: "goc-nhin-thang", lbl: "— Góc nhìn" }, { val: "podcast", lbl: "— Podcast" },
@@ -1451,81 +1110,47 @@ function AArts() {
     { val: "thu-vien", lbl: "Thư viện" }, { val: "huong-uoc", lbl: "— Hương ước" }, { val: "dang-bo", lbl: "— Đảng bộ" }
   ];
 
-  // 1. Tự động lấy tất cả bài viết từ Supabase khi mở Quản trị
   const loadAdminArts = async () => {
     const { data } = await supabase.from('articles').select('*').order('id', { ascending: false });
     if (data) setList(data);
   };
 
-  useEffect(() => {
-    loadAdminArts();
-  }, []);
+  useEffect(() => { loadAdminArts(); }, []);
 
-  // 2. Lưu hoặc Sửa bài viết thẳng vào Supabase
   const handleSave = async () => {
-    if (!form.title || !form.slug || !form.cat) {
-      alert("Vui lòng điền đủ Tiêu đề, Slug và Chọn chuyên mục!");
-      return;
-    }
+    if (!form.title || !form.slug || !form.cat) { alert("Vui lòng điền đủ Tiêu đề, Slug và Chọn chuyên mục!"); return; }
     setIsSaving(true);
-    
-    const payload = {
-      title: form.title, slug: form.slug, excerpt: form.excerpt, content: form.content,
-      status: form.status, cat: form.cat, author: form.author, featured: form.featured,
-      img: form.img || "https://picsum.photos/seed/"+Date.now()+"/400/220",
-      video: form.video, audio: form.audio,
-      date: new Date().toLocaleDateString("vi-VN")
-    };
-    
+    const payload = { title: form.title, slug: form.slug, excerpt: form.excerpt, content: form.content, status: form.status, cat: form.cat, author: form.author, featured: form.featured, img: form.img || "https://picsum.photos/seed/"+Date.now()+"/400/220", video: form.video, audio: form.audio, date: new Date().toLocaleDateString("vi-VN") };
     if (editId) {
       const { error } = await supabase.from('articles').update(payload).eq('id', editId);
-      if (error) alert("Lỗi khi sửa: " + error.message);
-      else alert("Cập nhật thành công!");
+      if (error) alert("Lỗi khi sửa: " + error.message); else alert("Cập nhật thành công!");
     } else {
       const { error } = await supabase.from('articles').insert([payload]);
-      if (error) alert("Lỗi khi thêm mới: " + error.message);
-      else alert("Thêm bài viết thành công!");
+      if (error) alert("Lỗi khi thêm mới: " + error.message); else alert("Thêm bài viết thành công!");
     }
-    
-    await loadAdminArts(); // Load lại ngay sau khi lưu
+    await loadAdminArts();
     setForm(initForm); setEditId(null); setShow(false); setIsSaving(false);
   };
 
-  // 3. Chuẩn bị dữ liệu khi bấm nút Sửa
   const handleEdit = (article: any) => {
-    setForm({
-      title: article.title || "", slug: article.slug || "", excerpt: article.excerpt || "",
-      content: article.content || "", status: article.status || "published",
-      cat: article.cat || "", author: article.author || "Ban biên tập",
-      featured: article.featured || false, img: article.img || "",
-      video: article.video || "", audio: article.audio || ""
-    });
-    setEditId(article.id);
-    setShow(true);
+    setForm({ title: article.title || "", slug: article.slug || "", excerpt: article.excerpt || "", content: article.content || "", status: article.status || "published", cat: article.cat || "", author: article.author || "Ban biên tập", featured: article.featured || false, img: article.img || "", video: article.video || "", audio: article.audio || "" });
+    setEditId(article.id); setShow(true);
   };
 
-  // 4. Xóa bài viết vĩnh viễn khỏi Supabase
   const handleDelete = async (id: any) => { 
     if(confirm("Bác có chắc chắn muốn xóa bài viết này khỏi hệ thống không? Hành động này không thể hoàn tác!")) {
       const { error } = await supabase.from('articles').delete().eq('id', id);
       if (error) alert("Lỗi khi xóa: " + error.message);
-      else {
-        alert("Đã xóa bài viết!");
-        await loadAdminArts();
-      }
+      else { alert("Đã xóa bài viết!"); await loadAdminArts(); }
     }
   };
-
-  const mockUpload = (type: any) => { alert(`Tính năng này cần thiết lập Supabase Storage.`); };
 
   return (
     <div>
       <div style={{ display:"flex", justifyContent:"space-between", marginBottom:16, alignItems:"center" }}>
         <span style={{ fontSize:13, color:"#888", fontWeight:700 }}>Tổng số: {list.length} bài viết</span>
         {!show && (
-          <button onClick={() => { setForm(initForm); setEditId(null); setShow(true); }} 
-            style={{ background:"#B91C1C", color:"#fff", border:"none", borderRadius:7, 
-              padding:"9px 18px", fontWeight:700, cursor:"pointer", fontSize:13 }}>
+          <button onClick={() => { setForm(initForm); setEditId(null); setShow(true); }} style={{ background:"#B91C1C", color:"#fff", border:"none", borderRadius:7, padding:"9px 18px", fontWeight:700, cursor:"pointer", fontSize:13 }}>
             + Tạo bài viết mới
           </button>
         )}
@@ -1534,31 +1159,22 @@ function AArts() {
       {show && (
         <div style={{ background:"#FFFBF5", borderRadius:12, padding:"24px 20px", marginBottom:20, border:"1px solid #E8DDD0", boxShadow:"0 4px 12px rgba(0,0,0,0.05)" }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20, borderBottom:"2px solid #B91C1C", paddingBottom:12 }}>
-            <h2 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900, color:"#1C1C1C", margin:0 }}>
-              {editId ? "Chỉnh sửa bài viết" : "Bài viết mới"}
-            </h2>
+            <h2 style={{ fontFamily:"'Lora', serif", fontSize:22, fontWeight:900, color:"#1C1C1C", margin:0 }}>{editId ? "Chỉnh sửa bài viết" : "Bài viết mới"}</h2>
             <div style={{ display:"flex", gap:10 }}>
-              <button onClick={() => setShow(false)} style={{ background:"#F3F4F6", border:"1px solid #E5E7EB", padding:"8px 16px", borderRadius:7, cursor:"pointer", fontSize:13, fontWeight:700, color:"#4B5563" }}>
-                Hủy
-              </button>
-              <button onClick={handleSave} disabled={isSaving} style={{ background:"#B91C1C", color:"#fff", border:"none", padding:"8px 24px", borderRadius:7, fontWeight:700, cursor:"pointer", fontSize:13 }}>
-                {isSaving ? "Đang lưu..." : "Lưu"}
-              </button>
+              <button onClick={() => setShow(false)} style={{ background:"#F3F4F6", border:"1px solid #E5E7EB", padding:"8px 16px", borderRadius:7, cursor:"pointer", fontSize:13, fontWeight:700, color:"#4B5563" }}>Hủy</button>
+              <button onClick={handleSave} disabled={isSaving} style={{ background:"#B91C1C", color:"#fff", border:"none", padding:"8px 24px", borderRadius:7, fontWeight:700, cursor:"pointer", fontSize:13 }}>{isSaving ? "Đang lưu..." : "Lưu"}</button>
             </div>
           </div>
-
           <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
             <div><label style={FL}>Tiêu đề *</label><input value={form.title} onChange={e=>setForm(f=>({...f, title:e.target.value}))} style={FI as any} /></div>
             <div><label style={FL}>Slug (URL) *</label><input value={form.slug} onChange={e=>setForm(f=>({...f, slug:e.target.value}))} placeholder="vi-du-tieu-de-khong-dau" style={FI as any} /></div>
             <div><label style={FL}>Mô tả ngắn (hiện trên thẻ + share)</label><textarea value={form.excerpt} onChange={e=>setForm(f=>({...f, excerpt:e.target.value}))} rows={3} style={{ ...FI, resize:"vertical" } as any} /></div>
             <div><label style={FL}>Nội dung (HTML hỗ trợ)</label><textarea value={form.content} onChange={e=>setForm(f=>({...f, content:e.target.value}))} rows={10} style={{ ...FI, resize:"vertical" } as any} /></div>
-
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
               <div>
                 <label style={FL}>Trạng thái</label>
                 <select value={form.status} onChange={e=>setForm(f=>({...f, status:e.target.value}))} style={FI as any}>
-                  <option value="draft">Bản nháp</option>
-                  <option value="published">Đã xuất bản</option>
+                  <option value="draft">Bản nháp</option><option value="published">Đã xuất bản</option>
                 </select>
               </div>
               <div>
@@ -1571,7 +1187,6 @@ function AArts() {
                 </select>
               </div>
             </div>
-
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, alignItems:"center" }}>
               <div><label style={FL}>Tác giả</label><input value={form.author} onChange={e=>setForm(f=>({...f, author:e.target.value}))} style={FI as any} /></div>
               <div style={{ display:"flex", alignItems:"center", gap:8, marginTop:18 }}>
@@ -1579,26 +1194,14 @@ function AArts() {
                 <label htmlFor="featured" style={{ fontSize:13, fontWeight:700, color:"#374151", cursor:"pointer" }}>Đánh dấu nổi bật</label>
               </div>
             </div>
-
             <hr style={{ border:"none", borderTop:"1px dashed #D1D5DB", margin:"8px 0" }}/>
-
-            <div>
-              <label style={FL}>Ảnh đại diện (URL)</label>
-              <input value={form.img} onChange={e=>setForm(f=>({...f, img:e.target.value}))} placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} />
-            </div>
-            <div>
-              <label style={FL}>Video (URL nhúng)</label>
-              <input value={form.video} onChange={e=>setForm(f=>({...f, video:e.target.value}))} placeholder="https://www.youtube.com/embed/..." style={FI as any} />
-            </div>
-            <div>
-              <label style={FL}>Audio / Podcast (URL)</label>
-              <input value={form.audio} onChange={e=>setForm(f=>({...f, audio:e.target.value}))} placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} />
-            </div>
+            <div><label style={FL}>Ảnh đại diện (URL)</label><input value={form.img} onChange={e=>setForm(f=>({...f, img:e.target.value}))} placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} /></div>
+            <div><label style={FL}>Video (URL nhúng)</label><input value={form.video} onChange={e=>setForm(f=>({...f, video:e.target.value}))} placeholder="https://www.youtube.com/embed/..." style={FI as any} /></div>
+            <div><label style={FL}>Audio / Podcast (URL)</label><input value={form.audio} onChange={e=>setForm(f=>({...f, audio:e.target.value}))} placeholder="https://..." style={{ ...FI, marginBottom:6 } as any} /></div>
           </div>
         </div>
       )}
 
-      {/* Danh sách bài viết tải từ Supabase */}
       <div style={{ background:"#fff", borderRadius:10, overflow:"hidden", border:"1px solid #E5E7EB", boxShadow:"0 1px 4px rgba(0,0,0,.05)" }}>
         {list.map((a, i) => (
           <div key={a.id} style={{ display:"flex", gap:14, alignItems:"center", padding:"12px 16px", borderBottom: i < list.length - 1 ? "1px solid #F3F4F6" : "none", background: a.id === editId ? "#FEF2F2" : "#fff" }}>
@@ -1608,35 +1211,25 @@ function AArts() {
                 {a.title} {(a as any).featured && <span style={{ color:"#EAB308", marginLeft:4 }}>★</span>}
               </p>
               <div style={{ display:"flex", gap:8, alignItems:"center", marginTop:4 }}>
-                <span style={{ fontSize:11, color:"#6B7280", fontWeight:"bold" }}>
-                  {ADMIN_OPTIONS.find(opt => opt.val === a.cat)?.lbl.replace("— ", "") || a.cat}
-                </span>
-                <span style={{ fontSize:10, color:"#D1D5DB" }}>|</span>
-                <span style={{ fontSize:11, color:"#6B7280" }}>{a.date}</span>
+                <span style={{ fontSize:11, color:"#6B7280", fontWeight:"bold" }}>{ADMIN_OPTIONS.find(opt => opt.val === a.cat)?.lbl.replace("— ", "") || a.cat}</span>
+                <span style={{ fontSize:10, color:"#D1D5DB" }}>|</span><span style={{ fontSize:11, color:"#6B7280" }}>{a.date}</span>
               </div>
             </div>
             <span style={{ fontSize:11, fontWeight:700, padding:"4px 10px", borderRadius:12, background: (a as any).status === 'draft' ? "#F3F4F6" : "#D1FAE5", color: (a as any).status === 'draft' ? "#4B5563" : "#065F46", flexShrink:0 }}>
               {(a as any).status === 'draft' ? "Nháp" : "Đã đăng"}
             </span>
             <div style={{ display:"flex", gap:8, flexShrink:0, marginLeft:10 }}>
-              <button onClick={() => handleEdit(a)} style={{ background:"#F3F4F6", border:"none", color:"#374151", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>
-                ✏️ Sửa
-              </button>
-              <button onClick={() => handleDelete(a.id)} style={{ background:"#FEE2E2", border:"none", color:"#B91C1C", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>
-                🗑 Xóa
-              </button>
+              <button onClick={() => handleEdit(a)} style={{ background:"#F3F4F6", border:"none", color:"#374151", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>✏️ Sửa</button>
+              <button onClick={() => handleDelete(a.id)} style={{ background:"#FEE2E2", border:"none", color:"#B91C1C", padding:"6px 12px", borderRadius:5, cursor:"pointer", fontSize:12, fontWeight:700 }}>🗑 Xóa</button>
             </div>
           </div>
         ))}
-        {list.length === 0 && (
-          <div style={{ padding:"40px 20px", textAlign:"center", color:"#9CA3AF", fontSize:13 }}>
-            Chưa có bài viết nào trong CSDL Supabase.
-          </div>
-        )}
+        {list.length === 0 && <div style={{ padding:"40px 20px", textAlign:"center", color:"#9CA3AF", fontSize:13 }}>Chưa có bài viết nào trong CSDL Supabase.</div>}
       </div>
     </div>
   );
 }
+
 function APeople() {
   const tabs=[
     {id:"me_vnah",label:"Mẹ VNAH",icon:"🌺",c:"#B91C1C"},
@@ -1658,54 +1251,28 @@ function APeople() {
     <div>
       <div style={{ display:"flex",gap:8,flexWrap:"wrap",marginBottom:16 }}>
         {tabs.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)}
-            style={{ padding:"6px 14px",borderRadius:18,border:"2px solid",
-              borderColor:tab===t.id?t.c:"#E5E7EB",
-              background:tab===t.id?t.c:"#fff",
-              color:tab===t.id?"#fff":"#374151",
-              fontSize:12.5,fontWeight:700,cursor:"pointer" }}>
-            {t.icon} {t.label}
-          </button>
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{ padding:"6px 14px",borderRadius:18,border:"2px solid", borderColor:tab===t.id?t.c:"#E5E7EB", background:tab===t.id?t.c:"#fff", color:tab===t.id?"#fff":"#374151", fontSize:12.5,fontWeight:700,cursor:"pointer" }}>{t.icon} {t.label}</button>
         ))}
       </div>
       <div style={{ display:"flex",justifyContent:"flex-end",marginBottom:12 }}>
-        <button onClick={()=>setShow(!show)} style={{ background: cur!.c, color:"#fff",
-          border:"none",borderRadius:7,padding:"8px 16px",fontWeight:700,
-          cursor:"pointer",fontSize:13 }}>
-          + Thêm {cur!.label}
-        </button>
+        <button onClick={()=>setShow(!show)} style={{ background: cur!.c, color:"#fff", border:"none",borderRadius:7,padding:"8px 16px",fontWeight:700, cursor:"pointer",fontSize:13 }}>+ Thêm {cur!.label}</button>
       </div>
       {show && (
         <div style={{ background:"#fff",borderRadius:10,padding:16,marginBottom:14,border:"1px solid #E5E7EB" }}>
           <div style={{ display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:10,marginBottom:10 }}>
-            <div><label style={FL}>Họ và tên *</label>
-              <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))}
-                placeholder="Nguyễn Thị Hoa" style={FI as any}/></div>
-            <div><label style={FL}>Năm sinh</label>
-              <input value={form.birth} onChange={e=>setForm(f=>({...f,birth:e.target.value}))}
-                placeholder="1920" style={FI as any}/></div>
-            <div><label style={FL}>Năm mất</label>
-              <input value={form.death} onChange={e=>setForm(f=>({...f,death:e.target.value}))}
-                placeholder="1975" style={FI as any}/></div>
+            <div><label style={FL}>Họ và tên *</label><input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder="Nguyễn Thị Hoa" style={FI as any}/></div>
+            <div><label style={FL}>Năm sinh</label><input value={form.birth} onChange={e=>setForm(f=>({...f,birth:e.target.value}))} placeholder="1920" style={FI as any}/></div>
+            <div><label style={FL}>Năm mất</label><input value={form.death} onChange={e=>setForm(f=>({...f,death:e.target.value}))} placeholder="1975" style={FI as any}/></div>
           </div>
-          <div style={{ marginBottom:10 }}>
-            <label style={FL}>Ghi chú</label>
-            <input value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))}
-              placeholder="Quê quán, thành tích..." style={FI as any}/>
-          </div>
+          <div style={{ marginBottom:10 }}><label style={FL}>Ghi chú</label><input value={form.note} onChange={e=>setForm(f=>({...f,note:e.target.value}))} placeholder="Quê quán, thành tích..." style={FI as any}/></div>
           <div style={{ display:"flex",gap:8 }}>
-            <button onClick={add} style={{ background: cur!.c, color:"#fff", border:"none",
-              padding:"8px 18px",borderRadius:7,fontWeight:700,cursor:"pointer",fontSize:13 }}>
-              💾 Lưu
-            </button>
-            <button onClick={()=>setShow(false)} style={{ background:"#F3F4F6",border:"none",
-              padding:"8px 14px",borderRadius:7,cursor:"pointer",fontSize:13 }}>Hủy</button>
+            <button onClick={add} style={{ background: cur!.c, color:"#fff", border:"none", padding:"8px 18px",borderRadius:7,fontWeight:700,cursor:"pointer",fontSize:13 }}>💾 Lưu</button>
+            <button onClick={()=>setShow(false)} style={{ background:"#F3F4F6",border:"none", padding:"8px 14px",borderRadius:7,cursor:"pointer",fontSize:13 }}>Hủy</button>
           </div>
         </div>
       )}
       {list.filter((p: any)=> p.type === tab).length === 0 ? (
-        <div style={{ background:"#fff",borderRadius:10,padding:"48px",
-          textAlign:"center",border:"2px dashed #E5E7EB" }}>
+        <div style={{ background:"#fff",borderRadius:10,padding:"48px", textAlign:"center",border:"2px dashed #E5E7EB" }}>
           <div style={{ fontSize:40,marginBottom:10 }}>{cur!.icon}</div>
           <p style={{ color:"#9CA3AF",fontSize:13 }}>Chưa có {cur!.label}. Nhấn + Thêm.</p>
         </div>
@@ -1713,14 +1280,11 @@ function APeople() {
         <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:12 }}>
           {list.filter(p=>p.type===tab).map(p=>(
             <div key={p.id} style={{ background:"#fff",borderRadius:10,overflow:"hidden",border:"1px solid #E5E7EB" }}>
-              <div style={{ height:80,background:`${cur!.c}15`,display:"flex",
-                alignItems:"center",justifyContent:"center",fontSize:32 }}>{cur!.icon}</div>
+              <div style={{ height:80,background:`${cur!.c}15`,display:"flex", alignItems:"center",justifyContent:"center",fontSize:32 }}>{cur!.icon}</div>
               <div style={{ padding:"10px 12px" }}>
                 <p style={{ fontWeight:700,fontSize:12.5,lineHeight:1.4 }}>{p.name}</p>
                 {(p.birth||p.death)&&<p style={{ fontSize:11,color:"#aaa" }}>{p.birth||"?"}–{p.death||"?"}</p>}
-                <button onClick={()=>setList(l=>l.filter(x=>x.id!==p.id))}
-                  style={{ marginTop:6,fontSize:11,color:"#B91C1C",
-                    background:"none",border:"none",cursor:"pointer",fontWeight:700 }}>Xóa</button>
+                <button onClick={()=>setList(l=>l.filter(x=>x.id!==p.id))} style={{ marginTop:6,fontSize:11,color:"#B91C1C", background:"none",border:"none",cursor:"pointer",fontWeight:700 }}>Xóa</button>
               </div>
             </div>
           ))}
@@ -1743,61 +1307,35 @@ function APod() {
     <div>
       <div style={{ display:"flex",justifyContent:"space-between",marginBottom:16 }}>
         <span style={{ fontSize:13,color:"#888" }}>{list.length} tập</span>
-        <button onClick={()=>setShow(!show)} style={{ background:"#0891B2",color:"#fff",
-          border:"none",borderRadius:7,padding:"8px 16px",fontWeight:700,cursor:"pointer",fontSize:13 }}>
-          + Thêm tập mới
-        </button>
+        <button onClick={()=>setShow(!show)} style={{ background:"#0891B2",color:"#fff", border:"none",borderRadius:7,padding:"8px 16px",fontWeight:700,cursor:"pointer",fontSize:13 }}>+ Thêm tập mới</button>
       </div>
       {show && (
         <div style={{ background:"#fff",borderRadius:10,padding:16,marginBottom:14,border:"1px solid #E5E7EB" }}>
           <div style={{ display:"grid",gridTemplateColumns:"3fr 1fr",gap:10,marginBottom:10 }}>
-            <div><label style={FL}>Tiêu đề *</label>
-              <input value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))}
-                placeholder="Câu chuyện Mẹ Việt Nam Anh hùng" style={FI as any}/></div>
-            <div><label style={FL}>Số tập</label>
-              <input value={form.ep} onChange={e=>setForm(f=>({...f,ep:e.target.value}))}
-                type="number" placeholder="1" style={FI as any}/></div>
+            <div><label style={FL}>Tiêu đề *</label><input value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="Câu chuyện Mẹ Việt Nam Anh hùng" style={FI as any}/></div>
+            <div><label style={FL}>Số tập</label><input value={form.ep} onChange={e=>setForm(f=>({...f,ep:e.target.value}))} type="number" placeholder="1" style={FI as any}/></div>
           </div>
-          <div style={{ border:"2px dashed #D1D5DB",borderRadius:8,padding:14,
-            textAlign:"center",background:"#FAFAFA",marginBottom:10 }}>
+          <div style={{ border:"2px dashed #D1D5DB",borderRadius:8,padding:14, textAlign:"center",background:"#FAFAFA",marginBottom:10 }}>
             <div style={{ fontSize:24,marginBottom:4 }}>🎵</div>
             <p style={{ fontSize:12,color:"#9CA3AF" }}>Kéo thả hoặc click để chọn file MP3</p>
           </div>
-          <div style={{ marginBottom:10 }}>
-            <label style={FL}>Mô tả</label>
-            <input value={form.desc} onChange={e=>setForm(f=>({...f,desc:e.target.value}))}
-              placeholder="Tóm tắt nội dung..." style={FI as any}/>
-          </div>
+          <div style={{ marginBottom:10 }}><label style={FL}>Mô tả</label><input value={form.desc} onChange={e=>setForm(f=>({...f,desc:e.target.value}))} placeholder="Tóm tắt nội dung..." style={FI as any}/></div>
           <div style={{ display:"flex",gap:8 }}>
-            <button onClick={add} style={{ background:"#0891B2",color:"#fff",border:"none",
-              padding:"8px 18px",borderRadius:7,fontWeight:700,cursor:"pointer",fontSize:13 }}>
-              💾 Lưu
-            </button>
-            <button onClick={()=>setShow(false)} style={{ background:"#F3F4F6",border:"none",
-              padding:"8px 14px",borderRadius:7,cursor:"pointer",fontSize:13 }}>Hủy</button>
+            <button onClick={add} style={{ background:"#0891B2",color:"#fff",border:"none", padding:"8px 18px",borderRadius:7,fontWeight:700,cursor:"pointer",fontSize:13 }}>💾 Lưu</button>
+            <button onClick={()=>setShow(false)} style={{ background:"#F3F4F6",border:"none", padding:"8px 14px",borderRadius:7,cursor:"pointer",fontSize:13 }}>Hủy</button>
           </div>
         </div>
       )}
       {list.length===0 ? (
-        <div style={{ background:"#fff",borderRadius:10,padding:"48px",
-          textAlign:"center",border:"2px dashed #E5E7EB" }}>
+        <div style={{ background:"#fff",borderRadius:10,padding:"48px", textAlign:"center",border:"2px dashed #E5E7EB" }}>
           <div style={{ fontSize:40,marginBottom:10 }}>🎙</div>
           <p style={{ color:"#9CA3AF",fontSize:13 }}>Chưa có podcast. Nhấn + Thêm.</p>
         </div>
       ) : list.map(p=>(
-        <div key={p.id} style={{ background:"#fff",borderRadius:10,padding:"12px 16px",
-          marginBottom:8,display:"flex",gap:12,alignItems:"center" }}>
-          <div style={{ width:42,height:42,background:"#1C1C1C",borderRadius:8,
-            display:"flex",alignItems:"center",justifyContent:"center",fontSize:20 }}>🎙</div>
-          <div style={{ flex:1 }}>
-            <p style={{ fontWeight:700,fontSize:13 }}>{p.ep?`Tập ${p.ep} – `:""}{p.title}</p>
-            {p.desc&&<p style={{ fontSize:11.5,color:"#aaa",marginTop:2 }}>{p.desc}</p>}
-          </div>
-          <button onClick={()=>setList(l=>l.map(x=>x.id===p.id?{...x,pub:!x.pub}:x))}
-            style={{ fontSize:12,fontWeight:700,background:"none",border:"none",
-              color:"#0891B2",cursor:"pointer" }}>
-            {p.pub?"Ẩn":"Xuất bản"}
-          </button>
+        <div key={p.id} style={{ background:"#fff",borderRadius:10,padding:"12px 16px", marginBottom:8,display:"flex",gap:12,alignItems:"center" }}>
+          <div style={{ width:42,height:42,background:"#1C1C1C",borderRadius:8, display:"flex",alignItems:"center",justifyContent:"center",fontSize:20 }}>🎙</div>
+          <div style={{ flex:1 }}><p style={{ fontWeight:700,fontSize:13 }}>{p.ep?`Tập ${p.ep} – `:""}{p.title}</p>{p.desc&&<p style={{ fontSize:11.5,color:"#aaa",marginTop:2 }}>{p.desc}</p>}</div>
+          <button onClick={()=>setList(l=>l.map(x=>x.id===p.id?{...x,pub:!x.pub}:x))} style={{ fontSize:12,fontWeight:700,background:"none",border:"none", color:"#0891B2",cursor:"pointer" }}>{p.pub?"Ẩn":"Xuất bản"}</button>
         </div>
       ))}
     </div>
@@ -1817,51 +1355,29 @@ function AFB() {
     <div>
       <div style={{ background:"#fff",borderRadius:10,overflow:"hidden",boxShadow:"0 1px 4px rgba(0,0,0,.07)" }}>
         {list.map((fb,i)=>(
-          <div key={fb.id} style={{ display:"flex",gap:12,alignItems:"center",
-            padding:"11px 16px",borderBottom:i<list.length-1?"1px solid #F3F4F6":"none" }}>
+          <div key={fb.id} style={{ display:"flex",gap:12,alignItems:"center", padding:"11px 16px",borderBottom:i<list.length-1?"1px solid #F3F4F6":"none" }}>
             <div style={{ flex:1,minWidth:0 }}>
-              <p style={{ fontWeight:700,fontSize:13 }}>{fb.name}
-                <span style={{ fontWeight:400,color:"#aaa",fontSize:11 }}> · {fb.type} · {fb.date}</span>
-              </p>
-              <p style={{ fontSize:12,color:"#666",overflow:"hidden",
-                textOverflow:"ellipsis",whiteSpace:"nowrap",marginTop:2 }}>{fb.content}</p>
+              <p style={{ fontWeight:700,fontSize:13 }}>{fb.name} <span style={{ fontWeight:400,color:"#aaa",fontSize:11 }}> · {fb.type} · {fb.date}</span></p>
+              <p style={{ fontSize:12,color:"#666",overflow:"hidden", textOverflow:"ellipsis",whiteSpace:"nowrap",marginTop:2 }}>{fb.content}</p>
             </div>
-            <span style={{ fontSize:11,fontWeight:700,padding:"3px 8px",borderRadius:10,
-              background:`${sc[fb.status]}15`,color:sc[fb.status],flexShrink:0 }}>
-              {sl[fb.status]}
-            </span>
-            <button onClick={()=>setDet(fb)} style={{ fontSize:12,fontWeight:700,
-              color:"#0891B2",background:"none",border:"none",cursor:"pointer",flexShrink:0 }}>
-              Xem
-            </button>
+            <span style={{ fontSize:11,fontWeight:700,padding:"3px 8px",borderRadius:10, background:`${sc[fb.status]}15`,color:sc[fb.status],flexShrink:0 }}>{sl[fb.status]}</span>
+            <button onClick={()=>setDet(fb)} style={{ fontSize:12,fontWeight:700, color:"#0891B2",background:"none",border:"none",cursor:"pointer",flexShrink:0 }}>Xem</button>
           </div>
         ))}
       </div>
       {det && (
-        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.5)",
-          zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:16 }}>
-          <div style={{ background:"#fff",borderRadius:14,width:"100%",maxWidth:460,
-            boxShadow:"0 20px 60px rgba(0,0,0,.25)" }}>
-            <div style={{ padding:"16px 20px",borderBottom:"1px solid #E5E7EB",
-              display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-              <h3 style={{ fontFamily:"'Lora', serif",fontSize:16,fontWeight:700 }}>
-                {det.type} – {det.name}
-              </h3>
-              <button onClick={()=>setDet(null)} style={{ background:"none",border:"none",
-                fontSize:20,cursor:"pointer",color:"#888" }}>✕</button>
+        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.5)", zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:16 }}>
+          <div style={{ background:"#fff",borderRadius:14,width:"100%",maxWidth:460, boxShadow:"0 20px 60px rgba(0,0,0,.25)" }}>
+            <div style={{ padding:"16px 20px",borderBottom:"1px solid #E5E7EB", display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+              <h3 style={{ fontFamily:"'Lora', serif",fontSize:16,fontWeight:700 }}>{det.type} – {det.name}</h3>
+              <button onClick={()=>setDet(null)} style={{ background:"none",border:"none", fontSize:20,cursor:"pointer",color:"#888" }}>✕</button>
             </div>
             <div style={{ padding:"14px 20px" }}>
-              <p style={{ fontSize:13,color:"#374151",lineHeight:1.8,
-                background:"#F9FAFB",padding:12,borderRadius:8 }}>{det.content}</p>
+              <p style={{ fontSize:13,color:"#374151",lineHeight:1.8, background:"#F9FAFB",padding:12,borderRadius:8 }}>{det.content}</p>
             </div>
             <div style={{ padding:"12px 20px 18px",display:"flex",gap:8,flexWrap:"wrap" }}>
               {["reviewed","resolved","rejected"].map(s=>(
-                <button key={s} onClick={()=>{
-                  setList(l=>l.map(x=>x.id===det.id?{...x,status:s}:x));setDet(null);
-                }} style={{ padding:"6px 14px",borderRadius:7,border:"none",cursor:"pointer",
-                  fontSize:12.5,fontWeight:700,background:`${sc[s]}15`,color:sc[s] }}>
-                  {sl[s]}
-                </button>
+                <button key={s} onClick={()=>{ setList(l=>l.map(x=>x.id===det.id?{...x,status:s}:x));setDet(null); }} style={{ padding:"6px 14px",borderRadius:7,border:"none",cursor:"pointer", fontSize:12.5,fontWeight:700,background:`${sc[s]}15`,color:sc[s] }}>{sl[s]}</button>
               ))}
             </div>
           </div>
@@ -1874,8 +1390,7 @@ function AFB() {
 function ASet() {
   const [s,setS]=useState<any>({
     site_name:"Xóm Ngọc Điền",tagline:"Hồn quê trong dòng chảy số",
-    email:"tinnhanhonline247@gmail.com",phone:"0914 58 75 75",
-    zalo:"",facebook:"",
+    email:"tinnhanhonline247@gmail.com",phone:"0914 58 75 75", zalo:"",facebook:"",
   });
   const [ok,setOk]=useState(false);
   const save=()=>{ setOk(true); setTimeout(()=>setOk(false),2500); };
@@ -1886,20 +1401,15 @@ function ASet() {
   ];
   return (
     <div style={{ maxWidth:560 }}>
-      <div style={{ background:"#fff",borderRadius:10,overflow:"hidden",
-        boxShadow:"0 1px 4px rgba(0,0,0,.07)",marginBottom:14 }}>
+      <div style={{ background:"#fff",borderRadius:10,overflow:"hidden", boxShadow:"0 1px 4px rgba(0,0,0,.07)",marginBottom:14 }}>
         {fields.map((f,i)=>(
-          <div key={f.k} style={{ padding:"13px 18px",
-            borderBottom:i<fields.length-1?"1px solid #F3F4F6":"none" }}>
+          <div key={f.k} style={{ padding:"13px 18px", borderBottom:i<fields.length-1?"1px solid #F3F4F6":"none" }}>
             <label style={FL}>{f.l}</label>
-            <input type={f.t||"text"} value={s[f.k]}
-              onChange={e=>setS((x: any)=>({...x,[f.k]:e.target.value}))} style={FI as any}/>
+            <input type={f.t||"text"} value={s[f.k]} onChange={e=>setS((x: any)=>({...x,[f.k]:e.target.value}))} style={FI as any}/>
           </div>
         ))}
       </div>
-      <button onClick={save} style={{ background:ok?"#16A34A":"#B91C1C",color:"#fff",
-        border:"none",padding:"10px 24px",borderRadius:8,fontSize:14,
-        fontWeight:700,cursor:"pointer",transition:"background .3s" }}>
+      <button onClick={save} style={{ background:ok?"#16A34A":"#B91C1C",color:"#fff", border:"none",padding:"10px 24px",borderRadius:8,fontSize:14, fontWeight:700,cursor:"pointer",transition:"background .3s" }}>
         {ok?"✅ Đã lưu!":"💾 Lưu cài đặt"}
       </button>
     </div>
@@ -1923,7 +1433,6 @@ function SearchPage({ setNav }: { setNav?: any }) {
     setLoading(true);
     const currentPage = isLoadMore ? page : 0;
     
-    // Supabase ILIKE giúp tìm kiếm không phân biệt hoa thường
     const { data } = await supabase.from('articles').select('*')
       .ilike('title', `%${query}%`).order('id', { ascending: false })
       .range(currentPage * limit, (currentPage + 1) * limit - 1);
@@ -1945,9 +1454,7 @@ function SearchPage({ setNav }: { setNav?: any }) {
         <h1 style={{ fontFamily:"'Lora', serif", fontSize:26, fontWeight:900, marginBottom:16 }}>🔍 Tra cứu bài viết</h1>
         <div style={{ display:"flex", maxWidth:600, margin:"0 auto", gap:8 }}>
           <input value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && doSearch()} placeholder="Nhập tên bài viết, sự kiện..." style={{ flex:1, padding:"12px 16px", borderRadius:8, border:"none", fontSize:15, outline:"none", color:"#333" }} />
-          <button onClick={() => doSearch()} style={{ background:"#FBBF24", color:"#92400E", border:"none", padding:"0 24px", borderRadius:8, fontWeight:900, cursor:"pointer", fontSize:15 }}>
-            TÌM
-          </button>
+          <button onClick={() => doSearch()} style={{ background:"#FBBF24", color:"#92400E", border:"none", padding:"0 24px", borderRadius:8, fontWeight:900, cursor:"pointer", fontSize:15 }}>TÌM</button>
         </div>
       </div>
 
@@ -1976,97 +1483,7 @@ function SearchPage({ setNav }: { setNav?: any }) {
 }
 
 /* ═══════════════════════════════════════════
-   ARTICLE PAGE (CHIA SẺ ĐA NĂNG & ÉP CỨNG LINK)
-═══════════════════════════════════════════ */
-function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
-  const shareUrl = `https://ngocdien.info.vn/bai-viet/${a?.slug || ''}`;
-  const defaultImg = "https://picsum.photos/seed/" + (a?.id || 1) + "nd/800/440";
-  const [fSize, setFSize] = useState(15);
-  
-  // 1. TỰ ĐỘNG DỌN RÁC: Xóa câu chữ nháp mặc định nếu lỡ lưu vào dữ liệu
-  const cleanContent = a?.content 
-    ? a.content.replace(/<p>Bắt đầu viết nội dung bài\.\.\.<\/p>/g, '').replace(/Bắt đầu viết nội dung bài\.\.\./g, '') 
-    : '';
-
-  const textContent = cleanContent ? cleanContent.replace(/<[^>]*>?/gm, '') : (a?.excerpt || '');
-  const readTime = Math.max(1, Math.ceil(textContent.split(/\s+/).length / 200));
-
-  const handleNativeShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: a?.title,
-          text: 'Mời bà con đọc bài viết trên Xóm Ngọc Điền:',
-          url: shareUrl,
-        });
-      } catch (error) {
-        console.log("Lỗi chia sẻ:", error);
-      }
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      alert("Đã copy đường link bài viết!\nAnh hãy dán vào Zalo để gửi cho bà con nhé.");
-    }
-  };
-
-  return (
-    <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 16px" }}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "22px 0" }}>
-        
-        <div style={{ display: "flex", gap: 6, fontSize: 12, color: "#aaa", marginBottom: 14, flexWrap: "wrap" }}>
-          <button onClick={() => setNav({ page: "home" })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>Trang chủ</button>
-          <span>›</span>
-          <button onClick={() => setNav({ page: "category", cat: a?.cat })} style={{ background: "none", border: "none", color: "#B91C1C", cursor: "pointer", fontSize: 12 }}>
-            {/* Nếu file này chưa import CATS thì anh cứ để nguyên, nó sẽ fallback về a.cat */}
-            {typeof CATS !== 'undefined' ? CATS.find((c: any) => c.slug === a?.cat)?.label || a?.cat : a?.cat}
-          </button>
-          <span>›</span>
-          <span style={{ color: "#555" }}>{a?.title}</span>
-        </div>
-        
-        <h1 style={{ fontFamily: "'Lora', serif", fontSize: "clamp(20px,4vw,30px)", fontWeight: 900, lineHeight: 1.38, margin: "12px 0", color: "#111" }}>{a?.title}</h1>
-        
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EAE0D0", paddingBottom: 12, marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
-          <p style={{ color: "#aaa", fontSize: 12.5, margin: 0 }}>
-            ✍️ {a?.author_name || 'Ban biên tập'}  ·  📅 {a?.date}  ·  <span style={{ color: "#0891B2", fontWeight: 700 }}>⏱️ Đọc {readTime} phút</span>
-          </p>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#FFFBF5", padding: "4px 8px", borderRadius: 6, border: "1px solid #E8DDD0" }}>
-            <span style={{ fontSize: 10, color: "#888", fontWeight: 700, letterSpacing: "1px" }}>CỠ CHỮ:</span>
-            <button onClick={() => setFSize(s => Math.max(14, s - 2))} style={{ border: "1px solid #E5E7EB", background: "#fff", width: 26, height: 26, borderRadius: 4, cursor: "pointer", fontWeight: 900, color: "#555" }}>A-</button>
-            <span style={{ fontSize: 13, fontWeight: 700, width: 18, textAlign: "center", color: "#1C1C1C" }}>{fSize}</span>
-            <button onClick={() => setFSize(s => Math.min(26, s + 2))} style={{ border: "1px solid #E5E7EB", background: "#fff", width: 26, height: 26, borderRadius: 4, cursor: "pointer", fontWeight: 900, color: "#555" }}>A+</button>
-          </div>
-        </div>
-        
-        <img src={a?.img || defaultImg} alt={a?.title} style={{ width: "100%", borderRadius: 10, marginBottom: 20, display: "block", maxHeight: 450, objectFit: 'cover' }}/>
-        
-        {/* 2. HIỂN THỊ MÔ TẢ NGẮN (SAPO) CỰC KỲ CHUYÊN NGHIỆP TỰA NHƯ BÁO CHÍ */}
-        {a?.excerpt && (
-          <div style={{ fontSize: fSize + 1, fontWeight: 700, fontStyle: "italic", color: "#4b5563", marginBottom: 24, borderLeft: "4px solid #B91C1C", lineHeight: 1.6, background: "#fdfbf7", padding: "14px 18px", borderRadius: "0 8px 8px 0" }}>
-            {a.excerpt}
-          </div>
-        )}
-        
-        {/* 3. NỘI DUNG ĐÃ ĐƯỢC DỌN RÁC (Gồm chữ và Máy nghe nhạc) */}
-        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: cleanContent || "<p>Chưa có nội dung chi tiết.</p>" }} />
-        
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8", flexWrap: "wrap" }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT NÀY:</span>
-          <button onClick={handleNativeShare} style={{ background: "#C8942B", color: "#fff", border: "none", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{fontSize: 16}}>➦</span> Chia sẻ qua Zalo/App
-          </button>
-          <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noopener noreferrer" style={{ background: "#1877F2", color: "#fff", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, textDecoration: "none" }}>📘 Facebook</a>
-          <button onClick={() => { navigator.clipboard.writeText(shareUrl); alert("Đã copy link bài viết:\n" + shareUrl + "\n\nGiờ anh mở Zalo lên bấm Dán (Paste) là xong!"); }} style={{ background: "#4B5563", color: "#fff", border: "none", borderRadius: 5, padding: "7px 14px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>
-            📋 Copy Link
-          </button>
-        </div>
-        
-        <button onClick={() => { setNav({ page: "home" }); window.scrollTo(0,0); }} style={{ background: "#B91C1C", color: "#fff", border: "none", borderRadius: 5, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", marginTop: 24, display: "inline-block" }}>← Quay lại Trang chủ</button>
-      </div>
-    </div>
-  );
-}
-/* ═══════════════════════════════════════════
-   APP ROOT (ĐÃ THÊM BỘ MÁY ĐÓN KHÁCH TỪ ZALO/FB)
+   APP ROOT
 ═══════════════════════════════════════════ */
 export default function App() {
   const [nav, setNav] = useState({ page: "home", cat: "", sub: "", article: null });
@@ -2135,20 +1552,18 @@ export default function App() {
   );
 }
 
-// 🚀 ĐÂY LÀ NHÀ MÁY XỬ LÝ PODCAST ĐỘC LẬP (Đúng chuẩn React)
+// 🚀 ĐÂY LÀ NHÀ MÁY XỬ LÝ PODCAST ĐỘC LẬP
 function TramPhatThanh({ ARTS, setNav }: { ARTS: any[], setNav: any }) {
   const latestPodcast = ARTS?.find((a: any) => a.cat === 'podcast');
   const audioMatch = latestPodcast?.content?.match(/<audio.*?src="([^"]+)"/);
   const audioUrl = audioMatch ? audioMatch[1] : null;
 
-  // Khai báo công cụ đếm (Đã được đặt đúng chuẩn, không bao giờ bị đơ nữa)
   const [isPlay, setIsPlay] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
   const [duration, setDuration] = useState("0:00");
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Nếu không có bài thì tàng hình
   if (!latestPodcast || !audioUrl) return null;
 
   const formatTime = (time: number) => {
@@ -2168,14 +1583,8 @@ function TramPhatThanh({ ARTS, setNav }: { ARTS: any[], setNav: any }) {
   return (
     <div style={{ background:"#fff", border:"1px solid #E8DDD0", borderRadius:10, overflow:"hidden", boxShadow: "0 4px 15px rgba(0,0,0,0.05)" }}>
       <audio 
-        ref={audioRef} 
-        src={audioUrl} 
-        onTimeUpdate={() => {
-          if (audioRef.current) {
-            setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
-            setCurrentTime(formatTime(audioRef.current.currentTime));
-          }
-        }}
+        ref={audioRef} src={audioUrl} 
+        onTimeUpdate={() => { if (audioRef.current) { setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100); setCurrentTime(formatTime(audioRef.current.currentTime)); } }}
         onLoadedMetadata={() => setDuration(formatTime(audioRef.current?.duration || 0))}
         onEnded={() => setIsPlay(false)}
       />
@@ -2185,8 +1594,7 @@ function TramPhatThanh({ ARTS, setNav }: { ARTS: any[], setNav: any }) {
           <span style={{ width:8, height:8, borderRadius:"50%", background:"#C8942B", display:"inline-block", boxShadow: "0 0 8px #C8942B" }}/>
           <span style={{ color:"#fff", fontSize:13, fontWeight:800, letterSpacing: 0.5 }}>🎙 RADIO XÓM</span>
         </div>
-        <button onClick={() => setNav({ page:"category", cat:"podcast" })}
-          style={{ background:"none", border:"1px solid rgba(200,148,43,.4)", color:"#C8942B", fontSize:10.5, fontWeight:700, cursor:"pointer", borderRadius:4, padding:"3px 8px" }}>
+        <button onClick={() => setNav({ page:"category", cat:"podcast" })} style={{ background:"none", border:"1px solid rgba(200,148,43,.4)", color:"#C8942B", fontSize:10.5, fontWeight:700, cursor:"pointer", borderRadius:4, padding:"3px 8px" }}>
           Tất cả tập →
         </button>
       </div>
@@ -2203,44 +1611,24 @@ function TramPhatThanh({ ARTS, setNav }: { ARTS: any[], setNav: any }) {
           <div style={{ width:56, height:56, background:"#1C1C1C", borderRadius:10, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0, boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)" }}>🎙</div>
           <div style={{ flex: 1, overflow: "hidden" }}>
             <div style={{ fontSize:10, color:"#B91C1C", fontWeight:800, letterSpacing: 0.5 }}>BÀI ĐĂNG MỚI NHẤT</div>
-            <p style={{ fontSize:14, fontWeight:800, lineHeight:1.3, marginTop:4, color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {latestPodcast.title}
-            </p>
+            <p style={{ fontSize:14, fontWeight:800, lineHeight:1.3, marginTop:4, color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{latestPodcast.title}</p>
           </div>
         </div>
 
-        <input 
-          type="range" min="0" max="100" value={progress || 0}
-          onChange={(e) => {
-            const manualChange = Number(e.target.value);
-            if (audioRef.current) {
-              audioRef.current.currentTime = (audioRef.current.duration / 100) * manualChange;
-              setProgress(manualChange);
-            }
-          }}
-          style={{ width: "100%", height: 4, borderRadius: 4, cursor: "pointer", accentColor: "#B91C1C", marginBottom: 6 }}
-        />
+        <input type="range" min="0" max="100" value={progress || 0} onChange={(e) => { const manualChange = Number(e.target.value); if (audioRef.current) { audioRef.current.currentTime = (audioRef.current.duration / 100) * manualChange; setProgress(manualChange); } }} style={{ width: "100%", height: 4, borderRadius: 4, cursor: "pointer", accentColor: "#B91C1C", marginBottom: 6 }} />
         <div style={{ display:"flex", justifyContent:"space-between", fontSize:11, color:"#888", marginBottom:16, fontWeight: 500 }}>
           <span>{currentTime}</span><span>{duration}</span>
         </div>
         
         <div style={{ display:"flex", justifyContent:"center", gap:20, marginBottom:16 }}>
           <button style={{ background:"none", border:"none", color:"#aaa", fontSize:20, cursor:"pointer" }}>⏮</button>
-          
-          <button onClick={togglePlay}
-            style={{ 
-              background: "#B91C1C", color: "#fff", width: 48, height: 48, borderRadius: "50%", 
-              border: "none", cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", 
-              justifyContent: "center", boxShadow: isPlay ? "0 0 15px rgba(185,28,28,0.4)" : "0 4px 10px rgba(185,28,28,0.3)"
-            }}>
+          <button onClick={togglePlay} style={{ background: "#B91C1C", color: "#fff", width: 48, height: 48, borderRadius: "50%", border: "none", cursor: "pointer", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: isPlay ? "0 0 15px rgba(185,28,28,0.4)" : "0 4px 10px rgba(185,28,28,0.3)" }}>
             {isPlay ? "⏸" : "▶"}
           </button>
-          
           <button style={{ background:"none", border:"none", color:"#aaa", fontSize:20, cursor:"pointer" }}>⏭</button>
         </div>
 
-        <button onClick={() => setNav({ page:"category", cat:"podcast" })}
-          style={{ width:"100%", background:"#1A1A1A", color:"#C8942B", border:"none", borderRadius:8, padding:"10px", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+        <button onClick={() => setNav({ page:"category", cat:"podcast" })} style={{ width:"100%", background:"#1A1A1A", color:"#C8942B", border:"none", borderRadius:8, padding:"10px", fontSize:13, fontWeight:700, cursor:"pointer" }}>
           Nghe thêm các tập khác →
         </button>
       </div>
