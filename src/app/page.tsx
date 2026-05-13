@@ -1590,16 +1590,15 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
         
         {/* NỘI DUNG ĐÃ ĐƯỢC DỌN RÁC - ÉP CĂN LỀ 2 BÊN VÀ ĐỒNG NHẤT FONT CHỮ */}
         <style>{`
+          .nd-article-content, 
           .nd-article-content * { 
             font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif !important; 
-          }
-          .nd-article-content p, .nd-article-content span, .nd-article-content div { 
             text-align: justify !important; 
           }
         `}</style>
         <div 
           className="nd-article-content" 
-          style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease", textAlign: "justify" }} 
+          style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease" }} 
           dangerouslySetInnerHTML={{ __html: cleanContent || "<p>Chưa có nội dung chi tiết.</p>" }} 
         />
         
