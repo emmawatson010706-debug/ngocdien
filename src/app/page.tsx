@@ -541,7 +541,7 @@ function Home({ setNav }: { setNav?: any }) {
             ))}
           </section>
           {/* =========================================
-            KHỐI GIỚI THIỆU (ĐÃ SỬA: ĐỒNG NHẤT, DỮ LIỆU THẬT & CẮT 2 DÒNG)
+            KHỐI GIỚI THIỆU (ĐÃ FIX LỖI BLOCKTITLE CHUẨN 100%)
             ========================================= */}
         {(() => {
           // Lấy bài viết đầu tiên thuộc chuyên mục Giới thiệu
@@ -549,14 +549,25 @@ function Home({ setNav }: { setNav?: any }) {
           
           return (
             <div style={{ marginBottom: 35 }}>
-              {/* Dùng lại đúng hàm BlockTitle để đồng bộ thanh tiêu đề với các mục khác */}
-              <BlockTitle icon="ℹ️" title="GIỚI THIỆU" color="#0891B2" onClick={() => go("gioi-thieu")} />
               
+              {/* 1. THANH TIÊU ĐỀ: Dùng HTML cơ bản thay vì gọi hàm lạ để chống lỗi Vercel */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "2px solid #0891B2", paddingBottom: 8, marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 18 }}>ℹ️</span>
+                  <h2 style={{ fontFamily: "'Lora', serif", fontSize: 16, fontWeight: 900, color: "#111", margin: 0, textTransform: "uppercase" }}>
+                    GIỚI THIỆU
+                  </h2>
+                </div>
+                <button onClick={() => go("gioi-thieu")} style={{ background: "none", border: "none", color: "#0891B2", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                  Xem tất cả →
+                </button>
+              </div>
+              
+              {/* 2. KHỐI NỘI DUNG THẬT (Ép 2 dòng) */}
               <div 
                 onClick={() => introArt ? goArt(introArt) : go("gioi-thieu")} 
                 style={{ border: "1px solid #EAE0D0", borderRadius: 10, overflow: "hidden", cursor: "pointer", background: "#fff", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
               >
-                {/* 1. HÌNH ẢNH THẬT: Lấy trực tiếp từ bài viết */}
                 <img 
                   src={introArt?.img || "https://picsum.photos/seed/nd/800/400"} 
                   style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }} 
@@ -564,19 +575,17 @@ function Home({ setNav }: { setNav?: any }) {
                 />
                 
                 <div style={{ padding: 20 }}>
-                  {/* 2. TIÊU ĐỀ THẬT: Chữ đen nền trắng rõ nét */}
                   <h3 style={{ fontFamily: "'Lora', serif", fontSize: 18, fontWeight: 900, color: "#111", margin: "0 0 8px 0", lineHeight: 1.4 }}>
                     {introArt ? introArt.title : "Giới thiệu Xóm Ngọc Điền"}
                   </h3>
                   
-                  {/* 3. MÔ TẢ THẬT & ÉP CỨNG 2 DÒNG */}
                   <p style={{ 
                     fontSize: 13, 
                     color: "#555", 
                     lineHeight: 1.6, 
                     margin: 0, 
                     display: "-webkit-box", 
-                    WebkitLineClamp: 2, /* 👈 Thuật toán ép cứng hiển thị đúng 2 dòng, dài hơn tự ra dấu ... */
+                    WebkitLineClamp: 2, 
                     WebkitBoxOrient: "vertical", 
                     overflow: "hidden" 
                   }}>
