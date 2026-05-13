@@ -27,6 +27,19 @@ const AudioPlayer = Node.create({
   },
 });
 
+// 💡 CÁCH TRỊ BỆNH TREO MÁY: 
+// Đưa toàn bộ extensions ra ngoài này, để nó chỉ nạp 1 lần duy nhất khi mở trang!
+const TIPTAP_EXTENSIONS = [
+  StarterKit, 
+  Image, 
+  Link.configure({ openOnClick: false }), 
+  Youtube.configure({ controls: true }),
+  TextStyle, 
+  Color, 
+  TextAlign.configure({ types: ['heading', 'paragraph'] }), 
+  AudioPlayer
+];
+
 // 🔥 ĐÃ ĐỔI "TIN TỨC" THÀNH "LOA XÓM" VÀ BỔ SUNG MỤC "GIỚI THIỆU"
 const ALL_CATEGORIES = [
   { id: 'loa-xom', name: '📢 LOA XÓM (Mục lớn)', isParent: true },
@@ -93,10 +106,7 @@ export default function ArticleEditor({ article }: Props) {
   const [error, setError]               = useState('');
 
   const editor = useEditor({
-    extensions: [
-      StarterKit, Image, Link.configure({ openOnClick: false }), Youtube.configure({ controls: true }),
-      TextStyle, Color, TextAlign.configure({ types: ['heading', 'paragraph'] }), AudioPlayer
-    ],
+    extensions: TIPTAP_EXTENSIONS, // Khai báo gọi biến tĩnh ở ngoài vào đây
     content: article?.content ?? '<p>Bắt đầu viết nội dung bài...</p>',
     immediatelyRender: false, 
   });
