@@ -540,6 +540,68 @@ function Home({ setNav }: { setNav?: any }) {
               </div>
             ))}
           </section>
+          {/* =========================================
+            KHỐI GIỚI THIỆU (CHUẨN BÁO CHÍ SANG TRỌNG)
+            ========================================= */}
+        <div style={{ marginBottom: 35 }}>
+          {/* 1. Thanh Tiêu đề */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #B91C1C", paddingBottom: 8, marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 32, height: 32, background: "#0891B2", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
+                ℹ️
+              </div>
+              <h2 style={{ fontFamily: "'Lora', serif", fontSize: 16, fontWeight: 900, color: "#fff", margin: 0, textTransform: "uppercase" }}>
+                GIỚI THIỆU
+              </h2>
+            </div>
+            <button onClick={() => setNav({ page: "category", cat: "gioi-thieu" })} style={{ background: "none", border: "none", color: "#FBBF24", fontSize: 12, fontWeight: 700, cursor: "pointer", opacity: 0.9 }}>
+              Xem chi tiết →
+            </button>
+          </div>
+
+          {/* 2. Khối Nội dung (Card dạng Banner) */}
+          <div 
+            onClick={() => setNav({ page: "category", cat: "gioi-thieu" })} 
+            style={{ 
+              background: "linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%)", 
+              border: "1px solid rgba(255,255,255,0.1)", 
+              borderRadius: 8, 
+              overflow: "hidden", 
+              display: "flex", 
+              flexDirection: "column", 
+              cursor: "pointer",
+              transition: "transform 0.2s"
+            }}
+            onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
+          >
+            {/* Ảnh cover có hiệu ứng đổ bóng mờ (Gradient Overlay) */}
+            <div style={{ height: 180, position: "relative" }}>
+              <img 
+                src="https://picsum.photos/seed/ngocdienintro/800/400" 
+                alt="Giới thiệu Ngọc Điền" 
+                style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.7 }} 
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, #161616 5%, transparent 100%)" }} />
+            </div>
+
+            {/* Chữ hiển thị nổi lên trên ảnh */}
+            <div style={{ padding: "0 16px 20px", marginTop: -50, position: "relative", zIndex: 2 }}>
+              <h3 style={{ fontFamily: "'Lora', serif", fontSize: 22, fontWeight: 900, color: "#FBBF24", margin: "0 0 8px 0", textShadow: "0 2px 5px rgba(0,0,0,0.9)", lineHeight: 1.3 }}>
+                Ngọc Điền – Một miền quê giàu bản sắc
+              </h3>
+              <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.6, margin: 0, textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
+                Có những miền quê, chỉ cần nhắc tên thôi, trong lòng người xa xứ đã bỗng dâng lên một niềm thương nhớ khôn nguôi... Ngọc Điền hiện lên trong ký ức của bao thế hệ người dân quê nhà bằng vẻ đẹp mộc mạc, thanh bình và sâu nặng nghĩa tình.
+              </p>
+              
+              {/* Nút bấm tinh tế */}
+              <div style={{ marginTop: 16, display: "inline-block", border: "1px solid #B91C1C", background: "rgba(185, 28, 28, 0.2)", color: "#fff", fontSize: 12, fontWeight: 700, padding: "6px 14px", borderRadius: 4 }}>
+                Đọc bài giới thiệu chi tiết →
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* ========================================= */}
 
           {/* NGƯỜI NGỌC ĐIỀN */}
           <section style={{ marginBottom:26 }}>
