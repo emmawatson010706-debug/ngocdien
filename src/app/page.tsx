@@ -1588,8 +1588,20 @@ function ArtPage({ article: a, setNav }: { article?: any, setNav?: any }) {
           </div>
         )}
         
-        {/* NỘI DUNG ĐÃ ĐƯỢC DỌN RÁC */}
-        <div style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease" }} dangerouslySetInnerHTML={{ __html: cleanContent || "<p>Chưa có nội dung chi tiết.</p>" }} />
+        {/* NỘI DUNG ĐÃ ĐƯỢC DỌN RÁC - ÉP CĂN LỀ 2 BÊN VÀ ĐỒNG NHẤT FONT CHỮ */}
+        <style>{`
+          .nd-article-content * { 
+            font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif !important; 
+          }
+          .nd-article-content p, .nd-article-content span, .nd-article-content div { 
+            text-align: justify !important; 
+          }
+        `}</style>
+        <div 
+          className="nd-article-content" 
+          style={{ fontSize: fSize, lineHeight: 1.85, color: "#333", transition: "font-size 0.3s ease", textAlign: "justify" }} 
+          dangerouslySetInnerHTML={{ __html: cleanContent || "<p>Chưa có nội dung chi tiết.</p>" }} 
+        />
         
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 30, padding: "14px 0", borderTop: "1px solid #EDE5D8", borderBottom: "1px solid #EDE5D8", flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#888" }}>CHIA SẺ BÀI VIẾT NÀY:</span>

@@ -27,12 +27,15 @@ const AudioPlayer = Node.create({
   },
 });
 
-// 💡 CÁCH TRỊ BỆNH TREO MÁY: 
-// Đưa toàn bộ extensions ra ngoài này, để nó chỉ nạp 1 lần duy nhất khi mở trang!
+// 💡 ĐÃ KHÓA MÕM TÍNH NĂNG QUÉT LINK GÂY SẬP TRÌNH DUYỆT CỦA TIPTAP
 const TIPTAP_EXTENSIONS = [
   StarterKit, 
   Image, 
-  Link.configure({ openOnClick: false }), 
+  Link.configure({ 
+    openOnClick: false,
+    autolink: false,     // 🔥 CHẶN ĐỨNG THỦ PHẠM 1: Tắt tự động dò link
+    linkOnPaste: false   // 🔥 CHẶN ĐỨNG THỦ PHẠM 2: Tắt quét link khi dán bài dài
+  }), 
   Youtube.configure({ controls: true }),
   TextStyle, 
   Color, 
