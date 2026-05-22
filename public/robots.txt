@@ -1,5 +1,8 @@
-User-Agent: *
+User-agent: *
 Allow: /
 
-User-Agent: facebookexternalhit
-Allow: /
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /quan-tri
+
+Sitemap: https://www.ngocdien.info.vn/sitemap.xml
