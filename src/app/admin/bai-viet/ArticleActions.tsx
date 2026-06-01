@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
 
 export default function ArticleActions({ id, isPublished }: { id: string; isPublished: boolean }) {
   const router = useRouter();
@@ -9,10 +8,14 @@ export default function ArticleActions({ id, isPublished }: { id: string; isPubl
 
   const togglePublish = async () => {
     setLoading(true);
-    await supabase.from('articles').update({
-      is_published: !isPublished,
-      published_at: !isPublished ? new Date().toISOString() : null,
-    }).eq('id', id);
+    await fetch(`/api/articles/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        is_published: !isPublished,
+        published_at: !isPublished ? new Date().toISOString() : null,
+      }),
+    });
     setLoading(false);
     router.refresh();
   };
@@ -20,7 +23,7 @@ export default function ArticleActions({ id, isPublished }: { id: string; isPubl
   const deleteArticle = async () => {
     if (!confirm('Xóa bài viết này? Không thể hoàn tác!')) return;
     setLoading(true);
-    await supabase.from('articles').delete().eq('id', id);
+    await fetch(`/api/articles/${id}`, { method: 'DELETE' });
     setLoading(false);
     router.refresh();
   };

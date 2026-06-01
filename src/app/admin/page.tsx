@@ -3,20 +3,17 @@ import Link from 'next/link';
 
 async function getStats() {
   const sb = createServerSupabase();
-  
-  // Dùng count để đếm số lượng dòng trong từng bảng
   const [arts, people, pods, subs] = await Promise.all([
-    sb.from('articles').select('id', { count: 'exact' }),
+    sb.from('articles').select('id, is_published', { count: 'exact' }),
     sb.from('people').select('id', { count: 'exact' }),
     sb.from('podcasts').select('id', { count: 'exact' }),
-    sb.from('submissions').select('id', { count: 'exact' }),
+    sb.from('submissions').select('id, status', { count: 'exact' }),
   ]);
-  
   return {
-    articles: arts.count ?? 0,
-    people:   people.count ?? 0,
-    podcasts: pods.count ?? 0,
-    pending:  subs.count ?? 0,
+    articles:   { total: arts.count ?? 0, published: arts.data?.filter(a => a.is_published).length ?? 0 },
+    people:     people.count ?? 0,
+    podcasts:   pods.count ?? 0,
+    pending:    subs.data?.filter(s => s.status === 'pending').length ?? 0,
   };
 }
 
@@ -24,18 +21,18 @@ export default async function AdminDashboard() {
   const stats = await getStats();
 
   const cards = [
-    { icon:'📝', label:'Bài viết', value: stats.articles, sub:`${stats.articles} tổng`, href:'/admin/bai-viet', color:'#B91C1C' },
-    { icon:'👥', label:'Người ND',  value: stats.people,   sub:'hồ sơ',           href:'/admin/nguoi',   color:'#7C3AED' },
-    { icon:'🎙', label:'Podcast',   value: stats.podcasts, sub:'tập',             href:'/admin/podcast', color:'#0891B2' },
-    { icon:'✉️', label:'Góp ý chờ', value: stats.pending,  sub:'cần xử lý',       href:'/admin/gop-y',   color:'#D97706' },
+    { icon:'📝', label:'Bài viết', value: stats.articles.published, sub:`${stats.articles.total} tổng`, href:'/admin/bai-viet', color:'#B91C1C' },
+    { icon:'👥', label:'Người ND',  value: stats.people,             sub:'hồ sơ',             href:'/admin/nguoi',   color:'#7C3AED' },
+    { icon:'🎙', label:'Podcast',   value: stats.podcasts,           sub:'tập',               href:'/admin/podcast', color:'#0891B2' },
+    { icon:'✉️', label:'Góp ý chờ', value: stats.pending,            sub:'cần xử lý',         href:'/admin/gop-y',   color:'#D97706' },
   ];
 
   const quickLinks = [
-    { label:'✏️ Đăng bài mới',      href:'/admin/bai-viet/moi' },
+    { label:'✏️ Đăng bài mới',       href:'/admin/bai-viet/moi' },
     { label:'👤 Thêm Liệt sỹ / Mẹ VNAH', href:'/admin/nguoi' },
-    { label:'🎙 Thêm Podcast',      href:'/admin/podcast' },
-    { label:'⚙️ Cài đặt website',   href:'/admin/cai-dat' },
-    { label:'🌐 Xem trang chủ',     href:'/' },
+    { label:'🎙 Thêm Podcast',       href:'/admin/podcast' },
+    { label:'⚙️ Cài đặt website',    href:'/admin/cai-dat' },
+    { label:'🌐 Xem trang chủ',      href:'/' },
   ];
 
   return (

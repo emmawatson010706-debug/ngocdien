@@ -1,6 +1,6 @@
 import { createServerSupabase } from './server';
-import { supabase as browserClient } from './client';
 import type { Article, Category, Person, Podcast } from '@/types/database';
+import { mergeCategories } from '@/lib/siteDefaults';
 
 // ─── ARTICLES ──────────────────────────────────────────────
 
@@ -46,7 +46,42 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 }
 
 export async function incrementViewCount(id: string) {
-  await browserClient.rpc('increment_views', { article_id: id });
+  const sb = createServerSupabase();
+  await sb.rpc('increment_views', { article_id: id });
+}
+
+
+export async function getAllPublishedArticles(limit = 80): Promise<Article[]> {
+  const sb = createServerSupabase();
+  const { data } = await sb
+    .from('published_articles_with_category')
+    .select('*')
+    .limit(limit);
+  return (data ?? []) as Article[];
+}
+
+export async function searchPublishedArticles(params: {
+  q?: string;
+  categorySlug?: string;
+  year?: string;
+  limit?: number;
+}): Promise<Article[]> {
+  const sb = createServerSupabase();
+  let query = sb
+    .from('published_articles_with_category')
+    .select('*')
+    .limit(params.limit ?? 80);
+
+  if (params.categorySlug) query = query.eq('category_slug', params.categorySlug);
+  if (params.q) query = query.or(`title.ilike.%${params.q}%,excerpt.ilike.%${params.q}%`);
+  if (params.year && /^\d{4}$/.test(params.year)) {
+    query = query
+      .gte('published_at', `${params.year}-01-01`)
+      .lt('published_at', `${Number(params.year) + 1}-01-01`);
+  }
+
+  const { data } = await query;
+  return (data ?? []) as Article[];
 }
 
 // ─── CATEGORIES ────────────────────────────────────────────
@@ -57,7 +92,10 @@ export async function getAllCategories(): Promise<Category[]> {
     .from('categories')
     .select('*')
     .order('sort_order');
-  return (data ?? []) as Category[];
+
+  // Luôn có danh mục mặc định để các đường dẫn công khai như /di-tich,
+  // /tieng-lang không bị 404 nếu CSDL Supabase chưa seed đủ categories.
+  return mergeCategories((data ?? []) as Category[]);
 }
 
 // ─── PEOPLE ────────────────────────────────────────────────
@@ -68,6 +106,16 @@ export async function getPeopleByType(type: string): Promise<Person[]> {
     .from('people')
     .select('*')
     .eq('type', type)
+    .order('sort_order');
+  return (data ?? []) as Person[];
+}
+
+
+export async function getAllPeople(): Promise<Person[]> {
+  const sb = createServerSupabase();
+  const { data } = await sb
+    .from('people')
+    .select('*')
     .order('sort_order');
   return (data ?? []) as Person[];
 }
@@ -100,5 +148,5 @@ export async function getSetting(key: string): Promise<string | null> {
 export async function getAllSettings(): Promise<Record<string, string>> {
   const sb = createServerSupabase();
   const { data } = await sb.from('settings').select('key, value');
-  return Object.fromEntries((data ?? []).map((r: any) => [r.key, r.value]));
+  return Object.fromEntries(((data ?? []) as Array<{ key: string; value: string | null }>).map((r) => [r.key, r.value ?? '']));
 }

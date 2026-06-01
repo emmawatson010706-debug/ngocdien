@@ -9,9 +9,11 @@ const COLS = [
     { label: 'Di tích', href: '/di-tich' },
   ]},
   { title: 'Người Ngọc Điền', links: [
+    { label: 'Tra cứu người Ngọc Điền', href: '/tra-cuu-nguoi-ngoc-dien' },
     { label: 'Mẹ VNAH', href: '/nguoi-ngoc-dien/me-vnah' },
     { label: 'Liệt sỹ', href: '/nguoi-ngoc-dien/liet-sy' },
     { label: 'Anh hùng lao động', href: '/nguoi-ngoc-dien/anh-hung' },
+    { label: 'Tư liệu Ngọc Điền', href: '/tu-lieu-ngoc-dien' },
     { label: 'Thư viện', href: '/thu-vien' },
     { label: 'Lễ hội', href: '/le-hoi' },
   ]},
@@ -20,8 +22,8 @@ const COLS = [
     { label: 'Chuyển đổi số', href: '/chuyen-doi-so' },
     { label: 'Cộng đồng Zalo', href: '#' },
     { label: 'Cộng đồng Facebook', href: '#' },
-    { label: 'Quản trị', href: '/admin' },
-  ]},
+    { label: 'Ban biên tập & Quy chế', href: '/ban-bien-tap' },
+      ]},
 ];
 
 export default function Footer() {

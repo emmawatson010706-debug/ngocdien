@@ -8,12 +8,9 @@ export function WeatherWidget() {
   const [weather, setWeather] = useState<any>(null);
 
   useEffect(() => {
-    const key  = process.env.NEXT_PUBLIC_OWM_API_KEY;
-    const city = process.env.NEXT_PUBLIC_OWM_CITY ?? '1568574';
-    if (!key) return;
-    fetch(`https://api.openweathermap.org/data/2.5/forecast?id=${city}&appid=${key}&units=metric&lang=vi&cnt=5`)
-      .then(r => r.json())
-      .then(setWeather)
+    fetch('/api/weather')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => data && setWeather(data))
       .catch(() => {});
   }, []);
 

@@ -29,6 +29,9 @@ export interface Article {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  source_note?: string | null;
+  editor_name?: string | null;
+  document_type?: string | null;
   // joined
   category_name?: string;
   category_slug?: string;

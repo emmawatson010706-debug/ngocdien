@@ -19,9 +19,17 @@ export default function AdminSettingsPage() {
   const [saved, setSaved]       = useState(false);
 
   useEffect(() => {
-    supabase.from('settings').select('key, value').then(({ data }) => {
-      if (data) setSettings(Object.fromEntries(data.map((r: any) => [r.key, r.value ?? ''])));
-    });
+    const loadSettings = async () => {
+      const { data } = await supabase.from('settings').select('key, value');
+      if (data) {
+        setSettings(
+          Object.fromEntries(
+            (data as Array<{ key: string; value: string | null }>).map((r) => [r.key, r.value ?? ''])
+          )
+        );
+      }
+    };
+    void loadSettings();
   }, []);
 
   const set = (k: string, v: string) => setSettings(s => ({ ...s, [k]: v }));

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'vi_VN',
     siteName: 'Xóm Ngọc Điền',
-    images: [{ url: '/og-default.jpg', width: 1200, height: 630 }],
+    images: [{ url: '/og-ngocdien.png', width: 1200, height: 630 }],
   },
   twitter: { card: 'summary_large_image' },
 };
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi">
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
