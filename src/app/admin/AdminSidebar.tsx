@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -6,13 +6,13 @@ import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
 const MENU = [
-  { label: 'Tổng quan',    href: '/admin',                icon: '📊' },
-  { label: 'Bài viết',     href: '/admin/bai-viet',       icon: '📝' },
-  { label: 'Người ND',     href: '/admin/nguoi',          icon: '👥' },
-  { label: 'Podcast',      href: '/admin/podcast',        icon: '🎙' },
-  { label: 'Góp ý',        href: '/admin/gop-y',          icon: '✉️' },
-  { label: 'Thư viện',     href: '/admin/thu-vien',       icon: '📚' },
-  { label: 'Cài đặt',      href: '/admin/cai-dat',        icon: '⚙️' },
+  { label: 'Tá»•ng quan',    href: '/admin',                icon: 'ðŸ“Š' },
+  { label: 'BÃ i viáº¿t',     href: '/admin/bai-viet',       icon: 'ðŸ“' },
+  { label: 'NgÆ°á»i ND',     href: '/admin/nguoi',          icon: 'ðŸ‘¥' },
+  { label: 'Podcast',      href: '/admin/podcast',        icon: 'ðŸŽ™' },
+  { label: 'GÃ³p Ã½',        href: '/admin/gop-y',          icon: 'âœ‰ï¸' },
+  { label: 'ThÆ° viá»‡n',     href: '/admin/thu-vien',       icon: 'ðŸ“š' },
+  { label: 'CÃ i Ä‘áº·t',      href: '/admin/cai-dat',        icon: 'âš™ï¸' },
 ];
 
 export default function AdminSidebar({ email }: { email: string }) {
@@ -22,7 +22,7 @@ export default function AdminSidebar({ email }: { email: string }) {
 
   const logout = async () => {
     await supabase.auth.signOut();
-    router.push('/admin/login');
+    router.push('/admin-login');
   };
 
   return (
@@ -30,7 +30,7 @@ export default function AdminSidebar({ email }: { email: string }) {
       {/* Mobile toggle */}
       <button onClick={() => setOpen(o => !o)}
         className="lg:hidden fixed top-4 left-4 z-50 bg-[#1C1C1C] text-white p-2.5 rounded-lg shadow-lg">
-        ☰
+        â˜°
       </button>
 
       {open && <div className="lg:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setOpen(false)} />}
@@ -42,8 +42,8 @@ export default function AdminSidebar({ email }: { email: string }) {
         {/* Logo */}
         <div className="px-5 py-5 border-b border-white/10">
           <Link href="/" className="block">
-            <div className="font-display text-lg font-black tracking-widest text-white">NGỌC ĐIỀN</div>
-            <div className="text-[10px] text-gold font-sans tracking-widest mt-0.5">QUẢN TRỊ HỆ THỐNG</div>
+            <div className="font-display text-lg font-black tracking-widest text-white">NGá»ŒC ÄIá»€N</div>
+            <div className="text-[10px] text-gold font-sans tracking-widest mt-0.5">QUáº¢N TRá»Š Há»† THá»NG</div>
           </Link>
         </div>
 
@@ -71,7 +71,7 @@ export default function AdminSidebar({ email }: { email: string }) {
           <button onClick={logout}
             className="w-full bg-white/8 hover:bg-red text-white text-xs font-sans font-bold
               py-2 rounded transition-colors">
-            🚪 Đăng xuất
+            ðŸšª ÄÄƒng xuáº¥t
           </button>
         </div>
       </aside>

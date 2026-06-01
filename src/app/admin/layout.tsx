@@ -1,13 +1,13 @@
-import { redirect } from 'next/navigation';
+﻿import { redirect } from 'next/navigation';
 import { getCurrentAdmin } from '@/lib/security';
 import AdminSidebar from './AdminSidebar';
 
-export const metadata = { title: 'Quản trị | Ngọc Điền' };
+export const metadata = { title: 'Quáº£n trá»‹ | Ngá»c Äiá»n' };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const admin = await getCurrentAdmin();
-  if (!admin.user) redirect('/admin/login');
-  if (!admin.isAdmin) redirect('/admin/login?error=not-admin');
+  if (!admin.user) redirect('/admin-login');
+  if (!admin.isAdmin) redirect('/admin-login?error=not-admin');
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
